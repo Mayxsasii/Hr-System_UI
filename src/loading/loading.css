@@ -1,0 +1,153 @@
+
+  .loading-wrapper {
+    position: relative;
+  }
+
+  .textcolor {
+    color: aliceblue !important;
+  }
+  
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    background: rgba(41, 38, 38, 0.5);
+    backdrop-filter: blur(0.5px);
+  }
+  
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    border-radius: 1rem;
+  }
+  
+  /* Spinner Styles */
+  .spinner-container {
+    position: relative;
+    width: 4rem;
+    height: 4rem;
+  }
+  
+  .spinner-outer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid #dbeafe;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .spinner-inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid #3b82f6;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+  }
+  
+  .spinner-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #3b82f6;
+    border-radius: 50%;
+  }
+  
+  /* Loading Text Styles */
+  .loading-text {
+    text-align: center;
+  }
+  
+  .loading-text p {
+    font-size: 1.125rem;
+    color: #374151;
+    font-weight: 500;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .loading-dots {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+  
+  .dot {
+    width: 0.6rem;         
+    height: 0.6rem;         
+    border-radius: 50%;
+    animation: bounce 1s infinite;
+  }
+  
+  .dot:nth-child(1) {
+    background-color: #0062ff;
+  }
+  
+  .dot:nth-child(2) {
+    background-color: #ffe609;
+    animation-delay: 0.15s;
+  }
+
+  .dot:nth-child(3) {
+    background-color: #e11d48;
+    animation-delay: 0.3s;
+  }
+  
+  /* Button Styles */
+  .toggle-button {
+    margin: 1rem;
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(to right, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+  }
+  
+  .toggle-button:hover {
+    background: linear-gradient(to right, #2563eb, #1d4ed8);
+    box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .toggle-button:active {
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Animations */
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.25rem);
+    }
+  }
