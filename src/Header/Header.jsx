@@ -22,11 +22,15 @@ const HeaderPage = ({ collapsed, setCollapsed, onLogout }) => {
     <Header
       style={{
         padding: 0,
-        backgroundColor: 'transparent',
+        backgroundColor: '#f5f5f5',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: '5px'
+        paddingTop: '5px',
+        marginLeft: '10px',
+        position: 'sticky', // ทำให้ header เป็นแบบ sticky
+        top: 0, // ตำแหน่งด้านบน
+        zIndex: 1000, // เพื่อให้ header อยู่ด้านบนสุด
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>

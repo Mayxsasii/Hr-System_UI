@@ -1,0 +1,21 @@
+/* CustomSider.css */
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+    background-color: #51ada8;
+  }
+  .ant-menu-item-selected {
+  background-color: #439c96 !important;
+}
