@@ -1,62 +1,45 @@
 import React from "react";
-import {
-  Checkbox,
-  Input,
-  Button,
-  Select,
-  Upload,
-  Radio,
-  DatePicker,
-  Table,
-} from "antd";
+import { Checkbox, Input, Button, Select, DatePicker, Table } from "antd";
 import {
   SearchOutlined,
   PlusOutlined,
   ReloadOutlined,
-  DownloadOutlined,
 } from "@ant-design/icons";
-import ImgExcel from '../../assets/excel.png';
+import ImgExcel from "../../assets/excel.png";
+import { fn_SearchManPowerRequst } from "./fn_SearchManPowerRequst.jsx";
 const { Option } = Select;
 
-const SearchManPower = (Page) => {
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
-  ];
-
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-    },
-  ];
+const SearchManPower = () => {
+  const {
+    columns,
+    data,
+    Factory,
+    bt_New,
+    Department,
+    Position,
+    JobGrade,
+    SL_Factory,
+    SL_Department,
+    SL_Position,
+    SL_JobGrade,
+    setSL_Factory,
+    setSL_Department,
+    setSL_Position,
+    setSL_JobGrade,
+    GetPosition,
+    GetJobGrade,
+    handleFactory,
+    handlePosition,
+    datauser,
+    DateFrom,
+    DateTo,
+    txt_ReqNoFrom,
+    txt_ReqNoTo,
+    setDateFrom,
+    setDateTo,
+    settxt_ReqNoFrom,
+    settxt_ReqNoTo,
+  } = fn_SearchManPowerRequst();
 
   return (
     <div
@@ -80,6 +63,7 @@ const SearchManPower = (Page) => {
         }}
       >
         <p style={{ margin: 0, fontSize: "20px", fontWeight: "bold" }}>
+          <SearchOutlined style={{ marginRight: "8px" }} />
           Man Power Request
         </p>
       </div>
@@ -100,66 +84,119 @@ const SearchManPower = (Page) => {
             <tr>
               <td style={{ textAlign: "right", padding: "4px" }}>Factory :</td>
               <td style={{ padding: "4px" }}>
-                <Select style={{ width: "100%" }}>
-                  <Option value="factory1">Factory 1</Option>
-                  <Option value="factory2">Factory 2</Option>
-                </Select>
+                <Select
+                  showSearch
+                  value={SL_Factory}
+                  style={{
+                    width: "100%",
+                    display: "block",
+                    marginTop: "5px",
+                  }}
+                  placeholder="Select Factory"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={Factory}
+                  onChange={handleFactory}
+                />
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>
                 Department :
               </td>
               <td style={{ padding: "4px" }}>
-                <Select style={{ width: "100%" }}>
-                  <Option value="department1">Department 1</Option>
-                  <Option value="department2">Department 2</Option>
-                </Select>
+                <Select
+                  showSearch
+                  value={SL_Department}
+                  style={{
+                    width: "100%",
+                    display: "block",
+                    marginTop: "5px",
+                  }}
+                  placeholder="Select Department"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={Department}
+                  onChange={setSL_Department}
+                />
               </td>
+              {/* {console.log('Selected factory:', SL_Department)} */}
               <td style={{ textAlign: "right", padding: "4px" }}>Position :</td>
               <td style={{ padding: "4px" }}>
-                <Select style={{ width: "100%" }}>
-                  <Option value="position1">Position 1</Option>
-                  <Option value="position2">Position 2</Option>
-                </Select>
+                <Select
+                  showSearch
+                  value={SL_Position}
+                  style={{
+                    width: "100%",
+                    display: "block",
+                    marginTop: "5px",
+                  }}
+                  placeholder="Select Position"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={Position}
+                  onChange={handlePosition}
+                />
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>Job grade:</td>
               <td style={{ padding: "4px" }}>
-                <Select style={{ width: "100%" }}>
-                  <Option value="grade1">Grade 1</Option>
-                  <Option value="grade2">Grade 2</Option>
-                </Select>
+                <Select
+                  showSearch
+                  value={SL_JobGrade}
+                  style={{
+                    width: "100%",
+                    display: "block",
+                    marginTop: "5px",
+                  }}
+                  placeholder="Select Department"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={JobGrade}
+                  onChange={setSL_JobGrade}
+                />
               </td>
             </tr>
 
             <tr>
-            <td style={{ textAlign: "right", padding: "4px" }}>Req No.:</td>
+              <td style={{ textAlign: "right", padding: "4px" }}>Req No.:</td>
               <td style={{ padding: "4px" }}>
-                <Input style={{ width: "100%" }} />
+                <Input value={txt_ReqNoFrom} style={{ width: "100%" }}  onChange={(e) => settxt_ReqNoFrom(e.target.value)} />
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>To:</td>
               <td style={{ padding: "4px" }}>
-                <Input style={{ width: "100%" }} />
+              <Input value={txt_ReqNoTo} style={{ width: "100%" }}   onChange={(e) => settxt_ReqNoTo(e.target.value)} />
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>
                 Request Date:
               </td>
               <td style={{ padding: "4px" }}>
-                <DatePicker style={{ width: "100%" }} />
+                <DatePicker value={DateFrom} style={{ width: "100%" }}  onChange={setDateFrom}/>
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>To:</td>
               <td style={{ padding: "4px" }}>
-                <DatePicker style={{ width: "100%" }} />
+              <DatePicker value={DateTo} style={{ width: "100%" }}  onChange={setDateTo}/>
               </td>
-
             </tr>
             <tr>
               <td style={{ textAlign: "right", padding: "4px" }}>
                 Request by:
               </td>
               <td style={{ padding: "4px" }}>
-                <Select style={{ width: "100%" }}>
-                  <Option value="requester1">Requester 1</Option>
-                  <Option value="requester2">Requester 2</Option>
-                </Select>
+                <Input value={datauser.LOGIN}style={{ width: "100%" }} />
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>
                 Request Status:
@@ -171,16 +208,18 @@ const SearchManPower = (Page) => {
                 </Select>
               </td>
               <td colSpan={4}>
-              <Button type="primary" icon={<SearchOutlined />} style={{ marginRight: '10px', marginLeft: '30px' }}>
+                <Button
+                  type="primary"
+                  icon={<SearchOutlined />}
+                  style={{ marginRight: "10px", marginLeft: "30px" }}
+                >
                   Search
                 </Button>
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
                   style={{ marginRight: "10px", backgroundColor: "#399918" }}
-                  onClick={() =>
-                    (window.location.href = "/HrSystem/NewManPowerRequest")
-                  }
+                  onClick={() => bt_New()}
                 >
                   New
                 </Button>
@@ -202,13 +241,19 @@ const SearchManPower = (Page) => {
           boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
         }}
       >
-         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-         <Button>
-            <img src={ImgExcel} alt="Export" style={{ width: '16px' }} />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: "10px",
+          }}
+        >
+          <Button>
+            <img src={ImgExcel} alt="Export" style={{ width: "16px" }} />
             Export
           </Button>
-  </div>
-         
+        </div>
+
         <Table columns={columns} dataSource={data} />
       </div>
     </div>

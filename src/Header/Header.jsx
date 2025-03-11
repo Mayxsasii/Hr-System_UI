@@ -1,23 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import { Layout, Avatar, Dropdown, Menu } from 'antd';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import imgHr from '../assets/social-security.png'; 
 import imgUser from '../assets/user (1).png'; 
+import {fn_Header} from "./fn_Header";
 
 const { Header } = Layout;
 
-const UserMenu = ({ onLogout }) => (
-  <Menu>
-    <Menu.Item key="1" icon={<UserOutlined />}>
-      <span>May Sasithorn</span>
-    </Menu.Item>
-    <Menu.Item key="2" icon={<LogoutOutlined />} onClick={onLogout}>
-      Logout
-    </Menu.Item>
-  </Menu>
-);
 
-const HeaderPage = ({ collapsed, setCollapsed, onLogout }) => {
+
+const HeaderPage = () => {
+  const {  datauser,
+    logout,UserMenu,GetDataUser } = fn_Header();
   return (
     <Header
       style={{
@@ -40,12 +34,12 @@ const HeaderPage = ({ collapsed, setCollapsed, onLogout }) => {
             fontSize: '16px',
             borderRadius: '8px',
           }}
-          onClick={() => setCollapsed(!collapsed)}
+          // onClick={() => setCollapsed(!collapsed)}
         />
         <span style={{ marginLeft: '10px', fontSize: '18px', fontWeight: 'bold' }}>HR System</span>
       </div>
       <div style={{ marginRight: '30px' }}>
-        <Dropdown overlay={<UserMenu onLogout={onLogout} />} trigger={['click']}>
+        <Dropdown overlay={<UserMenu onLogout={logout} />} trigger={['click']}>
           <Avatar
             src={imgUser}
             style={{

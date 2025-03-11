@@ -43,11 +43,15 @@ const App = () => {
     borderRadius: token.borderRadiusLG,
     border: `1px dashed ${token.colorBorder}`,
     marginTop: 30,
+    marginRight: 10,
+  };
+  const onChange = (current) => {
+    setCurrent(current);
   };
   return (
     <>
-      <div style={{}}>
-        <Steps current={current} items={items} />
+      <div style={{ marginBottom: '20px',marginRight:'10px' }}>
+        <Steps current={current} items={items} onChange={onChange} />
       </div>
       <div style={contentStyle}>{steps[current].content}</div>
       <div style={{ marginTop: 24 }}>
