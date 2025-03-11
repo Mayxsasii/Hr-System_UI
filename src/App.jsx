@@ -6,7 +6,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import Sider from './SideBar/Sider'; 
 import Header from './Header/Header'; 
 import Page from './Test page/test_page';
-import NewManPowerRequest from './Man Power Request/New Man Power Request/ManPowerRequest';
+import NewManPowerRequest from './Man Power Request/ManPowerRequest';
 import ManPowerRequest from './Man Power Request/Search Man Power Request/SearchManPowerRequst';
 import Login from './Login/Login';
 import Home from './Homepage/homepage';

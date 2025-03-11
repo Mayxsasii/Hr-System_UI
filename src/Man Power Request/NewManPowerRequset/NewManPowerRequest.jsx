@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Button,
   Input,
@@ -12,42 +12,21 @@ import {
 const { TextArea } = Input;
 import { fn_NewManPowerRequset } from "./fn_NewManPowerRequset";
 
-const Step1 = () => {
+const Step1 = ({ formData1, setFormData1 }) => {
   const {
     Factory,
     Department,
     Position,
-    setFactory,
-    setDepartment,
-    setPosition,
-    setSL_Department,
-    setSL_Factory,
-    setSL_Position,
     datauser,
-    handleFactory,
-    GetDepartment,
-    SL_Department,
-    SL_Factory,
-    SL_Position,
     DateToday,
-    settxt_TelNo,
-    txt_TelNo,
-    Date_Target,
-    setDate_Target,
-    setEmployeeType,
-    EmployeeType,
-    SL_Employee,
-    setSL_Employee,
-    CB_EmpRequirment,
-    setCB_EmpRequirment,
     handleEmpRequirment,
-    settxt_EmpReq_Other,
-    settxt_EmpType,
-    txt_EmpType,
-    txt_EmpReq_Other,
-    txt_Remark,
-    settxt_Remark,
+    EmployeeType,
+    GetPosition
   } = fn_NewManPowerRequset();
+
+  const handleChange = (field, value) => {
+    setFormData1((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <div>
@@ -66,10 +45,9 @@ const Step1 = () => {
           <td>
             <Select
               showSearch
-              value={SL_Factory}
+              value={formData1.SL_Factory}
               style={{
                 width: "200px",
-                // display: "block",
                 marginLeft: "5px",
               }}
               placeholder="Select Factory"
@@ -80,7 +58,7 @@ const Step1 = () => {
                   .includes(input.toLowerCase())
               }
               options={Factory}
-              onChange={handleFactory}
+              onChange={(value) => { handleChange('SL_Factory', value); GetPosition(value); }}
             />
           </td>
           <td style={{ textAlign: "right" }}>Request Status :</td>
@@ -116,10 +94,9 @@ const Step1 = () => {
           <td>
             <Select
               showSearch
-              value={SL_Department}
+              value={formData1.SL_Department}
               style={{
                 width: "200px",
-                // display: "block",
                 marginLeft: "5px",
               }}
               placeholder="Select Department"
@@ -130,7 +107,7 @@ const Step1 = () => {
                   .includes(input.toLowerCase())
               }
               options={Department}
-              onChange={setSL_Department}
+              onChange={(value) => handleChange('SL_Department', value)}
             />
           </td>
         </tr>
@@ -143,12 +120,11 @@ const Step1 = () => {
             />
           </td>
           <td style={{ textAlign: "right" }}>Tel :</td>
-          {console.log(txt_TelNo, "tellll")}
           <td>
             <Input
               style={{ marginLeft: "5px", width: "200px" }}
-              value={txt_TelNo}
-              onChange={(e) => settxt_TelNo(e.target.value)}
+              value={formData1.txt_TelNo}
+              onChange={(e) => handleChange('txt_TelNo', e.target.value)}
             />
           </td>
         </tr>
@@ -157,10 +133,9 @@ const Step1 = () => {
           <td>
             <Select
               showSearch
-              value={SL_Position}
+              value={formData1.SL_Position}
               style={{
                 width: "200px",
-                // display: "block",
                 marginLeft: "5px",
               }}
               placeholder="Select Position Requirement"
@@ -171,15 +146,15 @@ const Step1 = () => {
                   .includes(input.toLowerCase())
               }
               options={Position}
-              onChange={setSL_Position}
+              onChange={(value) => { handleChange('SL_Position', value);}}
             />
           </td>
           <td style={{ textAlign: "right" }}>Target Date :</td>
           <td>
             <DatePicker
               style={{ marginLeft: "5px", width: "200px" }}
-              value={Date_Target}
-              onChange={setDate_Target}
+              value={formData1.Date_Target}
+              onChange={(date) => handleChange('Date_Target', date)}
             />
           </td>
           <td style={{ textAlign: "right" }}>Total Request :</td>
@@ -190,15 +165,14 @@ const Step1 = () => {
         <tr>
           <td style={{ textAlign: "right" }}>Employee Requirment :</td>
           <td colSpan={5}>
-            {" "}
             <Checkbox.Group
               style={{
                 display: "flex",
-                flexDirection: "column", // จัดเรียงในแนวตั้ง
+                flexDirection: "column",
                 width: "100%",
               }}
-              value={CB_EmpRequirment}
-              onChange={handleEmpRequirment}
+              value={formData1.CB_EmpRequirment}
+              onChange={(value) => { handleChange('CB_EmpRequirment', value); handleEmpRequirment(value); }}
             >
               <Checkbox value="Internal">Internal</Checkbox>
               <div style={{ display: "flex", alignItems: "center" }}>
@@ -206,14 +180,13 @@ const Step1 = () => {
                 <p style={{ marginLeft: "30px", marginRight: "10px" }}>
                   Employee Type :
                 </p>
-
                 <Select
                   showSearch
-                  value={SL_Employee}
+                  value={formData1.SL_Employee}
                   style={{
                     width: "200px",
-                    // display: "block",
                     marginLeft: "5px",
+                    marginRight: "5px",
                   }}
                   placeholder="Select Empployee Type"
                   optionFilterProp="children"
@@ -223,14 +196,21 @@ const Step1 = () => {
                       .includes(input.toLowerCase())
                   }
                   options={EmployeeType}
-                  onChange={setSL_Employee}
+                  onChange={(value) => handleChange('SL_Employee', value)}
                 />
-                <Input style={{ width: "450px" }} value={txt_EmpType} onChange={(e) => settxt_EmpType(e.target.value)}></Input>
+                <Input
+                  style={{ width: "450px" }}
+                  value={formData1.txt_EmpType}
+                  onChange={(e) => handleChange('txt_EmpType', e.target.value)}
+                />
               </div>
-
               <div>
-                <Checkbox value="Other">Other</Checkbox>{" "}
-                <Input style={{ width: "800px" }} value={txt_EmpReq_Other} onChange={(e) => settxt_EmpReq_Other(e.target.value)}></Input>
+                <Checkbox value="Other">Other</Checkbox>
+                <Input
+                  style={{ width: "815px" }}
+                  value={formData1.txt_EmpReq_Other}
+                  onChange={(e) => handleChange('txt_EmpReq_Other', e.target.value)}
+                />
               </div>
             </Checkbox.Group>
           </td>
@@ -239,15 +219,21 @@ const Step1 = () => {
           <td style={{ textAlign: "right" }}>Remark :</td>
           <td colSpan={5}>
             <TextArea
-            value={txt_Remark}
-            onChange={(e) => settxt_Remark(e.target.value)}
+              value={formData1.txt_Remark}
+              onChange={(e) => handleChange('txt_Remark', e.target.value)}
               style={{ width: "1000px", height: "100px" }}
               maxLength={2000}
             />
           </td>
         </tr>
+        <tr>
+          <td colSpan={6} align="center"> <Button type="primary" >
+           Gen Request No.
+          </Button></td>
+        </tr>
       </table>
     </div>
   );
 };
+
 export default Step1;
