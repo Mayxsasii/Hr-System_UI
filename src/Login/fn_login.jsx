@@ -33,6 +33,7 @@ function fn_login() {
             title: 'Login Success',
           });
           localStorage.setItem('username', username);
+          localStorage.setItem('FAC_CODE', res.data[0].FAC_CODE);
           window.location.href = "/HrSystem/Home";
         }
       });

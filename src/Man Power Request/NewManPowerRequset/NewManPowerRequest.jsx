@@ -21,12 +21,9 @@ const Step1 = ({ formData1, setFormData1 }) => {
     DateToday,
     handleEmpRequirment,
     EmployeeType,
-    GetPosition
-  } = fn_NewManPowerRequset();
-
-  const handleChange = (field, value) => {
-    setFormData1((prev) => ({ ...prev, [field]: value }));
-  };
+    GetPosition,
+    handleChange,
+  } = fn_NewManPowerRequset(formData1, setFormData1);
 
   return (
     <div>
@@ -58,7 +55,10 @@ const Step1 = ({ formData1, setFormData1 }) => {
                   .includes(input.toLowerCase())
               }
               options={Factory}
-              onChange={(value) => { handleChange('SL_Factory', value); GetPosition(value); }}
+              onChange={(value) => {
+                handleChange("SL_Factory", value);
+                GetPosition(value);
+              }}
             />
           </td>
           <td style={{ textAlign: "right" }}>Request Status :</td>
@@ -107,7 +107,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
                   .includes(input.toLowerCase())
               }
               options={Department}
-              onChange={(value) => handleChange('SL_Department', value)}
+              onChange={(value) => handleChange("SL_Department", value)}
             />
           </td>
         </tr>
@@ -124,7 +124,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
             <Input
               style={{ marginLeft: "5px", width: "200px" }}
               value={formData1.txt_TelNo}
-              onChange={(e) => handleChange('txt_TelNo', e.target.value)}
+              onChange={(e) => handleChange("txt_TelNo", e.target.value)}
             />
           </td>
         </tr>
@@ -146,7 +146,9 @@ const Step1 = ({ formData1, setFormData1 }) => {
                   .includes(input.toLowerCase())
               }
               options={Position}
-              onChange={(value) => { handleChange('SL_Position', value);}}
+              onChange={(value) => {
+                handleChange("SL_Position", value);
+              }}
             />
           </td>
           <td style={{ textAlign: "right" }}>Target Date :</td>
@@ -154,12 +156,18 @@ const Step1 = ({ formData1, setFormData1 }) => {
             <DatePicker
               style={{ marginLeft: "5px", width: "200px" }}
               value={formData1.Date_Target}
-              onChange={(date) => handleChange('Date_Target', date)}
+              onChange={(date) => handleChange("Date_Target", date)}
             />
           </td>
           <td style={{ textAlign: "right" }}>Total Request :</td>
           <td>
-            <Input style={{ marginLeft: "5px", width: "60px" }} disabled />
+            <Input
+              value={
+                formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional
+              }
+              style={{ marginLeft: "5px", width: "60px" }}
+              disabled
+            />
           </td>
         </tr>
         <tr>
@@ -172,7 +180,10 @@ const Step1 = ({ formData1, setFormData1 }) => {
                 width: "100%",
               }}
               value={formData1.CB_EmpRequirment}
-              onChange={(value) => { handleChange('CB_EmpRequirment', value); handleEmpRequirment(value); }}
+              onChange={(value) => {
+                handleChange("CB_EmpRequirment", value);
+                handleEmpRequirment(value);
+              }}
             >
               <Checkbox value="Internal">Internal</Checkbox>
               <div style={{ display: "flex", alignItems: "center" }}>
@@ -196,12 +207,12 @@ const Step1 = ({ formData1, setFormData1 }) => {
                       .includes(input.toLowerCase())
                   }
                   options={EmployeeType}
-                  onChange={(value) => handleChange('SL_Employee', value)}
+                  onChange={(value) => handleChange("SL_Employee", value)}
                 />
                 <Input
                   style={{ width: "450px" }}
                   value={formData1.txt_EmpType}
-                  onChange={(e) => handleChange('txt_EmpType', e.target.value)}
+                  onChange={(e) => handleChange("txt_EmpType", e.target.value)}
                 />
               </div>
               <div>
@@ -209,7 +220,9 @@ const Step1 = ({ formData1, setFormData1 }) => {
                 <Input
                   style={{ width: "815px" }}
                   value={formData1.txt_EmpReq_Other}
-                  onChange={(e) => handleChange('txt_EmpReq_Other', e.target.value)}
+                  onChange={(e) =>
+                    handleChange("txt_EmpReq_Other", e.target.value)
+                  }
                 />
               </div>
             </Checkbox.Group>
@@ -220,16 +233,17 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td colSpan={5}>
             <TextArea
               value={formData1.txt_Remark}
-              onChange={(e) => handleChange('txt_Remark', e.target.value)}
+              onChange={(e) => handleChange("txt_Remark", e.target.value)}
               style={{ width: "1000px", height: "100px" }}
               maxLength={2000}
             />
           </td>
         </tr>
         <tr>
-          <td colSpan={6} align="center"> <Button type="primary" >
-           Gen Request No.
-          </Button></td>
+          <td colSpan={6} align="center">
+            {" "}
+            <Button type="primary">Gen Request No.</Button>
+          </td>
         </tr>
       </table>
     </div>

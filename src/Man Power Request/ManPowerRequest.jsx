@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, message, Steps, theme } from "antd";
 import Step1 from "./NewManPowerRequset/NewManPowerRequest";
 import Step2 from "./ReasontoRequest/ReasontoRequest";
@@ -26,8 +26,44 @@ const steps = [
 
 const App = () => {
   const { token } = theme.useToken();
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(1);
+  // const [DataPage1, setDataPage1 ]= useState({
+  //   SL_Factory: null,
+  //   SL_Department: null,
+  //   SL_Position: null,
+  //   txt_TelNo: "",
+  //   Date_Target: null,
+  //   SL_Employee: null,
+  //   txt_EmpType: "",
+  //   txt_EmpReq_Other: "",
+  //   txt_Remark: "",
+  //   txt_TotalSubstitube: 1,
+  //   CB_Substitube: "",
+  //   CB_FileSubstitube: "",
+  //   Person_Sub: [
+  //     {
+  //       CopyNo:'',
+  //       ID_Code:'',
+  //       Emp_Name:'',
+  //       Cost_Center:'',
+  //       Job_grade:'',
+  //       Dept:'',
+  //       Req_Jobgrade:'',
+  //       Education: "",
+  //       Course: "",
+  //       Field: "",
+  //       Special: "",
+  //       Experience: "",
+  //       StepLanguage: "",
+  //       StepLanguage_other: "",
+  //       Other_requirment: "",
+  //       Filefeature: "",
+  //     },
+  //   ],
+
+  // });
   const [formData1, setFormData1] = useState({
+    //Step1
     SL_Factory: null,
     SL_Department: null,
     SL_Position: null,
@@ -37,7 +73,50 @@ const App = () => {
     txt_EmpType: "",
     txt_EmpReq_Other: "",
     txt_Remark: "",
+    //Step2
+    txt_TotalSubstitube: 0,
+    CB_Substitube: "",
+    CB_FileSubstitube: "",
+    //--Step2.sub
+    Person_Sub: [
+      {
+        CopyNo: "",
+        ID_Code: "",
+        Emp_Name: "",
+        Cost_Center: "",
+        Job_grade: "",
+        Dept: null,
+        Req_Jobgrade: null,
+        Education: null,
+        Course: null,
+        Field: null,
+        Special: "",
+        Experience: "",
+        StepLanguage: null,
+        StepLanguage_other: "",
+        Filefeature: "",
+      },
+    ],
+    //---Step2.add
+    txt_TotalAdditional: 0,
+    CB_Additional: "",
+    CB_FileAdditional: "",
+    Person_ADD: [
+      {
+        CopyNo: "",
+        Education: null,
+        Course: null,
+        Field: null,
+        Special: "",
+        Experience: "",
+        StepLanguage: null,
+        StepLanguage_other: "",
+        Filefeature: "",
+      },
+    ],
   });
+
+  useEffect(() => {}, []);
 
   const next = () => {
     setCurrent(current + 1);

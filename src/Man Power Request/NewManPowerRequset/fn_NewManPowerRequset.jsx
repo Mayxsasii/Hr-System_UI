@@ -3,7 +3,7 @@ import axios from "axios";
 import { useLoading } from "../../loading/fn_loading";
 import { fn_Header } from "../../Header/fn_Header";
 
-function fn_NewManPowerRequset() {
+function fn_NewManPowerRequset(formData1, setFormData1 ) {
   const {datauser} = fn_Header();
   const userlogin = localStorage.getItem("username");
   const [Factory, setFactory] = useState([]);
@@ -20,6 +20,7 @@ function fn_NewManPowerRequset() {
     GetFactory();
     GetDepartment();
     GetEmployeeType();
+    GetPosition(formData1.SL_Factory);
   }, []);
 
   const GetFactory = async () => {
@@ -30,8 +31,6 @@ function fn_NewManPowerRequset() {
         setFactory(res.data);
       });
   };
-
-
 
   const handleEmpRequirment = (value) => {
     console.log(value, "handleEmpRequirment");
@@ -77,6 +76,10 @@ function fn_NewManPowerRequset() {
       });
   };
 
+  const handleChange = (field, value) => {
+    setFormData1((prev) => ({ ...prev, [field]: value }));
+  };
+
   return {
     Factory,
     Department,
@@ -85,7 +88,8 @@ function fn_NewManPowerRequset() {
     DateToday,
     handleEmpRequirment,
     EmployeeType,
-    GetPosition
+    GetPosition,
+    handleChange
   };
 }
 
