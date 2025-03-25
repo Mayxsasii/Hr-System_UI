@@ -10,6 +10,7 @@ import {
   DatePicker,
 } from "antd";
 const { TextArea } = Input;
+import moment from "moment";
 import { fn_NewManPowerRequset } from "./fn_NewManPowerRequset";
 
 const Step1 = ({ formData1, setFormData1 }) => {
@@ -23,6 +24,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
     EmployeeType,
     GetPosition,
     handleChange,
+    GetRunningNo,
   } = fn_NewManPowerRequset(formData1, setFormData1);
 
   return (
@@ -41,6 +43,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td style={{ textAlign: "right" }}>Factory :</td>
           <td>
             <Select
+              disabled={formData1.txt_ReqNo != "" ? true : false}
               showSearch
               value={formData1.SL_Factory}
               style={{
@@ -65,7 +68,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td>
             <Input
               style={{ marginLeft: "5px", width: "200px" }}
-              value={"Create"}
+              value={formData1.txt_ReqStatus}
               disabled
             />
           </td>
@@ -73,7 +76,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td>
             <Input
               style={{ marginLeft: "5px", width: "200px" }}
-              value={DateToday}
+              value={formData1.txt_ReqDate}
               disabled
             />
           </td>
@@ -81,18 +84,24 @@ const Step1 = ({ formData1, setFormData1 }) => {
         <tr>
           <td style={{ textAlign: "right" }}>Request No. :</td>
           <td>
-            <Input style={{ marginLeft: "5px", width: "200px" }} />
+            <Input
+              style={{ marginLeft: "5px", width: "200px" }}
+              value={formData1.txt_ReqNo}
+              disabled
+            />
           </td>
           <td style={{ textAlign: "right" }}>Request By :</td>
           <td>
             <Input
               style={{ marginLeft: "5px", width: "200px" }}
-              value={datauser.LOGIN}
+              disabled
+              value={formData1.txt_ReqBy || datauser.LOGIN}
             />
           </td>
           <td style={{ textAlign: "right" }}>Department:</td>
           <td>
             <Select
+              disabled={formData1.txt_ReqNo != "" ? true : false}
               showSearch
               value={formData1.SL_Department}
               style={{
@@ -115,8 +124,9 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td style={{ textAlign: "right" }}>Email :</td>
           <td colSpan={3}>
             <Input
-              value={datauser.EMAIL}
+              value={formData1.txt_Email}
               style={{ marginLeft: "5px", width: "600px" }}
+              onChange={(e) => handleChange("txt_Email", e.target.value)}
             />
           </td>
           <td style={{ textAlign: "right" }}>Tel :</td>
@@ -132,6 +142,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td style={{ textAlign: "right" }}>Position Requirement :</td>
           <td>
             <Select
+              disabled={formData1.txt_ReqNo != "" ? true : false}
               showSearch
               value={formData1.SL_Position}
               style={{
@@ -155,8 +166,15 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td>
             <DatePicker
               style={{ marginLeft: "5px", width: "200px" }}
-              value={formData1.Date_Target}
-              onChange={(date) => handleChange("Date_Target", date)}
+              value={
+                formData1.Date_Target
+                  ? moment(formData1.Date_Target, "DD/MM/YYYY")
+                  : null
+              }
+              onChange={(date, dateString) =>
+                handleChange("Date_Target", dateString)
+              }
+              format="DD/MM/YYYY"
             />
           </td>
           <td style={{ textAlign: "right" }}>Total Request :</td>
@@ -185,19 +203,33 @@ const Step1 = ({ formData1, setFormData1 }) => {
                 handleEmpRequirment(value);
               }}
             >
-              <Checkbox value="Internal">Internal</Checkbox>
+              <Checkbox value="MR0201">Internal</Checkbox>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <Checkbox value="External">External</Checkbox>
-                <p style={{ marginLeft: "30px", marginRight: "10px" }}>
+                <Checkbox value="MR0202">External</Checkbox>
+                <p
+                  style={{
+                    marginLeft: "30px",
+                    marginRight: "10px",
+                    marginTop: "0px",
+                    marginBottom: "0px",
+                    display: formData1.CB_EmpRequirment.includes("MR0202")
+                      ? "block"
+                      : "none",
+                  }}
+                >
                   Employee Type :
                 </p>
+
                 <Select
                   showSearch
-                  value={formData1.SL_Employee}
+                  value={formData1.SL_EmployeeType}
                   style={{
                     width: "200px",
                     marginLeft: "5px",
                     marginRight: "5px",
+                    display: formData1.CB_EmpRequirment.includes("MR0202")
+                      ? "block"
+                      : "none",
                   }}
                   placeholder="Select Empployee Type"
                   optionFilterProp="children"
@@ -207,18 +239,38 @@ const Step1 = ({ formData1, setFormData1 }) => {
                       .includes(input.toLowerCase())
                   }
                   options={EmployeeType}
-                  onChange={(value) => handleChange("SL_Employee", value)}
+                  onChange={(value) => {
+                    handleChange("SL_EmployeeType", value);
+                    if (value == "MR0390") {
+                      handleChange("txt_EmpType_Other", "");
+                    }
+                  }}
                 />
                 <Input
-                  style={{ width: "450px" }}
-                  value={formData1.txt_EmpType}
-                  onChange={(e) => handleChange("txt_EmpType", e.target.value)}
+                  style={{
+                    width: "450px",
+                    display:
+                      formData1.CB_EmpRequirment.includes("MR0202") &&
+                      formData1.SL_EmployeeType &&
+                      formData1.SL_EmployeeType == "MR0390"
+                        ? ""
+                        : "none",
+                  }}
+                  value={formData1.txt_EmpType_Other}
+                  onChange={(e) =>
+                    handleChange("txt_EmpType_Other", e.target.value)
+                  }
                 />
               </div>
-              <div>
-                <Checkbox value="Other">Other</Checkbox>
+              <div style={{ marginTop: "2px" }}>
+                <Checkbox value="MR0290">Other</Checkbox>
                 <Input
-                  style={{ width: "815px" }}
+                  style={{
+                    width: "815px",
+                    display: formData1.CB_EmpRequirment.includes("MR0290")
+                      ? ""
+                      : "none",
+                  }}
                   value={formData1.txt_EmpReq_Other}
                   onChange={(e) =>
                     handleChange("txt_EmpReq_Other", e.target.value)
@@ -234,7 +286,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
             <TextArea
               value={formData1.txt_Remark}
               onChange={(e) => handleChange("txt_Remark", e.target.value)}
-              style={{ width: "1000px", height: "100px" }}
+              style={{ width: "1000px", height: "50px" }}
               maxLength={2000}
             />
           </td>
@@ -242,7 +294,15 @@ const Step1 = ({ formData1, setFormData1 }) => {
         <tr>
           <td colSpan={6} align="center">
             {" "}
-            <Button type="primary">Gen Request No.</Button>
+            <Button
+              type="primary"
+              style={{ display: formData1.txt_ReqNo != "" ? "none" : "" }}
+              onClick={() => {
+                GetRunningNo();
+              }}
+            >
+              Gen Request No.
+            </Button>
           </td>
         </tr>
       </table>

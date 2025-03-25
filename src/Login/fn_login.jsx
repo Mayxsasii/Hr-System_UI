@@ -34,6 +34,7 @@ function fn_login() {
           });
           localStorage.setItem('username', username);
           localStorage.setItem('FAC_CODE', res.data[0].FAC_CODE);
+          localStorage.setItem('Email', res.data[0].EMAIL);
           window.location.href = "/HrSystem/Home";
         }
       });

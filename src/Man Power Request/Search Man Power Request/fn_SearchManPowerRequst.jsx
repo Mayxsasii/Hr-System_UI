@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import moment from "moment";
 import { useLoading } from "../../loading/fn_loading";
-
+import { EditOutlined, DeleteOutlined, CloseOutlined } from "@ant-design/icons";
+import { Button, Space, FloatButton, Tag } from "antd";
+import { useNavigate } from "react-router-dom";
 import { fn_Header } from "../../Header/fn_Header";
+import Swal from "sweetalert2";
 
 function fn_SearchManPowerRequst() {
+  const navigate = useNavigate();
   const userlogin = localStorage.getItem("username");
   const { showLoading, hideLoading } = useLoading();
   const { datauser } = fn_Header();
@@ -24,6 +29,8 @@ function fn_SearchManPowerRequst() {
   const [txt_ReqNoTo, settxt_ReqNoTo] = useState("");
   const [DateFrom, setDateFrom] = useState("");
   const [DateTo, setDateTo] = useState("");
+
+  const [dataSearch, setDataSearch] = useState([]);
 
   useEffect(() => {
     GetFactory();
@@ -65,7 +72,8 @@ function fn_SearchManPowerRequst() {
     await axios
       .post("/api/RequestManPower/GetJobGrade", {
         DDLFactory: SL_Factory || "",
-        DDLPosition: position || "",
+        DDLPosition:
+          `${position.map((position) => `'${position}'`).join(",")}` || "",
       })
       .then((res) => {
         console.log(res.data, "GetJobGrade");
@@ -83,52 +91,186 @@ function fn_SearchManPowerRequst() {
     console.log("Selected factory:", value);
   };
 
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
-  ];
+  const handleEdit = (record) => {
+    console.log("Edit record:", record.ReqNo);
 
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-    },
-  ];
+    navigate(`/HrSystem/NewManPowerRequest?ReqNo=${record.ReqNo}`);
+    // Add your edit logic here
+  };
+
+  const handleDelete = (record) => {
+    console.log("Delete record:", record);
+    // Add your delete logic here
+  };
 
   const bt_New = async () => {
     showLoading("");
     window.location.href = "/HrSystem/NewManPowerRequest";
   };
+
+  const bt_Search = async () => {
+    setDataSearch([]);
+    console.log("Search", DateFrom, DateTo);
+    if (
+      DateFrom == "" &&
+      DateTo == "" &&
+      SL_Department == null &&
+      SL_Factory == null &&
+      SL_JobGrade == null &&
+      SL_Position == null &&
+      txt_ReqNoFrom == "" &&
+      txt_ReqNoTo == ""
+    ) {
+      Swal.fire({ icon: "warning", title: "Please fill in the information" });
+    } else {
+      showLoading("กำลังค้นหาข้อมูล...");
+      await axios
+        .post("/api/RequestManPower/SearchManPower", {
+          Department:
+            SL_Department != null && SL_Department.length > 0
+              ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
+              : null,
+          Factory: SL_Factory || null,
+          JobGrade:
+            SL_JobGrade != null && SL_JobGrade.length > 0
+              ? `array[${SL_JobGrade.map((dept) => `'${dept}'`).join(",")}]`
+              : null,
+          Position:
+            SL_Position != null && SL_Position.length > 0
+              ? `array[${SL_Position.map((dept) => `'${dept}'`).join(",")}]`
+              : null,
+          ReqNoFrom: txt_ReqNoFrom || "",
+          ReqNoTo: txt_ReqNoTo || "",
+          DateFrom: DateFrom || "",
+          DateTo: DateTo || "",
+          ReqBy: datauser.LOGIN || null,
+        })
+        .then((res) => {
+          if (res.data.length == 0) {
+            Swal.fire({ icon: "warning", title: "Not Found Data!" });
+          } else {
+            console.log(res.data, "SearchManPower");
+            setDataSearch(res.data);
+            // window.location.href = "/HrSystem/SearchManPowerRequest";
+          }
+        });
+    }
+    hideLoading();
+  };
+
+  const columns = [
+    {
+      key: "actions",
+      width: "120px",
+      render: (_, record) => (
+        <div>
+          <Button
+            onClick={() => handleEdit(record)}
+            style={{ marginRight: 10, fontSize: "18px" }}
+            icon={<EditOutlined style={{ color: "#EF9651" }} />}
+          />
+          <Button
+            onClick={() => handleDelete(record)}
+            style={{ fontSize: "18px" }}
+            icon={<CloseOutlined style={{ color: "red" }} />}
+          />
+        </div>
+      ),
+    },
+
+    {
+      title: "Factory",
+      width: "30px",
+      dataIndex: "Factory",
+      key: "Factory",
+    },
+    {
+      title: "Dept.",
+      width: "30px",
+      dataIndex: "Department",
+      key: "Department",
+    },
+    {
+      title: "Req No.",
+      width: "160px",
+      dataIndex: "ReqNo",
+      key: "ReqNo",
+    },
+    {
+      title: "Position",
+      width: "30px",
+      dataIndex: "Position",
+      key: "Position",
+    },
+    {
+      title: "Job  Grade",
+      dataIndex: "Job_Grade",
+      width: "30px",
+      key: "Job_Grade",
+      render: (text, record, index) => {
+        return <div className="scrollable-column">{text}</div>;
+      },
+      align: "center",
+      width: 150,
+    },
+    {
+      title: "Request By",
+      dataIndex: "CreateBy",
+      key: "CreateBy",
+    },
+    {
+      title: "Request Date",
+      dataIndex: "CreateDate",
+      key: "CreateDate",
+    },
+    {
+      title: "Status",
+      width: "180px",
+      dataIndex: "Status",
+      key: "Status",
+      render: (text, record, index) => {
+        if (
+          record.Status_value == "MR0101" ||
+          record.Status_value == "MR0106"
+        ) {
+          return <Tag color="processing">{text}</Tag>;
+        } else if (
+          record.Status_value == "MR0102" ||
+          record.Status_value == "MR0103" ||
+          record.Status_value == "MR0104" ||
+          record.Status_value == "MR0105"
+        ) {
+          return <Tag color="warning">{text}</Tag>;
+        } else if (
+          record.Status_value == "MR0129" ||
+          record.Status_value == "MR0139" ||
+          record.Status_value == "MR0149" ||
+          record.Status_value == "MR0190"
+        ) {
+          return <Tag color="error">{text}</Tag>;
+        } else if (
+          record.Status_value == "MR0107" ||
+          record.Status_value == "MR0108" ||
+          record.Status_value == "LT0108"
+        ) {
+          return <Tag color="success">{text}</Tag>;
+        }
+      },
+    },
+    {
+      title: "Last Action By",
+      dataIndex: "LastBy",
+      key: "LastBy",
+    },
+    {
+      title: "Last Action Date",
+      dataIndex: "Lastdate",
+      key: "Lastdate",
+    },
+  ];
+
   return {
     columns,
-    data,
     Factory,
     bt_New,
     Department,
@@ -155,7 +297,9 @@ function fn_SearchManPowerRequst() {
     setDateTo,
     settxt_ReqNoFrom,
     settxt_ReqNoTo,
-    GetFactory
+    GetFactory,
+    bt_Search,
+    dataSearch,
   };
 }
 

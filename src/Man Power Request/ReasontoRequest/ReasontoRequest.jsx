@@ -1,6 +1,10 @@
 import React from "react";
 import { Checkbox, Input, Button, Select, Upload } from "antd";
-import { UploadOutlined, PlusCircleOutlined,DeleteOutlined } from "@ant-design/icons";
+import {
+  UploadOutlined,
+  PlusCircleOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 const { TextArea } = Input;
 import "../ManPowerRequest.css";
 import { fn_ReasontoRequest } from "./fn_ReasontoRequest";
@@ -23,6 +27,9 @@ const Step2 = ({ formData1, setFormData1 }) => {
     handleAddPersonAdd,
     handleCopyADD,
     CheckReasontorequestADD,
+    handleDeletePerson,
+    CB_AttachFileSub,
+    CB_AttachFileAdd,
   } = fn_ReasontoRequest(formData1, setFormData1);
 
   return (
@@ -41,8 +48,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
         style={{ marginTop: "10px", marginLeft: "10px" }}
         checked={formData1.CB_Substitube}
         onChange={(e) => {
-          setFormData1({ ...formData1, CB_Substitube: e.target.checked });
-          CheckReasontorequestSub();
+          // setFormData1({ ...formData1, CB_Substitube: e.target.checked });
+          CheckReasontorequestSub(e);
         }}
       >
         Substitube (เพื่อทดแทนคนเก่า)
@@ -63,18 +70,29 @@ const Step2 = ({ formData1, setFormData1 }) => {
             style={{ width: "80px", marginLeft: "10px", marginRight: "5px" }}
           />{" "}
           Person
-          <Checkbox value="A" style={{ marginLeft: "30px" }}>
+          <Checkbox
+            checked={formData1.CB_FileSubstitube}
+            onChange={(e) => {
+              CB_AttachFileSub(e);
+            }}
+            style={{ marginLeft: "30px" }}
+            disabled={!formData1.CB_Substitube}
+          >
             Attach file:
           </Checkbox>
           <Upload maxCount={1}>
-            <Button icon={<UploadOutlined />} style={{ marginLeft: "5px" }}>
+            <Button
+              icon={<UploadOutlined />}
+              style={{ marginLeft: "5px" }}
+              disabled={!formData1.CB_Substitube}
+            >
               Click to Attach file
             </Button>
           </Upload>
           <p
             style={{
               marginLeft: "10px",
-              color: "blue",
+              color: !formData1.CB_Substitube ? "gray" : "blue",
               textDecoration: "underline",
             }}
           >
@@ -82,6 +100,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
           </p>
         </div>
         <Button
+          disabled={!formData1.CB_Substitube || formData1.CB_FileSubstitube}
           type="primary"
           style={{ marginRight: "30px" }}
           onClick={() => {
@@ -150,6 +169,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
           >
             <p style={{ marginRight: "10px" }}>{index + 1}.</p>
             <Input
+              disabled={formData1.CB_FileSubstitube}
               size="middle"
               value={formData1.Person_Sub[index].ID_Code}
               style={{ width: "100px", marginLeft: "10px" }}
@@ -167,6 +187,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               }}
             />
             <Input
+              disabled
               size="middle"
               value={formData1.Person_Sub[index].Emp_Name}
               style={{ width: "200px", marginLeft: "5px" }}
@@ -175,6 +196,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               }
             />
             <Input
+             disabled
               size="middle"
               style={{ width: "80px", marginLeft: "5px" }}
               value={formData1.Person_Sub[index].Cost_Center}
@@ -184,6 +206,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
             />
             <Input
               size="middle"
+              disabled
               value={formData1.Person_Sub[index].Job_grade}
               onChange={(e) =>
                 handlePersonSubChange(index, "Job_grade", e.target.value)
@@ -193,6 +216,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
             <p style={{ marginLeft: "10px" }}>For Dept.:</p>
 
             <Select
+              disabled={formData1.CB_FileSubstitube}
               showSearch
               value={formData1.Person_Sub[index].Dept}
               style={{ width: "80px", marginLeft: "5px" }}
@@ -210,9 +234,12 @@ const Step2 = ({ formData1, setFormData1 }) => {
             />
             <p style={{ marginLeft: "10px" }}>Request Job Grade :</p>
             <Select
+              disabled={formData1.CB_FileSubstitube}
               showSearch
+              mode="multiple"
+              maxTagCount={"responsive"}
               value={formData1.Person_Sub[index].Req_Jobgrade}
-              style={{ width: "80px", marginLeft: "5px" }}
+              style={{ width: "150px", marginLeft: "5px" }}
               placeholder="Select Dept"
               optionFilterProp="children"
               filterOption={(input, option) =>
@@ -229,11 +256,13 @@ const Step2 = ({ formData1, setFormData1 }) => {
           <table className="TB_ReasontoRequest" style={{ marginLeft: "80px" }}>
             <tr>
               <td align="right">วุฒิการศึกษา (Education) :</td>
-              <td colSpan={2}>
+              <td colSpan={1}>
                 {" "}
-                {/* <Select style={{ width: "300px", marginLeft: "5px" }}></Select> */}
                 <Select
+                  disabled={formData1.CB_FileSubstitube}
                   showSearch
+                  mode="multiple"
+                  maxTagCount={"responsive"}
                   value={formData1.Person_Sub[index].Education}
                   style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select Education"
@@ -249,12 +278,36 @@ const Step2 = ({ formData1, setFormData1 }) => {
                   }}
                 />
               </td>
+              <td>
+                {" "}
+                <Input
+                  style={{
+                    display:
+                    // formData1.Person_Sub[index].Field.includes("Other")
+                      formData1.Person_Sub[index].Education &&
+                      formData1.Person_Sub[index].Education.includes("MR0490")
+                        ? ""
+                        : "none",
+                  }}
+                  value={formData1.Person_Sub[index].EducationOther}
+                  onChange={(e) =>
+                    handlePersonSubChange(
+                      index,
+                      "EducationOther",
+                      e.target.value
+                    )
+                  }
+                ></Input>
+              </td>
             </tr>
             <tr>
               <td align="right">Course (หลักสูตร):</td>
-              <td colSpan={2}>
+              <td colSpan={1}>
                 <Select
+                  disabled={formData1.CB_FileSubstitube}
                   showSearch
+                  mode="multiple"
+                  maxTagCount={"responsive"}
                   value={formData1.Person_Sub[index].Course}
                   style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select Course"
@@ -270,13 +323,33 @@ const Step2 = ({ formData1, setFormData1 }) => {
                   }}
                 />
               </td>
+              <td>
+                {" "}
+                <Input
+                  style={{
+                    display:
+                      formData1.Person_Sub[index].Course &&
+                      // formData1.Person_Sub[index].Course == "MR0507"
+                      formData1.Person_Sub[index].Course.includes("MR0507")
+                        ? ""
+                        : "none",
+                  }}
+                  value={formData1.Person_Sub[index].CourseOther}
+                  onChange={(e) =>
+                    handlePersonSubChange(index, "CourseOther", e.target.value)
+                  }
+                ></Input>
+              </td>
             </tr>
             <tr>
               <td align="right">Field (สาขาวิชา):</td>
-              <td colSpan={2}>
+              <td colSpan={1}>
                 {" "}
                 <Select
+                  disabled={formData1.CB_FileSubstitube}
                   showSearch
+                  mode="multiple"
+                  maxTagCount={"responsive"}
                   value={formData1.Person_Sub[index].Field}
                   style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select Field"
@@ -292,11 +365,28 @@ const Step2 = ({ formData1, setFormData1 }) => {
                   }}
                 />
               </td>
+              <td>
+                {" "}
+                <Input
+                  style={{
+                    display:
+                      formData1.Person_Sub[index].Field &&
+                      formData1.Person_Sub[index].Field.includes("MR0699")
+                        ? ""
+                        : "none",
+                  }}
+                  value={formData1.Person_Sub[index].FieldOther}
+                  onChange={(e) =>
+                    handlePersonSubChange(index, "FieldOther", e.target.value)
+                  }
+                />
+              </td>
             </tr>
             <tr>
               <td align="right">Special (คุณสมบัติพิเศษ):</td>
               <td colSpan={2}>
                 <TextArea
+                  disabled={formData1.CB_FileSubstitube}
                   value={formData1.Person_Sub[index].Special}
                   style={{ width: "950px", height: "50px", marginLeft: "5px" }}
                   maxLength={2000}
@@ -311,6 +401,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td colSpan={2}>
                 {" "}
                 <TextArea
+                  disabled={formData1.CB_FileSubstitube}
                   style={{ width: "950px", height: "50px", marginLeft: "5px" }}
                   maxLength={2000}
                   value={formData1.Person_Sub[index].Experience}
@@ -326,10 +417,11 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td style={{ width: "300px" }}>
                 {" "}
                 <Select
+                  disabled={formData1.CB_FileSubstitube}
                   showSearch
                   value={formData1.Person_Sub[index].StepLanguage}
-                  style={{ width: "300px", marginLeft: "5px" }}
-                  placeholder="Select English Language"
+                  style={{ width: "400px", marginLeft: "5px" }}
+                  placeholder="Select English Language or other"
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     (option?.label ?? "")
@@ -344,7 +436,15 @@ const Step2 = ({ formData1, setFormData1 }) => {
               </td>
               <td>
                 {" "}
-                <Input style={{}} />
+                <Input
+                  style={{
+                    display:
+                      formData1.Person_Sub[index].StepLanguage &&
+                      formData1.Person_Sub[index].StepLanguage == "MR0790"
+                        ? ""
+                        : "none",
+                  }}
+                />
               </td>
             </tr>
             <tr>
@@ -353,12 +453,30 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 {" "}
                 <Upload maxCount={1}>
                   <Button
+                    disabled={formData1.CB_FileSubstitube}
                     icon={<UploadOutlined />}
                     style={{ marginLeft: "5px" }}
                   >
                     Click to Upload
                   </Button>
                 </Upload>
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={3} align="center">
+                {" "}
+                <Button
+                  disabled={formData1.CB_FileSubstitube}
+                  icon={<DeleteOutlined />}
+                  danger
+                  type="primary"
+                  style={{ marginBottom: "5px" }}
+                  onClick={() => {
+                    handleDeletePerson("Substitube", index);
+                  }}
+                >
+                  Delete Person
+                </Button>
               </td>
             </tr>
           </table>
@@ -369,32 +487,45 @@ const Step2 = ({ formData1, setFormData1 }) => {
         style={{ marginLeft: "10px" }}
         checked={formData1.CB_Additional}
         onChange={(e) => {
-          setFormData1({ ...formData1, CB_Additional: e.target.checked });
-          CheckReasontorequestADD();
+          CheckReasontorequestADD(e);
         }}
       >
         Additional (เพิ่มกำลังคน)
       </Checkbox>
-      <div style={{ display: "flex", alignItems: "center", marginLeft: "90px", flexDirection: "column" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginLeft: "90px",
+          flexDirection: "column",
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
           <p style={{ textAlign: "right", marginRight: "5px" }}>
             What is target of capacity up? <br /> (Please notify)
           </p>
           <TextArea
+            value={formData1.txt_TargetCapacity1}
+            onChange={(e) =>
+              handleChange("txt_TargetCapacity1", e.target.value)
+            }
             style={{ width: "1000px", height: "50px", marginLeft: "5px" }}
             maxLength={2000}
+            disabled={!formData1.CB_Additional}
           />
         </div>
         <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
           <TextArea
+            disabled={!formData1.CB_Additional}
             style={{ width: "1000px", height: "50px", marginLeft: "195px" }}
             maxLength={2000}
+            value={formData1.txt_TargetCapacity2}
+            onChange={(e) =>
+              handleChange("txt_TargetCapacity2", e.target.value)
+            }
           />
         </div>
       </div>
-      
-
-        
 
       <div
         style={{
@@ -412,18 +543,29 @@ const Step2 = ({ formData1, setFormData1 }) => {
             style={{ width: "80px", marginLeft: "10px", marginRight: "5px" }}
           />{" "}
           Person
-          <Checkbox value="A" style={{ marginLeft: "30px" }}>
+          <Checkbox
+            style={{ marginLeft: "30px" }}
+            disabled={!formData1.CB_Additional}
+            checked={formData1.CB_FileAdditional}
+            onChange={(e) => {
+              CB_AttachFileAdd(e);
+            }}
+          >
             Attach file:
           </Checkbox>
           <Upload maxCount={1}>
-            <Button icon={<UploadOutlined />} style={{ marginLeft: "5px" }}>
+            <Button
+              icon={<UploadOutlined />}
+              style={{ marginLeft: "5px" }}
+              disabled={!formData1.CB_Additional}
+            >
               Click to Attach file
             </Button>
           </Upload>
           <p
             style={{
               marginLeft: "10px",
-              color: "blue",
+              color: !formData1.CB_Additional ? "gray" : "blue",
               textDecoration: "underline",
             }}
           >
@@ -431,6 +573,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
           </p>
         </div>
         <Button
+          disabled={!formData1.CB_Additional || formData1.CB_FileAdditional}
           type="primary"
           style={{ marginRight: "30px" }}
           onClick={() => {
@@ -473,6 +616,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <p>Copy detail from No.</p>
             )}
             <Input
+              disabled={formData1.CB_FileAdditional}
               size="middle"
               style={{ width: "70px", marginLeft: "10px" }}
               value={formData1.Person_ADD[index].CopyNo}
@@ -481,6 +625,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               }
             />
             <Button
+              disabled={formData1.CB_FileAdditional}
               type="primary"
               style={{ marginLeft: "10px" }}
               onClick={() => {
@@ -493,10 +638,11 @@ const Step2 = ({ formData1, setFormData1 }) => {
           <table className="TB_ReasontoRequest" style={{ marginLeft: "80px" }}>
             <tr>
               <td align="right">วุฒิการศึกษา (Education) :</td>
-              <td colSpan={2}>
-                {" "}
-                {/* <Select style={{ width: "300px", marginLeft: "5px" }}></Select> */}
+              <td colSpan={1}>
                 <Select
+                  mode="multiple"
+                  maxTagCount={"responsive"}
+                  disabled={formData1.CB_FileAdditional}
                   showSearch
                   value={formData1.Person_ADD[index].Education}
                   style={{ width: "400px", marginLeft: "5px" }}
@@ -513,12 +659,36 @@ const Step2 = ({ formData1, setFormData1 }) => {
                   }}
                 />
               </td>
+              <td>
+                {" "}
+                <Input
+                  style={{
+                    display:
+                      formData1.Person_ADD[index].Education &&
+                      // formData1.Person_ADD[index].Education == "MR0490"
+                      formData1.Person_ADD[index].Education.includes("MR0490")
+                        ? ""
+                        : "none",
+                  }}
+                  value={formData1.Person_ADD[index].EducationOther}
+                  onChange={(e) =>
+                    handlePersonAddChange(
+                      index,
+                      "EducationOther",
+                      e.target.value
+                    )
+                  }
+                ></Input>
+              </td>
             </tr>
             <tr>
               <td align="right">Course (หลักสูตร):</td>
-              <td colSpan={2}>
+              <td colSpan={1}>
                 {" "}
                 <Select
+                  mode="multiple"
+                  maxTagCount={"responsive"}
+                  disabled={formData1.CB_FileAdditional}
                   showSearch
                   value={formData1.Person_ADD[index].Course}
                   style={{ width: "400px", marginLeft: "5px" }}
@@ -535,13 +705,33 @@ const Step2 = ({ formData1, setFormData1 }) => {
                   }}
                 />
               </td>
+              <td>
+                {" "}
+                <Input
+                  style={{
+                    display:
+                      formData1.Person_ADD[index].Course &&
+                      // formData1.Person_ADD[index].Course == "MR0507"
+                      formData1.Person_ADD[index].Course.includes("MR0507")
+                        ? ""
+                        : "none",
+                  }}
+                  value={formData1.Person_ADD[index].CourseOther}
+                  onChange={(e) =>
+                    handlePersonAddChange(index, "CourseOther", e.target.value)
+                  }
+                ></Input>
+              </td>
             </tr>
             <tr>
               <td align="right">Field (สาขาวิชา):</td>
-              <td colSpan={2}>
+              <td colSpan={1}>
                 {" "}
                 <Select
+                  disabled={formData1.CB_FileAdditional}
                   showSearch
+                  mode="multiple"
+                  maxTagCount={"responsive"}
                   value={formData1.Person_ADD[index].Field}
                   style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select Field"
@@ -556,13 +746,32 @@ const Step2 = ({ formData1, setFormData1 }) => {
                     handlePersonAddChange(index, "Field", value);
                   }}
                 />
+
               </td>
+              <td>
+                  {" "}
+                  <Input
+                    style={{
+                      display:
+                        formData1.Person_ADD[index].Field &&
+                        // formData1.Person_ADD[index].Field == "MR0490"
+                        formData1.Person_ADD[index].Field.includes("MR0699")
+                          ? ""
+                          : "none",
+                    }}
+                    value={formData1.Person_ADD[index].FieldOther}
+                    onChange={(e) =>
+                      handlePersonAddChange(index, "FieldOther", e.target.value)
+                    }
+                  />
+                </td>
             </tr>
             <tr>
               <td align="right">Special (คุณสมบัติพิเศษ):</td>
               <td colSpan={2}>
                 {" "}
                 <TextArea
+                  disabled={formData1.CB_FileAdditional}
                   style={{ width: "960px", height: "50px", marginLeft: "5px" }}
                   maxLength={2000}
                   value={formData1.Person_ADD[index].Special}
@@ -577,6 +786,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td colSpan={2}>
                 {" "}
                 <TextArea
+                  disabled={formData1.CB_FileAdditional}
                   style={{ width: "960px", height: "50px", marginLeft: "5px" }}
                   maxLength={2000}
                   value={formData1.Person_ADD[index].Experience}
@@ -593,8 +803,9 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 {" "}
                 <Select
                   showSearch
+                  disabled={formData1.CB_FileAdditional}
                   value={formData1.Person_ADD[index].StepLanguage}
-                  style={{ width: "300px", marginLeft: "5px" }}
+                  style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select English Language or other"
                   optionFilterProp="children"
                   filterOption={(input, option) =>
@@ -610,7 +821,23 @@ const Step2 = ({ formData1, setFormData1 }) => {
               </td>
               <td>
                 {" "}
-                <Input style={{}} />
+                <Input
+                  style={{
+                    display:
+                      formData1.Person_ADD[index].StepLanguage &&
+                      formData1.Person_ADD[index].StepLanguage == "MR0790"
+                        ? ""
+                        : "none",
+                  }}
+                  value={formData1.Person_ADD[index].StepLanguage_other}
+                  onChange={(e) =>
+                    handlePersonAddChange(
+                      index,
+                      "StepLanguage_other",
+                      e.target.value
+                    )
+                  }
+                ></Input>
               </td>
             </tr>
             <tr>
@@ -619,6 +846,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 {" "}
                 <Upload maxCount={1}>
                   <Button
+                    disabled={formData1.CB_FileAdditional}
                     icon={<UploadOutlined />}
                     style={{ marginLeft: "5px" }}
                   >
@@ -626,16 +854,24 @@ const Step2 = ({ formData1, setFormData1 }) => {
                   </Button>
                 </Upload>
               </td>
-        
             </tr>
-            <tr><td colSpan={3} align="center"> <Button
-                    icon={<DeleteOutlined />}
-                    danger
-                    type="primary"
-                    style={{ marginBottom: "5px" }}
-                  >
-                    Delete
-                  </Button></td></tr>
+            <tr>
+              <td colSpan={3} align="center">
+                {" "}
+                <Button
+                  disabled={formData1.CB_FileAdditional}
+                  icon={<DeleteOutlined />}
+                  danger
+                  type="primary"
+                  style={{ marginBottom: "5px" }}
+                  onClick={() => {
+                    handleDeletePerson("Additional", index);
+                  }}
+                >
+                  Delete Person
+                </Button>
+              </td>
+            </tr>
           </table>
         </div>
       ))}

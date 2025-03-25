@@ -9,6 +9,7 @@
 .TB_ForApp {
     /* border: 1px solid red; */
     /* margin:10px ; */
+    
     margin-left: 40px;
     /* margin-right: 10px;
     margin-top: 10px; */
@@ -22,3 +23,9 @@
     background-color: #f9f9f9; /* Light grey background */
   }
 
+
+  .scrollable-column {
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }

@@ -12,7 +12,6 @@ const { Option } = Select;
 const SearchManPower = () => {
   const {
     columns,
-    data,
     Factory,
     bt_New,
     Department,
@@ -39,6 +38,8 @@ const SearchManPower = () => {
     setDateTo,
     settxt_ReqNoFrom,
     settxt_ReqNoTo,
+    bt_Search,
+    dataSearch
   } = fn_SearchManPowerRequst();
 
   return (
@@ -53,7 +54,7 @@ const SearchManPower = () => {
       <div
         style={{
           borderRadius: "15px",
-          width: "100%",
+          
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -88,7 +89,7 @@ const SearchManPower = () => {
                   showSearch
                   value={SL_Factory}
                   style={{
-                    width: "100%",
+                    
                     display: "block",
                     marginTop: "5px",
                   }}
@@ -109,9 +110,11 @@ const SearchManPower = () => {
               <td style={{ padding: "4px" }}>
                 <Select
                   showSearch
+                  mode="multiple"
+                  maxTagCount={"responsive"}
                   value={SL_Department}
                   style={{
-                    width: "100%",
+                    
                     display: "block",
                     marginTop: "5px",
                   }}
@@ -131,9 +134,11 @@ const SearchManPower = () => {
               <td style={{ padding: "4px" }}>
                 <Select
                   showSearch
+                  mode="multiple"
+                  maxTagCount={"responsive"}
                   value={SL_Position}
                   style={{
-                    width: "100%",
+                    // 
                     display: "block",
                     marginTop: "5px",
                   }}
@@ -152,9 +157,11 @@ const SearchManPower = () => {
               <td style={{ padding: "4px" }}>
                 <Select
                   showSearch
+                  mode="multiple"
+                  maxTagCount={"responsive"}
                   value={SL_JobGrade}
                   style={{
-                    width: "100%",
+                    
                     display: "block",
                     marginTop: "5px",
                   }}
@@ -184,19 +191,21 @@ const SearchManPower = () => {
                 Request Date:
               </td>
               <td style={{ padding: "4px" }}>
-                <DatePicker value={DateFrom} style={{ width: "100%" }}  onChange={setDateFrom}/>
+                {/* <DatePicker value={DateFrom} style={{ width: "100%" }}   onChange={setDateFrom}/> */}
+                <Input type="date" style={{ width: "100%" }}  value={DateFrom} onChange={(e) => setDateFrom(e.target.value)}/>
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>To:</td>
               <td style={{ padding: "4px" }}>
-              <DatePicker value={DateTo} style={{ width: "100%" }}  onChange={setDateTo}/>
+              {/* <DatePicker value={DateTo} style={{ width: "100%" }}  onChange={setDateTo}/> */}
+              <Input type="date" style={{ width: "100%" }}  value={DateTo} onChange={(e) => setDateTo(e.target.value)}/>
               </td>
             </tr>
             <tr>
-              <td style={{ textAlign: "right", padding: "4px" }}>
+              <td style={{ textAlign: "right", padding: "4px" }} >
                 Request by:
               </td>
               <td style={{ padding: "4px" }}>
-                <Input value={datauser.LOGIN}style={{ width: "100%" }} />
+                <Input value={datauser.LOGIN}style={{ width: "100%" }} disabled/>
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>
                 Request Status:
@@ -212,6 +221,7 @@ const SearchManPower = () => {
                   type="primary"
                   icon={<SearchOutlined />}
                   style={{ marginRight: "10px", marginLeft: "30px" }}
+                  onClick={() => bt_Search()}
                 >
                   Search
                 </Button>
@@ -253,8 +263,7 @@ const SearchManPower = () => {
             Export
           </Button>
         </div>
-
-        <Table columns={columns} dataSource={data} />
+        <Table columns={columns} dataSource={dataSearch} />
       </div>
     </div>
   );
