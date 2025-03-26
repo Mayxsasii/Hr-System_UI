@@ -1,31 +1,35 @@
-.TB_ForApp td{
-    /* border: 1px solid red; */
-    /* margin:10px ; */
-    /* margin-left: 60px; */
-    /* margin-right: 10px;
-    margin-top: 10px; */
+
+.tableSerachAnalysis .ant-table-thead > tr > th {
+    background-color: #81BFDA; /* Green header */
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
 }
 
-.TB_ForApp {
-    /* border: 1px solid red; */
-    /* margin:10px ; */
-    
-    margin-left: 40px;
-    /* margin-right: 10px;
-    margin-top: 10px; */
+.tableSerachAnalysis .ant-table-tbody > tr > td {
+    font-family: 'Varela Round', sans-serif;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd; /* Row separator */
 }
-.result-container {
-    margin: 10px;
-    width: '10px';
-    border: 2px solid #4c534c; /* Green border */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    background-color: #f9f9f9; /* Light grey background */
-  }
 
+.tableSerachAnalysis .ant-table-tbody > tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
 
-  .scrollable-column {
-    max-width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
+.tableSerachAnalysis .ant-table-pagination {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.tableSerachAnalysis .ant-table-tbody > tr > td:first-child {
+    font-weight: bold; /* Highlight first column */
+}
+
+.scrollable-column {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}

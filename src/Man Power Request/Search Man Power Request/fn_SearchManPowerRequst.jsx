@@ -161,7 +161,7 @@ function fn_SearchManPowerRequst() {
   const columns = [
     {
       key: "actions",
-      width: "120px",
+      width: "91px",
       render: (_, record) => (
         <div>
           <Button
@@ -180,13 +180,13 @@ function fn_SearchManPowerRequst() {
 
     {
       title: "Factory",
-      width: "30px",
+      width: "20px",
       dataIndex: "Factory",
       key: "Factory",
     },
     {
       title: "Dept.",
-      width: "30px",
+      width: "20px",
       dataIndex: "Department",
       key: "Department",
     },
@@ -198,14 +198,14 @@ function fn_SearchManPowerRequst() {
     },
     {
       title: "Position",
-      width: "30px",
+      width: "160px",
       dataIndex: "Position",
       key: "Position",
     },
     {
       title: "Job  Grade",
       dataIndex: "Job_Grade",
-      width: "30px",
+      width: "20px",
       key: "Job_Grade",
       render: (text, record, index) => {
         return <div className="scrollable-column">{text}</div>;
@@ -228,12 +228,13 @@ function fn_SearchManPowerRequst() {
       width: "180px",
       dataIndex: "Status",
       key: "Status",
+      align: "center",
       render: (text, record, index) => {
         if (
           record.Status_value == "MR0101" ||
           record.Status_value == "MR0106"
         ) {
-          return <Tag color="processing">{text}</Tag>;
+          return <Tag color="processing" >{text}</Tag>;
         } else if (
           record.Status_value == "MR0102" ||
           record.Status_value == "MR0103" ||

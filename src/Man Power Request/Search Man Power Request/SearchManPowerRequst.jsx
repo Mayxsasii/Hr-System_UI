@@ -263,7 +263,16 @@ const SearchManPower = () => {
             Export
           </Button>
         </div>
-        <Table columns={columns} dataSource={dataSearch} />
+        <Table
+  columns={columns}
+  dataSource={dataSearch}
+  bordered
+  pagination={{ pageSize: 5 }}
+
+  size="middle"
+  scroll={{ x: "max-content" }}
+className="tableSerachAnalysis"
+/>
       </div>
     </div>
   );
