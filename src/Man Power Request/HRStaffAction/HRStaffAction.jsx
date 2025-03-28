@@ -19,7 +19,14 @@ const Step4 = () => (
         fontWeight: "bold",
       }}
     >
-      HR Staff Action
+      HR Staff Action{''}
+        {/* {formData1.txt_ReqNo ? (
+          <>
+            {">>"} {formData1.txt_ReqNo}
+          </>
+        ) : (
+          ""
+        )} */}
     </p>
     <div style={{ display: "flex", alignItems: "center", marginLeft: "30px" }}>
       <div

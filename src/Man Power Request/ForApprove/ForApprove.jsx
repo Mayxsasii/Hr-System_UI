@@ -10,6 +10,7 @@ const Step3 = ({ formData1, setFormData1 }) => {
     handleChange,
     DateToday,
     SaveDraft,
+    SendApprove
   } = fn_ForApprove(formData1, setFormData1);
   return (
     <div>
@@ -20,7 +21,14 @@ const Step3 = ({ formData1, setFormData1 }) => {
           fontWeight: "bold",
         }}
       >
-        For Approve
+        For Approve{''}
+        {formData1.txt_ReqNo ? (
+          <>
+            {">>"} {formData1.txt_ReqNo}
+          </>
+        ) : (
+          ""
+        )}
       </p>
       <table className="TB_ForApp">
         <tr>
@@ -276,7 +284,7 @@ const Step3 = ({ formData1, setFormData1 }) => {
             <Button type="primary" danger style={{ marginLeft: "10px" }}>
               Reset
             </Button>
-            <Button type="primary" style={{ marginLeft: "10px" }}>
+            <Button type="primary" style={{ marginLeft: "10px" }}   onClick={() => SendApprove()}>
               Send Approve
             </Button>
           </td>

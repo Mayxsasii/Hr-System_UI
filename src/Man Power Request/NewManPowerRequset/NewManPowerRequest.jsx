@@ -36,7 +36,14 @@ const Step1 = ({ formData1, setFormData1 }) => {
           fontWeight: "bold",
         }}
       >
-        New Man Power Request
+        New Man Power Request{" "}
+        {formData1.txt_ReqNo ? (
+          <>
+            {">>"} {formData1.txt_ReqNo}
+          </>
+        ) : (
+          ""
+        )}
       </p>
       <table style={{ marginTop: "10px", marginLeft: "10px" }}>
         <tr>

@@ -4,6 +4,8 @@ import {
   UploadOutlined,
   PlusCircleOutlined,
   DeleteOutlined,
+  LinkOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 const { TextArea } = Input;
 import "../ManPowerRequest.css";
@@ -30,6 +32,9 @@ const Step2 = ({ formData1, setFormData1 }) => {
     handleDeletePerson,
     CB_AttachFileSub,
     CB_AttachFileAdd,
+    handleFileChange,
+    handleFilefeatureChange,
+    DeleteFile
   } = fn_ReasontoRequest(formData1, setFormData1);
 
   return (
@@ -41,7 +46,14 @@ const Step2 = ({ formData1, setFormData1 }) => {
           fontWeight: "bold",
         }}
       >
-        Reason to request
+        Reason to request {''}
+        {formData1.txt_ReqNo ? (
+          <>
+            {">>"} {formData1.txt_ReqNo}
+          </>
+        ) : (
+          ""
+        )}
       </p>
 
       <Checkbox
@@ -80,24 +92,50 @@ const Step2 = ({ formData1, setFormData1 }) => {
           >
             Attach file:
           </Checkbox>
-          <Upload maxCount={1}>
-            <Button
-              icon={<UploadOutlined />}
-              style={{ marginLeft: "5px" }}
-              disabled={!formData1.CB_Substitube}
+          <div className="file-upload">
+            <label
+              htmlFor="fileInputSUB"
+              className={`custom-file-upload ${
+                !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+                  ? "disabled"
+                  : ""
+              }`}
+              style={{
+                pointerEvents:
+                  !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+                    ? "none"
+                    : "auto",
+                opacity:
+                  !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+                    ? 0.5
+                    : 1,
+              }}
             >
-              Click to Attach file
-            </Button>
-          </Upload>
-          <p
-            style={{
-              marginLeft: "10px",
-              color: !formData1.CB_Substitube ? "gray" : "blue",
-              textDecoration: "underline",
-            }}
-          >
-            File format
-          </p>
+              <UploadOutlined /> Click to Attach file
+            </label>
+            <input
+              id="fileInputSUB"
+              type="file"
+              onChange={(e) => handleFileChange("SUB", e)}
+              disabled={
+                !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+              }
+            />
+            <p
+              // onClick={handleUpload}
+              style={{
+                marginLeft: "10px",
+                cursor: "pointer",
+                color:
+                  !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+                    ? "gray"
+                    : "blue",
+                textDecoration: "underline",
+              }}
+            >
+              File format
+            </p>
+          </div>
         </div>
         <Button
           disabled={!formData1.CB_Substitube || formData1.CB_FileSubstitube}
@@ -114,6 +152,19 @@ const Step2 = ({ formData1, setFormData1 }) => {
         >
           Add
         </Button>
+      </div>
+      <div style={{ marginLeft: "395px" }}>
+        {formData1.FileName_Sub && (
+          <p style={{ color: "black", margin: 0, marginTop: "0px" }}>
+            <LinkOutlined style={{ marginRight: "5px" }} />{" "}
+            {formData1.FileName_Sub}{" "}
+            <CloseOutlined
+            onClick={() => { DeleteFile('SUB','')}}
+            // DeleteFile
+              style={{ marginLeft: "20px", cursor: "pointer", color: "red" }}
+            />
+          </p>
+        )}
       </div>
       <br />
       {Array.from({ length: formData1.txt_TotalSubstitube }, (Data, index) => (
@@ -196,7 +247,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               }
             />
             <Input
-             disabled
+              disabled
               size="middle"
               style={{ width: "80px", marginLeft: "5px" }}
               value={formData1.Person_Sub[index].Cost_Center}
@@ -283,7 +334,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 <Input
                   style={{
                     display:
-                    // formData1.Person_Sub[index].Field.includes("Other")
+                      // formData1.Person_Sub[index].Field.includes("Other")
                       formData1.Person_Sub[index].Education &&
                       formData1.Person_Sub[index].Education.includes("MR0490")
                         ? ""
@@ -451,7 +502,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td align="right">คุณสมบัติอย่างละเอียด :</td>
               <td colSpan={2}>
                 {" "}
-                <Upload maxCount={1}>
+                {/* <Upload maxCount={1}>
                   <Button
                     disabled={formData1.CB_FileSubstitube}
                     icon={<UploadOutlined />}
@@ -459,7 +510,50 @@ const Step2 = ({ formData1, setFormData1 }) => {
                   >
                     Click to Upload
                   </Button>
-                </Upload>
+                </Upload> */}
+                <div className="file-upload" style={{ marginLeft: "5px" }}>
+                  <label
+                    htmlFor="fileInputFeatureSUB"
+                    className={`custom-file-upload ${
+                      formData1.CB_FileSubstitube ? "disabled" : ""
+                    }`}
+                    style={{
+                      pointerEvents: formData1.CB_FileSubstitube
+                        ? "none"
+                        : "auto",
+                      opacity: formData1.CB_FileSubstitube ? 0.5 : 1,
+                    }}
+                  >
+                    <UploadOutlined /> Click to Attach file
+                  </label>
+                  <input
+                    id="fileInputFeatureSUB"
+                    type="file"
+                    onChange={(e) => handleFilefeatureChange("SUB", index, e)}
+                    disabled={formData1.CB_FileSubstitube}
+                  />
+                  {formData1.Person_Sub[index].Filefeature && (
+                    <p
+                      style={{
+                        color: "black",
+                        margin: 0,
+                        marginTop: "0px",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      <LinkOutlined style={{ marginRight: "5px" }} />{" "}
+                      {formData1.Person_Sub[index].Filefeature}{" "}
+                      <CloseOutlined
+                       onClick={() => { DeleteFile('SUBFeature',index)}}
+                        style={{
+                          marginLeft: "20px",
+                          cursor: "pointer",
+                          color: "red",
+                        }}
+                      />
+                    </p>
+                  )}
+                </div>
               </td>
             </tr>
             <tr>
@@ -533,6 +627,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
           alignItems: "center",
           marginLeft: "90px",
           justifyContent: "space-between",
+          marginTop: "10px",
         }}
       >
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -553,24 +648,50 @@ const Step2 = ({ formData1, setFormData1 }) => {
           >
             Attach file:
           </Checkbox>
-          <Upload maxCount={1}>
-            <Button
-              icon={<UploadOutlined />}
-              style={{ marginLeft: "5px" }}
-              disabled={!formData1.CB_Additional}
+          <div className="file-upload">
+            <label
+              htmlFor="fileInputADD"
+              className={`custom-file-upload ${
+                !formData1.CB_Additional || !formData1.CB_FileAdditional
+                  ? "disabled"
+                  : ""
+              }`}
+              style={{
+                pointerEvents:
+                  !formData1.CB_Additional || !formData1.CB_FileAdditional
+                    ? "none"
+                    : "auto",
+                opacity:
+                  !formData1.CB_Additional || !formData1.CB_FileAdditional
+                    ? 0.5
+                    : 1,
+              }}
             >
-              Click to Attach file
-            </Button>
-          </Upload>
-          <p
-            style={{
-              marginLeft: "10px",
-              color: !formData1.CB_Additional ? "gray" : "blue",
-              textDecoration: "underline",
-            }}
-          >
-            File format
-          </p>
+              <UploadOutlined /> Click to Attach file
+            </label>
+            <input
+              id="fileInputADD"
+              type="file"
+              onChange={(e) => handleFileChange("ADD", e)}
+              disabled={
+                !formData1.CB_Additional || !formData1.CB_FileAdditional
+              }
+            />
+            <p
+              // onClick={handleUpload}
+              style={{
+                marginLeft: "10px",
+                cursor: "pointer",
+                color:
+                  !formData1.CB_Additional || !formData1.CB_FileAdditional
+                    ? "gray"
+                    : "blue",
+                textDecoration: "underline",
+              }}
+            >
+              File format
+            </p>
+          </div>
         </div>
         <Button
           disabled={!formData1.CB_Additional || formData1.CB_FileAdditional}
@@ -587,6 +708,18 @@ const Step2 = ({ formData1, setFormData1 }) => {
         >
           Add
         </Button>
+      </div>
+      <div style={{ marginLeft: "395px" }}>
+        {formData1.FileName_Add && (
+          <p style={{ color: "black", margin: 0, marginTop: "0px" }}>
+            <LinkOutlined style={{ marginRight: "5px" }} />{" "}
+            {formData1.FileName_Add}{" "}
+            <CloseOutlined
+              onClick={() => { DeleteFile('ADD','')}}
+              style={{ marginLeft: "20px", cursor: "pointer", color: "red" }}
+            />
+          </p>
+        )}
       </div>
       <br />
       {Array.from({ length: formData1.txt_TotalAdditional }, (_, index) => (
@@ -746,25 +879,24 @@ const Step2 = ({ formData1, setFormData1 }) => {
                     handlePersonAddChange(index, "Field", value);
                   }}
                 />
-
               </td>
               <td>
-                  {" "}
-                  <Input
-                    style={{
-                      display:
-                        formData1.Person_ADD[index].Field &&
-                        // formData1.Person_ADD[index].Field == "MR0490"
-                        formData1.Person_ADD[index].Field.includes("MR0699")
-                          ? ""
-                          : "none",
-                    }}
-                    value={formData1.Person_ADD[index].FieldOther}
-                    onChange={(e) =>
-                      handlePersonAddChange(index, "FieldOther", e.target.value)
-                    }
-                  />
-                </td>
+                {" "}
+                <Input
+                  style={{
+                    display:
+                      formData1.Person_ADD[index].Field &&
+                      // formData1.Person_ADD[index].Field == "MR0490"
+                      formData1.Person_ADD[index].Field.includes("MR0699")
+                        ? ""
+                        : "none",
+                  }}
+                  value={formData1.Person_ADD[index].FieldOther}
+                  onChange={(e) =>
+                    handlePersonAddChange(index, "FieldOther", e.target.value)
+                  }
+                />
+              </td>
             </tr>
             <tr>
               <td align="right">Special (คุณสมบัติพิเศษ):</td>
@@ -843,7 +975,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
             <tr>
               <td align="right">คุณสมบัติอย่างละเอียด :</td>
               <td colSpan={2}>
-                {" "}
+                {/* {" "}
                 <Upload maxCount={1}>
                   <Button
                     disabled={formData1.CB_FileAdditional}
@@ -852,7 +984,50 @@ const Step2 = ({ formData1, setFormData1 }) => {
                   >
                     Click to Upload
                   </Button>
-                </Upload>
+                </Upload> */}
+                <div className="file-upload" style={{ marginLeft: "5px" }}>
+                  <label
+                    htmlFor="fileInputFeatureADD"
+                    className={`custom-file-upload ${
+                      formData1.CB_FileAdditional ? "disabled" : ""
+                    }`}
+                    style={{
+                      pointerEvents: formData1.CB_FileAdditional
+                        ? "none"
+                        : "auto",
+                      opacity: formData1.CB_FileAdditional ? 0.5 : 1,
+                    }}
+                  >
+                    <UploadOutlined /> Click to Attach file
+                  </label>
+                  <input
+                    id="fileInputFeatureADD"
+                    type="file"
+                    onChange={(e) => handleFilefeatureChange("ADD", index, e)}
+                    disabled={formData1.CB_FileAdditional}
+                  />
+                  {formData1.Person_ADD[index].Filefeature && (
+                    <p
+                      style={{
+                        color: "black",
+                        margin: 0,
+                        marginTop: "0px",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      <LinkOutlined style={{ marginRight: "5px" }} />{" "}
+                      {formData1.Person_ADD[index].Filefeature}{" "}
+                      <CloseOutlined
+                        onClick={() => { DeleteFile('ADDFeature',index)}}
+                        style={{
+                          marginLeft: "20px",
+                          cursor: "pointer",
+                          color: "red",
+                        }}
+                      />
+                    </p>
+                  )}
+                </div>
               </td>
             </tr>
             <tr>

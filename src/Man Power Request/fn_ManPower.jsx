@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, message, Steps, theme } from "antd";
+import { theme } from "antd";
 import Step1 from "./NewManPowerRequset/NewManPowerRequest";
 import Step2 from "./ReasontoRequest/ReasontoRequest";
 import Step3 from "./ForApprove/ForApprove";
@@ -32,9 +32,7 @@ function fn_ManPower() {
   const { showLoading, hideLoading } = useLoading();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const ReqNo = queryParams.get("ReqNo"); // รับค่า ReqNo จาก query string
-
-  const { datauser } = fn_Header();
+  const ReqNo = queryParams.get("ReqNo"); 
   const Email = localStorage.getItem("Email");
 
   const { token } = theme.useToken();
@@ -70,6 +68,7 @@ function fn_ManPower() {
     CB_FileSubstitube: "",
     FileName_Sub: "",
     FileNameServer_Sub: "",
+    DataFileSub: null,
     //--Step2.sub
     Person_Sub: [
       {
@@ -92,6 +91,8 @@ function fn_ManPower() {
         StepLanguage: null,
         StepLanguage_other: "",
         Filefeature: "",
+        FileServerfeature: "",
+        DataFilefeature: null,
       },
     ],
     //---Step2.add
@@ -102,6 +103,7 @@ function fn_ManPower() {
     CB_FileAdditional: "",
     FileName_Add: "",
     FileNameServer_Add: "",
+    DataFileADD: null,
     Person_ADD: [
       {
         CopyNo: "",
@@ -116,6 +118,8 @@ function fn_ManPower() {
         StepLanguage: null,
         StepLanguage_other: "",
         Filefeature: "",
+        FileServerfeature: "",
+        DataFilefeature: null,
       },
     ],
     //step3
@@ -133,6 +137,7 @@ function fn_ManPower() {
     txt_CommentHRManager: "",
     //step4
   });
+
   useEffect(() => {
     FetchData();
     // handleChange("txt_ReqBy", datauser.LOGIN);
@@ -145,12 +150,14 @@ function fn_ManPower() {
       hideLoading();
     }
   };
+
   const GetdataEdit = async () => {
     await axios
       .post("/api/RequestManPower/GetDataEdit", {
         ReqNo: ReqNo,
       })
       .then((res) => {
+        console.log(res.data, "GetDataEdit");
         handleChange("txt_ReqNo", res.data[0].Req_No);
         handleChange("SL_Factory", res.data[0].Fac_code || null);
         handleChange("txt_ReqStatus", res.data[0].Status_Desc);
@@ -164,7 +171,7 @@ function fn_ManPower() {
         handleChange("Date_Target", res.data[0].Target_date);
         handleChange("txt_Remark", res.data[0].Remark);
 
-        handleChange("CB_Substitube", res.data[0].Cb_Sub);
+        handleChange("CB_Substitube", res.data[0].Cb_Sub=== "Y" ? true : false);
         handleChange("txt_TotalSubstitube", res.data[0].Sub_Total);
         handleChange(
           "CB_FileSubstitube",
@@ -180,9 +187,9 @@ function fn_ManPower() {
         handleChange("txt_TargetCapacity1", res.data[0].Add_Target1);
         handleChange("txt_TargetCapacity2", res.data[0].Add_Target2);
         handleChange("txt_TotalAdditional", res.data[0].Add_Total);
-        handleChange("CB_FileAdditional", res.data[0].Add_FileNameServer);
-        handleChange("FileName_Add", res.data[0].Sub_FileNameServer);
-        handleChange("FileNameServer_Add", res.data[0].Sub_FileNameServer);
+        handleChange("CB_FileAdditional", res.data[0].Cb_AddFile=== "Y" ? true : false);
+        handleChange("FileName_Add", res.data[0].Add_FileName);
+        handleChange("FileNameServer_Add", res.data[0].Add_FileNameServer);
 
         handleChange("SL_DepartmentManager", res.data[0].Dept_by || null);
         handleChange("CB_DepartmentApprove", res.data[0].Dept_Radio);
@@ -488,7 +495,12 @@ function fn_ManPower() {
         }
       });
   };
-  console.log(formData1, "nnnnnn");
+
+  const GetFile = (FileNameServer) => {
+
+  };
+
+
   const validateStep1 = () => {
     if (formData1.txt_ReqNo == "") {
       Swal.fire({

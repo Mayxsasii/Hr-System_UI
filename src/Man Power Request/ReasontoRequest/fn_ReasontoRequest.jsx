@@ -357,11 +357,13 @@ function fn_ReasontoRequest(formData1, setFormData1) {
   };
 
   const CB_AttachFileSub = (e) => {
-    // setFormData1({ ...formData1, CB_FileSubstitube: e.target.checked });
+ 
+  if(e.target.checked){ //true
+    console.log( e.target.checked,'Check')
     setFormData1((prev) => ({
       ...prev,
       CB_FileSubstitube: e.target.checked,
-      txt_TotalSubstitube: 1,
+      txt_TotalSubstitube: 0,
       Person_Sub: [
         {
           CopyNo: "",
@@ -382,18 +384,30 @@ function fn_ReasontoRequest(formData1, setFormData1) {
           StepLanguage: null,
           StepLanguage_other: "",
           Filefeature: "",
+          FileServerfeature: "",
+          DataFilefeature: null,
         },
       ],
     }));
-
+  }
+  else{
+    handleChange("CB_FileSubstitube", e.target.checked);
+    handleChange("txt_TotalSubstitube", 1);
+    handleChange("FileName_Sub", '');
+    handleChange("FileNameServer_Sub", '');
+    handleChange("DataFileSub", null);
+    const input = document.getElementById("fileInputSUB");
+    if (input) input.value = "";
+  }
   };
 
   const CB_AttachFileAdd = (e) => {
     // setFormData1({ ...formData1, CB_FileSubstitube: e.target.checked });
+    if(e.target.checked){ //true
     setFormData1((prev) => ({
       ...prev,
       CB_FileAdditional : e.target.checked,
-      txt_TotalAdditional: 1,
+      txt_TotalAdditional: 0,
       Person_ADD: [
         {
           CopyNo: "",
@@ -408,11 +422,174 @@ function fn_ReasontoRequest(formData1, setFormData1) {
           StepLanguage: null,
           StepLanguage_other: "",
           Filefeature: "",
+          FileServerfeature: "",
+          DataFilefeature: null,
         },
       ],
     }));
+  }else{
+    handleChange("CB_FileAdditional", e.target.checked);
+    handleChange("txt_TotalAdditional", 1);
+    handleChange("FileName_Add", '');
+    handleChange("FileNameServer_Add", '');
+    handleChange("DataFileADD", null);
+    const input = document.getElementById("fileInputADD");
+    if (input) input.value = "";
+  }
 
   };
+  const getDateToday = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0"); // เดือนเริ่มจาก 0
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+
+    return `${year}${month}${day}${hours}${minutes}${seconds}`;
+  };
+
+
+  const handleFileChange = (Reason,e) => {
+    const file = e.target.files[0];
+    console.log("file999" ,e,Reason);
+    let DateToday = getDateToday();
+    let FileNameServer = "";
+    let ReqNo = formData1.txt_ReqNo;
+    if(!file){
+      return;
+    }
+    const allowedExtensions = ["xls", "xlsx", "pdf"];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (!allowedExtensions.includes(fileExtension)) {
+      Swal.fire({
+        title: "รองรับเฉพาะไฟล์ .xls, .xlsx, .pdf เท่านั้น",
+        icon: "warning",
+      });
+      return;
+    }
+    const maxFileSize = 10 * 1024 * 1024; 
+    if (file.size > maxFileSize) {
+      Swal.fire({
+        title: "ไฟล์ต้องมีขนาดไม่เกิน 10 MB",
+        icon: "warning",
+      });
+      return;
+    }
+    if(Reason == "SUB"){
+      FileNameServer = `${ReqNo}-SUBS-${DateToday}.${file.name.substring(file.name.lastIndexOf(".")+1)}`;
+      console.log("FileNameServer", FileNameServer);
+      if (file) {
+        const renamedFile = new File([file], FileNameServer, { type: file.type });
+        console.log("renamedFile", renamedFile);
+        handleChange("FileName_Sub", file.name);
+        handleChange("DataFileSub", renamedFile);
+        handleChange("FileNameServer_Sub", renamedFile.name);
+      } 
+    }
+    else if(Reason == "ADD"){
+      console.log('ADD_FILE01',file.name);
+      FileNameServer = `${ReqNo}-ADD-${DateToday}.${file.name.substring(
+        file.name.lastIndexOf(".") + 1
+      )}`;
+      console.log("FileNameServer", FileNameServer);
+      if (file) {
+        const renamedFile = new File([file], FileNameServer, { type: file.type });
+        console.log("renamedFile", renamedFile);
+        handleChange("FileName_Add", file.name);
+        handleChange("DataFileADD", renamedFile);
+        handleChange("FileNameServer_Add",renamedFile.name);
+      } 
+    }
+  };
+
+  const handleFilefeatureChange = (Reason,index,e) => {
+    console.log("filefeature" ,e,Reason);
+    const file = e.target.files[0];
+    let DateToday = getDateToday();
+    let FileNameServer = "";
+    let ReqNo = formData1.txt_ReqNo;
+    const Rec_id = `S${String(index + 1).padStart(2, "0")}`;
+    if(!file){
+      return;
+    }
+    const allowedExtensions = ["xls", "xlsx", "pdf"];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (!allowedExtensions.includes(fileExtension)) {
+      Swal.fire({
+        title: "รองรับเฉพาะไฟล์ .xls, .xlsx, .pdf เท่านั้น",
+        icon: "warning",
+      });
+      return;
+    }
+
+    const maxFileSize = 10 * 1024 * 1024; 
+    if (file.size > maxFileSize) {
+      Swal.fire({
+        title: "ไฟล์ต้องมีขนาดไม่เกิน 10 MB",
+        icon: "warning",
+      });
+      return;
+    }
+
+    if(Reason == "SUB"){
+      FileNameServer = `${ReqNo}-${Rec_id}-SUBS-${DateToday}.${file.name.substring(file.name.lastIndexOf(".")+1)}`;
+      console.log("FileNameServer", FileNameServer);
+      if (file) {
+        const renamedFile = new File([file], FileNameServer, { type: file.type });
+        handlePersonSubChange(index, "Filefeature", file.name);
+        handlePersonSubChange(index, "FileServerfeature", renamedFile.name);
+        handlePersonSubChange(index, "DataFilefeature", renamedFile);
+      } 
+    }
+    else if(Reason == "ADD"){
+      FileNameServer = `${ReqNo}-${Rec_id}-ADD-${DateToday}.${file.name.substring(file.name.lastIndexOf(".")+1)}`;
+      console.log("FileNameServer", FileNameServer);
+      if (file) {
+        const renamedFile = new File([file], FileNameServer, { type: file.type });
+        handlePersonAddChange(index, "Filefeature", file.name);
+        handlePersonAddChange(index, "FileServerfeature", renamedFile.name);
+        handlePersonAddChange(index, "DataFilefeature", renamedFile);
+      } 
+    }
+  };
+
+  const DeleteFile = (Reason, index) => {
+    if (Reason === "SUBFeature") {
+      handlePersonSubChange(index, "Filefeature", "");
+      handlePersonSubChange(index, "FileServerfeature", "");
+      handlePersonSubChange(index, "DataFilefeature", null);
+      // ล้างค่าใน input file
+      const input = document.getElementById(`fileInputSUBFeature-${index}`);
+      if (input) input.value = "";
+    } else if (Reason === "ADDFeature") {
+      handlePersonAddChange(index, "Filefeature", "");
+      handlePersonAddChange(index, "FileServerfeature", "");
+      handlePersonAddChange(index, "DataFilefeature", null);
+  
+      // ล้างค่าใน input file
+      const input = document.getElementById(`fileInputADDFeature-${index}`);
+      if (input) input.value = "";
+    } else if (Reason === "SUB") {
+      handleChange("FileName_Sub", "");
+      handleChange("FileNameServer_Sub", "");
+      handleChange("DataFileSub", null);
+  
+      // ล้างค่าใน input file
+      const input = document.getElementById("fileInputSUB");
+      if (input) input.value = "";
+    } else if (Reason === "ADD") {
+      handleChange("FileName_Add", "");
+      handleChange("FileNameServer_Add", "");
+      handleChange("DataFileADD", null);
+      // ล้างค่าใน input file
+      const input = document.getElementById("fileInputADD");
+      if (input) input.value = "";
+    }
+  };
+  
+
 
   return {
     handleChange,
@@ -433,7 +610,10 @@ function fn_ReasontoRequest(formData1, setFormData1) {
     CheckReasontorequestADD,
     handleDeletePerson,
     CB_AttachFileSub,
-    CB_AttachFileAdd
+    CB_AttachFileAdd,
+    handleFileChange,
+    handleFilefeatureChange,
+    DeleteFile,
   };
 }
 
