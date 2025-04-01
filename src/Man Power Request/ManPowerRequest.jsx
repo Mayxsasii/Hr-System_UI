@@ -14,8 +14,9 @@ const App = () => {
     prev,
     next,
     contentStyle,
+    Disable,
+    setDisable
   } = fn_ManPower();
- 
 
   return (
     <>
@@ -23,25 +24,28 @@ const App = () => {
         <Steps current={current} items={items} onChange={onChange} />
       </div>
       <div style={contentStyle}>
-        {steps[current].content({ formData1, setFormData1 })} 
+        {steps[current].content({ formData1, setFormData1,Disable,setDisable })}
       </div>
-      <div style={{ marginTop: 24 }}>
+      <div
+        style={{
+          marginTop: 10,
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
+        }}
+      >
         {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+          <Button style={{ margin: "10 8px" }} onClick={() => prev()}>
             Previous
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Next
-          </Button>
-        )}
-        {current === steps.length - 1 && (
           <Button
             type="primary"
-            onClick={() => message.success("Processing complete!")}
+            style={{ marginRight: "18px" }}
+            onClick={() => next()}
           >
-            Done
+            Next
           </Button>
         )}
       </div>

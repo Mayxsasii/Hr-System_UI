@@ -1,7 +1,6 @@
 import React from "react";
-import { Checkbox, Input, Button, Select, Upload, Radio } from "antd";
+import { Input, Button, Select, Radio } from "antd";
 import { fn_ForApprove } from "./fn_ForApprove";
-const { TextArea } = Input;
 const Step3 = ({ formData1, setFormData1 }) => {
   const {
     DepartmentManager,
@@ -10,7 +9,7 @@ const Step3 = ({ formData1, setFormData1 }) => {
     handleChange,
     DateToday,
     SaveDraft,
-    SendApprove
+    SendApprove,
   } = fn_ForApprove(formData1, setFormData1);
   return (
     <div>
@@ -21,10 +20,10 @@ const Step3 = ({ formData1, setFormData1 }) => {
           fontWeight: "bold",
         }}
       >
-        For Approve{''}
+        For Approve{""}
         {formData1.txt_ReqNo ? (
           <>
-            {">>"} {formData1.txt_ReqNo}
+            {" >>"} {formData1.txt_ReqNo}
           </>
         ) : (
           ""
@@ -51,7 +50,7 @@ const Step3 = ({ formData1, setFormData1 }) => {
               }}
             />
           </td>
-          <td style={{ textAlign: "center" ,width:'300px' }}>
+          <td style={{ textAlign: "center", width: "500px" }}>
             {" "}
             <Radio.Group
               style={{ display: formData1.ID_Status == "MR0101" ? "none" : "" }}
@@ -72,7 +71,7 @@ const Step3 = ({ formData1, setFormData1 }) => {
               ]}
             />
           </td>
-          <td style={{ textAlign: "right",width:'300px'  }}>
+          <td style={{ textAlign: "right", width: "80px" }}>
             <div
               style={{ display: formData1.ID_Status == "MR0101" ? "none" : "" }}
             >
@@ -101,7 +100,7 @@ const Step3 = ({ formData1, setFormData1 }) => {
           <td colSpan={4}>
             <Input
               style={{
-                width: "1050px",
+                width: "1200px",
                 display: formData1.ID_Status == "MR0101" ? "none" : "",
               }}
               value={formData1.txt_CommentDepartmentmanager}
@@ -181,7 +180,7 @@ const Step3 = ({ formData1, setFormData1 }) => {
           <td colSpan={4}>
             <Input
               style={{
-                width: "1050px",
+                width: "1200px",
                 display: formData1.ID_Status == "MR0101" ? "none" : "",
               }}
               value={formData1.txt_CommentFMGM}
@@ -262,7 +261,7 @@ const Step3 = ({ formData1, setFormData1 }) => {
           <td colSpan={4}>
             <Input
               style={{
-                width: "1050px",
+                width: "1200px",
                 display: formData1.ID_Status == "MR0101" ? "none" : "",
               }}
               value={formData1.txt_CommentHRManager}
@@ -272,24 +271,48 @@ const Step3 = ({ formData1, setFormData1 }) => {
             />
           </td>
         </tr>
-        <tr>
-          <td colSpan={5} align="center" >
-            <Button
-              type="primary"
-              style={{ backgroundColor: "#FF9D23" }}
-              onClick={() => SaveDraft()}
-            >
-              Save Draft
-            </Button>
-            <Button type="primary" danger style={{ marginLeft: "10px" }}>
-              Reset
-            </Button>
-            <Button type="primary" style={{ marginLeft: "10px" }}   onClick={() => SendApprove()}>
-              Send Approve
-            </Button>
-          </td>
-        </tr>
       </table>
+      <div align="center" style={{ marginTop: "5px" }}>
+        <Button
+          type="primary"
+          style={{
+            backgroundColor: "#FF9D23",
+            display: formData1.ID_Status == "MR0101" ? "" : "none",
+          }}
+          onClick={() => SaveDraft()}
+        >
+          Save Draft
+        </Button>
+        <Button
+          type="primary"
+          danger
+          style={{ marginLeft: "10px", backgroundColor: "#758694" }}
+        >
+          Reset
+        </Button>
+        <Button
+          type="primary"
+          style={{
+            marginLeft: "10px",
+            backgroundColor: "#3F7D58",
+            display: formData1.ID_Status == "MR0101" ? "" : "none",
+          }}
+          onClick={() => SendApprove()}
+        >
+          Send Approve
+        </Button>
+        <Button
+          type="primary"
+          style={{
+            marginLeft: "10px",
+            backgroundColor: "#66D2CE",
+            display: formData1.ID_Status != "MR0101" ? "" : "none",
+          }}
+          // onClick={() => SendApprove()}
+        >
+          Submit
+        </Button>
+      </div>
     </div>
   );
 };

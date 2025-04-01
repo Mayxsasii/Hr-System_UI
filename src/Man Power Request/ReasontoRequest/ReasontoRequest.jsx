@@ -10,8 +10,15 @@ import {
 const { TextArea } = Input;
 import "../ManPowerRequest.css";
 import { fn_ReasontoRequest } from "./fn_ReasontoRequest";
+import { fn_ForApprove } from "../ForApprove/fn_ForApprove";
+const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
+  const { SaveDraft } = fn_ForApprove(
+    formData1,
+    setFormData1,
+    Disable,
+    setDisable
+  );
 
-const Step2 = ({ formData1, setFormData1 }) => {
   const {
     handleChange,
     handlePersonSubChange,
@@ -34,8 +41,9 @@ const Step2 = ({ formData1, setFormData1 }) => {
     CB_AttachFileAdd,
     handleFileChange,
     handleFilefeatureChange,
-    DeleteFile
-  } = fn_ReasontoRequest(formData1, setFormData1);
+    DeleteFile,
+    DisableChange,
+  } = fn_ReasontoRequest(formData1, setFormData1, Disable, setDisable);
 
   return (
     <div>
@@ -46,7 +54,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
           fontWeight: "bold",
         }}
       >
-        Reason to request {''}
+        Reason to request {""}
         {formData1.txt_ReqNo ? (
           <>
             {">>"} {formData1.txt_ReqNo}
@@ -59,8 +67,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
       <Checkbox
         style={{ marginTop: "10px", marginLeft: "10px" }}
         checked={formData1.CB_Substitube}
+        disabled={Disable.CB_Substitube}
         onChange={(e) => {
-          // setFormData1({ ...formData1, CB_Substitube: e.target.checked });
           CheckReasontorequestSub(e);
         }}
       >
@@ -88,7 +96,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
               CB_AttachFileSub(e);
             }}
             style={{ marginLeft: "30px" }}
-            disabled={!formData1.CB_Substitube}
+            // disabled={!formData1.CB_Substitube}
+            disabled={Disable.CB_FileSubstitube}
           >
             Attach file:
           </Checkbox>
@@ -96,17 +105,23 @@ const Step2 = ({ formData1, setFormData1 }) => {
             <label
               htmlFor="fileInputSUB"
               className={`custom-file-upload ${
-                !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+                !formData1.CB_Substitube ||
+                !formData1.CB_FileSubstitube ||
+                formData1.ID_Status !== "MR0101"
                   ? "disabled"
                   : ""
               }`}
               style={{
                 pointerEvents:
-                  !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+                  !formData1.CB_Substitube ||
+                  !formData1.CB_FileSubstitube ||
+                  formData1.ID_Status !== "MR0101"
                     ? "none"
                     : "auto",
                 opacity:
-                  !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+                  !formData1.CB_Substitube ||
+                  !formData1.CB_FileSubstitube ||
+                  formData1.ID_Status !== "MR0101"
                     ? 0.5
                     : 1,
               }}
@@ -118,16 +133,19 @@ const Step2 = ({ formData1, setFormData1 }) => {
               type="file"
               onChange={(e) => handleFileChange("SUB", e)}
               disabled={
-                !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+                !formData1.CB_Substitube ||
+                !formData1.CB_FileSubstitube ||
+                formData1.ID_Status !== "MR0101"
               }
             />
             <p
-              // onClick={handleUpload}
               style={{
                 marginLeft: "10px",
                 cursor: "pointer",
                 color:
-                  !formData1.CB_Substitube || !formData1.CB_FileSubstitube
+                  !formData1.CB_Substitube ||
+                  !formData1.CB_FileSubstitube ||
+                  formData1.ID_Status !== "MR0101"
                     ? "gray"
                     : "blue",
                 textDecoration: "underline",
@@ -138,7 +156,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
           </div>
         </div>
         <Button
-          disabled={!formData1.CB_Substitube || formData1.CB_FileSubstitube}
+          // disabled={!formData1.CB_Substitube || formData1.CB_FileSubstitube}
+          disabled={Disable.ButtonSUB_ADD}
           type="primary"
           style={{ marginRight: "30px" }}
           onClick={() => {
@@ -159,9 +178,15 @@ const Step2 = ({ formData1, setFormData1 }) => {
             <LinkOutlined style={{ marginRight: "5px" }} />{" "}
             {formData1.FileName_Sub}{" "}
             <CloseOutlined
-            onClick={() => { DeleteFile('SUB','')}}
-            // DeleteFile
-              style={{ marginLeft: "20px", cursor: "pointer", color: "red" }}
+              onClick={() => {
+                DeleteFile("SUB", "");
+              }}
+              style={{
+                marginLeft: "20px",
+                cursor: "pointer",
+                color: "red",
+                display: formData1.ID_Status !== "MR0101" ? "none" : "",
+              }}
             />
           </p>
         )}
@@ -191,6 +216,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
             >
               Copy detail from No.
               <Input
+                disabled={Disable.Sub_CopyNo}
                 style={{ width: "70px", marginLeft: "10px" }}
                 value={formData1.Person_Sub[index].CopyNo}
                 onChange={(e) =>
@@ -198,6 +224,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 }
               ></Input>{" "}
               <Button
+                disabled={Disable.Sub_CopyNo}
                 type="primary"
                 style={{ marginLeft: "10px" }}
                 onClick={() => {
@@ -220,7 +247,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
           >
             <p style={{ marginRight: "10px" }}>{index + 1}.</p>
             <Input
-              disabled={formData1.CB_FileSubstitube}
+              // disabled={formData1.CB_FileSubstitube}
+              disabled={Disable.Sub_ID_Code}
               size="middle"
               value={formData1.Person_Sub[index].ID_Code}
               style={{ width: "100px", marginLeft: "10px" }}
@@ -267,7 +295,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
             <p style={{ marginLeft: "10px" }}>For Dept.:</p>
 
             <Select
-              disabled={formData1.CB_FileSubstitube}
+              // disabled={formData1.CB_FileSubstitube}
+              disabled={Disable.Sub_Dept}
               showSearch
               value={formData1.Person_Sub[index].Dept}
               style={{ width: "80px", marginLeft: "5px" }}
@@ -285,10 +314,11 @@ const Step2 = ({ formData1, setFormData1 }) => {
             />
             <p style={{ marginLeft: "10px" }}>Request Job Grade :</p>
             <Select
-              disabled={formData1.CB_FileSubstitube}
+              // disabled={formData1.CB_FileSubstitube}
+              disabled={Disable.Sub_Req_Jobgrade}
               showSearch
               mode="multiple"
-              maxTagCount={"responsive"}
+              // maxTagCount={"responsive"}
               value={formData1.Person_Sub[index].Req_Jobgrade}
               style={{ width: "150px", marginLeft: "5px" }}
               placeholder="Select Dept"
@@ -310,10 +340,11 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td colSpan={1}>
                 {" "}
                 <Select
-                  disabled={formData1.CB_FileSubstitube}
+                  // disabled={formData1.CB_FileSubstitube}
+                  disabled={Disable.Sub_Education}
                   showSearch
                   mode="multiple"
-                  maxTagCount={"responsive"}
+                  // maxTagCount={"responsive"}
                   value={formData1.Person_Sub[index].Education}
                   style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select Education"
@@ -332,6 +363,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td>
                 {" "}
                 <Input
+                  disabled={Disable.Sub_EducationOther}
                   style={{
                     display:
                       // formData1.Person_Sub[index].Field.includes("Other")
@@ -355,10 +387,11 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td align="right">Course (หลักสูตร):</td>
               <td colSpan={1}>
                 <Select
-                  disabled={formData1.CB_FileSubstitube}
+                  // disabled={formData1.CB_FileSubstitube}
+                  disabled={Disable.Sub_Course}
                   showSearch
                   mode="multiple"
-                  maxTagCount={"responsive"}
+                  // maxTagCount={"responsive"}
                   value={formData1.Person_Sub[index].Course}
                   style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select Course"
@@ -377,6 +410,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td>
                 {" "}
                 <Input
+                  disabled={Disable.Sub_CourseOther}
                   style={{
                     display:
                       formData1.Person_Sub[index].Course &&
@@ -397,10 +431,11 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td colSpan={1}>
                 {" "}
                 <Select
-                  disabled={formData1.CB_FileSubstitube}
+                  // disabled={formData1.CB_FileSubstitube}
+                  disabled={Disable.Sub_Field}
                   showSearch
                   mode="multiple"
-                  maxTagCount={"responsive"}
+                  // maxTagCount={"responsive"}
                   value={formData1.Person_Sub[index].Field}
                   style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select Field"
@@ -419,6 +454,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td>
                 {" "}
                 <Input
+                  disabled={Disable.Sub_FieldOther}
                   style={{
                     display:
                       formData1.Person_Sub[index].Field &&
@@ -437,7 +473,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td align="right">Special (คุณสมบัติพิเศษ):</td>
               <td colSpan={2}>
                 <TextArea
-                  disabled={formData1.CB_FileSubstitube}
+                  disabled={Disable.Sub_Special}
+                  // disabled={formData1.CB_FileSubstitube}
                   value={formData1.Person_Sub[index].Special}
                   style={{ width: "950px", height: "50px", marginLeft: "5px" }}
                   maxLength={2000}
@@ -452,7 +489,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td colSpan={2}>
                 {" "}
                 <TextArea
-                  disabled={formData1.CB_FileSubstitube}
+                  disabled={Disable.Sub_Experience}
+                  // disabled={formData1.CB_FileSubstitube}
                   style={{ width: "950px", height: "50px", marginLeft: "5px" }}
                   maxLength={2000}
                   value={formData1.Person_Sub[index].Experience}
@@ -468,7 +506,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td style={{ width: "300px" }}>
                 {" "}
                 <Select
-                  disabled={formData1.CB_FileSubstitube}
+                  // disabled={formData1.CB_FileSubstitube}
+                  disabled={Disable.Sub_StepLanguage}
                   showSearch
                   value={formData1.Person_Sub[index].StepLanguage}
                   style={{ width: "400px", marginLeft: "5px" }}
@@ -488,6 +527,15 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td>
                 {" "}
                 <Input
+                  disabled={Disable.Sub_StepLanguage_other}
+                  value={formData1.Person_Sub[index].Sub_StepLanguage_other}
+                  onChange={(e) =>
+                    handlePersonSubChange(
+                      index,
+                      "Sub_StepLanguage_other",
+                      e.target.value
+                    )
+                  }
                   style={{
                     display:
                       formData1.Person_Sub[index].StepLanguage &&
@@ -501,27 +549,20 @@ const Step2 = ({ formData1, setFormData1 }) => {
             <tr>
               <td align="right">คุณสมบัติอย่างละเอียด :</td>
               <td colSpan={2}>
-                {" "}
-                {/* <Upload maxCount={1}>
-                  <Button
-                    disabled={formData1.CB_FileSubstitube}
-                    icon={<UploadOutlined />}
-                    style={{ marginLeft: "5px" }}
-                  >
-                    Click to Upload
-                  </Button>
-                </Upload> */}
                 <div className="file-upload" style={{ marginLeft: "5px" }}>
                   <label
                     htmlFor="fileInputFeatureSUB"
                     className={`custom-file-upload ${
-                      formData1.CB_FileSubstitube ? "disabled" : ""
+                      formData1.CB_FileSubstitube||
+                      formData1.ID_Status !== "MR0101" ? "disabled" : ""
                     }`}
                     style={{
-                      pointerEvents: formData1.CB_FileSubstitube
+                      pointerEvents: formData1.CB_FileSubstitube||
+                  formData1.ID_Status !== "MR0101"
                         ? "none"
                         : "auto",
-                      opacity: formData1.CB_FileSubstitube ? 0.5 : 1,
+                      opacity: formData1.CB_FileSubstitube||
+                      formData1.ID_Status !== "MR0101" ? 0.5 : 1,
                     }}
                   >
                     <UploadOutlined /> Click to Attach file
@@ -530,7 +571,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
                     id="fileInputFeatureSUB"
                     type="file"
                     onChange={(e) => handleFilefeatureChange("SUB", index, e)}
-                    disabled={formData1.CB_FileSubstitube}
+                    disabled={formData1.CB_FileSubstitube||
+                  formData1.ID_Status !== "MR0101"}
                   />
                   {formData1.Person_Sub[index].Filefeature && (
                     <p
@@ -544,11 +586,14 @@ const Step2 = ({ formData1, setFormData1 }) => {
                       <LinkOutlined style={{ marginRight: "5px" }} />{" "}
                       {formData1.Person_Sub[index].Filefeature}{" "}
                       <CloseOutlined
-                       onClick={() => { DeleteFile('SUBFeature',index)}}
+                        onClick={() => {
+                          DeleteFile("SUBFeature", index);
+                        }}
                         style={{
                           marginLeft: "20px",
                           cursor: "pointer",
                           color: "red",
+                          display: formData1.ID_Status !== "MR0101" ? "none" : "",
                         }}
                       />
                     </p>
@@ -556,24 +601,22 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 </div>
               </td>
             </tr>
-            <tr>
-              <td colSpan={3} align="center">
-                {" "}
-                <Button
-                  disabled={formData1.CB_FileSubstitube}
-                  icon={<DeleteOutlined />}
-                  danger
-                  type="primary"
-                  style={{ marginBottom: "5px" }}
-                  onClick={() => {
-                    handleDeletePerson("Substitube", index);
-                  }}
-                >
-                  Delete Person
-                </Button>
-              </td>
-            </tr>
           </table>
+          <div align="center">
+            <Button
+              // disabled={formData1.CB_FileSubstitube}
+              disabled={Disable.Button_DeleteSub}
+              icon={<DeleteOutlined />}
+              danger
+              type="primary"
+              style={{ marginBottom: "5px" }}
+              onClick={() => {
+                handleDeletePerson("Substitube", index);
+              }}
+            >
+              Delete Person
+            </Button>
+          </div>
         </div>
       ))}
       <br />
@@ -583,6 +626,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
         onChange={(e) => {
           CheckReasontorequestADD(e);
         }}
+        disabled={Disable.CB_Additional}
       >
         Additional (เพิ่มกำลังคน)
       </Checkbox>
@@ -605,12 +649,14 @@ const Step2 = ({ formData1, setFormData1 }) => {
             }
             style={{ width: "1000px", height: "50px", marginLeft: "5px" }}
             maxLength={2000}
-            disabled={!formData1.CB_Additional}
+            // disabled={!formData1.CB_Additional}
+            disabled={Disable.txt_TargetCapacity1}
           />
         </div>
         <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
           <TextArea
-            disabled={!formData1.CB_Additional}
+            // disabled={!formData1.CB_Additional}
+            disabled={Disable.handleDelete}
             style={{ width: "1000px", height: "50px", marginLeft: "195px" }}
             maxLength={2000}
             value={formData1.txt_TargetCapacity2}
@@ -640,7 +686,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
           Person
           <Checkbox
             style={{ marginLeft: "30px" }}
-            disabled={!formData1.CB_Additional}
+            // disabled={!formData1.CB_Additional}
+            disabled={Disable.CB_FileAdditional}
             checked={formData1.CB_FileAdditional}
             onChange={(e) => {
               CB_AttachFileAdd(e);
@@ -652,17 +699,17 @@ const Step2 = ({ formData1, setFormData1 }) => {
             <label
               htmlFor="fileInputADD"
               className={`custom-file-upload ${
-                !formData1.CB_Additional || !formData1.CB_FileAdditional
+                !formData1.CB_Additional || !formData1.CB_FileAdditional ||formData1.ID_Status!="MR0101"
                   ? "disabled"
                   : ""
               }`}
               style={{
                 pointerEvents:
-                  !formData1.CB_Additional || !formData1.CB_FileAdditional
+                  !formData1.CB_Additional || !formData1.CB_FileAdditional||formData1.ID_Status!="MR0101"
                     ? "none"
                     : "auto",
                 opacity:
-                  !formData1.CB_Additional || !formData1.CB_FileAdditional
+                  !formData1.CB_Additional || !formData1.CB_FileAdditional||formData1.ID_Status!="MR0101"
                     ? 0.5
                     : 1,
               }}
@@ -674,7 +721,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               type="file"
               onChange={(e) => handleFileChange("ADD", e)}
               disabled={
-                !formData1.CB_Additional || !formData1.CB_FileAdditional
+                !formData1.CB_Additional || !formData1.CB_FileAdditional||formData1.ID_Status!="MR0101"
               }
             />
             <p
@@ -683,7 +730,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 marginLeft: "10px",
                 cursor: "pointer",
                 color:
-                  !formData1.CB_Additional || !formData1.CB_FileAdditional
+                  !formData1.CB_Additional || !formData1.CB_FileAdditional||formData1.ID_Status!="MR0101"
                     ? "gray"
                     : "blue",
                 textDecoration: "underline",
@@ -694,7 +741,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
           </div>
         </div>
         <Button
-          disabled={!formData1.CB_Additional || formData1.CB_FileAdditional}
+          // disabled={!formData1.CB_Additional || formData1.CB_FileAdditional}
+          disabled={Disable.ButtonADD_ADD}
           type="primary"
           style={{ marginRight: "30px" }}
           onClick={() => {
@@ -715,8 +763,10 @@ const Step2 = ({ formData1, setFormData1 }) => {
             <LinkOutlined style={{ marginRight: "5px" }} />{" "}
             {formData1.FileName_Add}{" "}
             <CloseOutlined
-              onClick={() => { DeleteFile('ADD','')}}
-              style={{ marginLeft: "20px", cursor: "pointer", color: "red" }}
+              onClick={() => {
+                DeleteFile("ADD", "");
+              }}
+              style={{ marginLeft: "20px", cursor: "pointer", color: "red" ,display:formData1.ID_Status!="MR0101"?'none':''}}
             />
           </p>
         )}
@@ -749,7 +799,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <p>Copy detail from No.</p>
             )}
             <Input
-              disabled={formData1.CB_FileAdditional}
+              // disabled={formData1.CB_FileAdditional}
+              disabled={Disable.ADD_CopyNo}
               size="middle"
               style={{ width: "70px", marginLeft: "10px" }}
               value={formData1.Person_ADD[index].CopyNo}
@@ -758,7 +809,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
               }
             />
             <Button
-              disabled={formData1.CB_FileAdditional}
+              // disabled={formData1.CB_FileAdditional}
+              disabled={Disable.ADD_CopyNo}
               type="primary"
               style={{ marginLeft: "10px" }}
               onClick={() => {
@@ -774,8 +826,11 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td colSpan={1}>
                 <Select
                   mode="multiple"
-                  maxTagCount={"responsive"}
-                  disabled={formData1.CB_FileAdditional}
+                  // maxTagCount={"responsive"}
+                  // disabled={formData1.CB_FileAdditional}
+                  disabled={Disable.ADD_Education}
+                  // disabled
+                  // gutter={[16, 16]}
                   showSearch
                   value={formData1.Person_ADD[index].Education}
                   style={{ width: "400px", marginLeft: "5px" }}
@@ -804,6 +859,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
                         : "none",
                   }}
                   value={formData1.Person_ADD[index].EducationOther}
+                  disabled={Disable.ADD_EducationOther}
                   onChange={(e) =>
                     handlePersonAddChange(
                       index,
@@ -820,8 +876,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 {" "}
                 <Select
                   mode="multiple"
-                  maxTagCount={"responsive"}
-                  disabled={formData1.CB_FileAdditional}
+                  // maxTagCount={"responsive"}
+                  disabled={Disable.ADD_Course}
                   showSearch
                   value={formData1.Person_ADD[index].Course}
                   style={{ width: "400px", marginLeft: "5px" }}
@@ -841,6 +897,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td>
                 {" "}
                 <Input
+                 disabled={Disable.ADD_CourseOther}
                   style={{
                     display:
                       formData1.Person_ADD[index].Course &&
@@ -861,10 +918,11 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td colSpan={1}>
                 {" "}
                 <Select
-                  disabled={formData1.CB_FileAdditional}
+                  // disabled={formData1.CB_FileAdditional}
+                  disabled={Disable.ADD_Field}
                   showSearch
                   mode="multiple"
-                  maxTagCount={"responsive"}
+                  // maxTagCount={"responsive"}
                   value={formData1.Person_ADD[index].Field}
                   style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select Field"
@@ -883,6 +941,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td>
                 {" "}
                 <Input
+                disabled={Disable.ADD_FieldOther}
                   style={{
                     display:
                       formData1.Person_ADD[index].Field &&
@@ -903,7 +962,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td colSpan={2}>
                 {" "}
                 <TextArea
-                  disabled={formData1.CB_FileAdditional}
+                  // disabled={formData1.CB_FileAdditional}
+                  disabled={Disable.ADD_Special}
                   style={{ width: "960px", height: "50px", marginLeft: "5px" }}
                   maxLength={2000}
                   value={formData1.Person_ADD[index].Special}
@@ -918,7 +978,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td colSpan={2}>
                 {" "}
                 <TextArea
-                  disabled={formData1.CB_FileAdditional}
+                  disabled={Disable.ADD_Experience}
+                  // disabled={formData1.CB_FileAdditional}
                   style={{ width: "960px", height: "50px", marginLeft: "5px" }}
                   maxLength={2000}
                   value={formData1.Person_ADD[index].Experience}
@@ -935,7 +996,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 {" "}
                 <Select
                   showSearch
-                  disabled={formData1.CB_FileAdditional}
+                  // disabled={formData1.CB_FileAdditional}
+                  disabled={Disable.ADD_StepLanguage}
                   value={formData1.Person_ADD[index].StepLanguage}
                   style={{ width: "400px", marginLeft: "5px" }}
                   placeholder="Select English Language or other"
@@ -954,6 +1016,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               <td>
                 {" "}
                 <Input
+                disabled={Disable.ADD_StepLanguage_other}
                   style={{
                     display:
                       formData1.Person_ADD[index].StepLanguage &&
@@ -975,27 +1038,17 @@ const Step2 = ({ formData1, setFormData1 }) => {
             <tr>
               <td align="right">คุณสมบัติอย่างละเอียด :</td>
               <td colSpan={2}>
-                {/* {" "}
-                <Upload maxCount={1}>
-                  <Button
-                    disabled={formData1.CB_FileAdditional}
-                    icon={<UploadOutlined />}
-                    style={{ marginLeft: "5px" }}
-                  >
-                    Click to Upload
-                  </Button>
-                </Upload> */}
                 <div className="file-upload" style={{ marginLeft: "5px" }}>
                   <label
                     htmlFor="fileInputFeatureADD"
                     className={`custom-file-upload ${
-                      formData1.CB_FileAdditional ? "disabled" : ""
+                      formData1.CB_FileAdditional||formData1.ID_Status!='MR0101' ? "disabled" : ""
                     }`}
                     style={{
-                      pointerEvents: formData1.CB_FileAdditional
+                      pointerEvents: formData1.CB_FileAdditional||formData1.ID_Status!='MR0101'
                         ? "none"
                         : "auto",
-                      opacity: formData1.CB_FileAdditional ? 0.5 : 1,
+                      opacity: formData1.CB_FileAdditional||formData1.ID_Status!='MR0101' ? 0.5 : 1,
                     }}
                   >
                     <UploadOutlined /> Click to Attach file
@@ -1004,7 +1057,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
                     id="fileInputFeatureADD"
                     type="file"
                     onChange={(e) => handleFilefeatureChange("ADD", index, e)}
-                    disabled={formData1.CB_FileAdditional}
+                    disabled={formData1.CB_FileAdditional||formData1.ID_Status!='MR0101'}
                   />
                   {formData1.Person_ADD[index].Filefeature && (
                     <p
@@ -1018,11 +1071,14 @@ const Step2 = ({ formData1, setFormData1 }) => {
                       <LinkOutlined style={{ marginRight: "5px" }} />{" "}
                       {formData1.Person_ADD[index].Filefeature}{" "}
                       <CloseOutlined
-                        onClick={() => { DeleteFile('ADDFeature',index)}}
+                        onClick={() => {
+                          DeleteFile("ADDFeature", index);
+                        }}
                         style={{
                           marginLeft: "20px",
                           cursor: "pointer",
                           color: "red",
+                          display: formData1.ID_Status !== "MR0101" ? "none" : "",
                         }}
                       />
                     </p>
@@ -1030,26 +1086,50 @@ const Step2 = ({ formData1, setFormData1 }) => {
                 </div>
               </td>
             </tr>
-            <tr>
-              <td colSpan={3} align="center">
-                {" "}
-                <Button
-                  disabled={formData1.CB_FileAdditional}
-                  icon={<DeleteOutlined />}
-                  danger
-                  type="primary"
-                  style={{ marginBottom: "5px" }}
-                  onClick={() => {
-                    handleDeletePerson("Additional", index);
-                  }}
-                >
-                  Delete Person
-                </Button>
-              </td>
-            </tr>
           </table>
+          <div align="center">
+            {" "}
+            <Button
+              // disabled={formData1.CB_FileAdditional}
+              disabled={Disable.Button_DeleteAdd}
+              icon={<DeleteOutlined />}
+              danger
+              type="primary"
+              style={{ marginBottom: "5px" }}
+              onClick={() => {
+                handleDeletePerson("Additional", index);
+              }}
+            >
+              Delete Person
+            </Button>
+          </div>
         </div>
       ))}
+      <div align="center" style={{ marginTop: "10px" }}>
+        {" "}
+        <Button
+          type="primary"
+          style={{
+            display: formData1.ID_Status != "MR0101" ? "none" : "",
+
+            backgroundColor: "#758694",
+            color: "#FFFFFF",
+          }}
+        >
+          Reset
+        </Button>
+        <Button
+          type="primary"
+          style={{
+            marginLeft: "10px",
+            display: formData1.ID_Status != "MR0101" ? "none" : "",
+            backgroundColor: "#FF9D23",
+          }}
+          onClick={() => SaveDraft()}
+        >
+          Save Draft
+        </Button>
+      </div>
     </div>
   );
 };

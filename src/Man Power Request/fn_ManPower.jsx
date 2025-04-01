@@ -8,7 +8,7 @@ import { fn_Header } from "../Header/fn_Header";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useLoading } from "../loading/fn_loading";
-import { useLocation } from "react-router-dom";
+import { Await, useLocation } from "react-router-dom";
 
 function fn_ManPower() {
   const steps = [
@@ -32,7 +32,7 @@ function fn_ManPower() {
   const { showLoading, hideLoading } = useLoading();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const ReqNo = queryParams.get("ReqNo"); 
+  const ReqNo = queryParams.get("ReqNo");
   const Email = localStorage.getItem("Email");
 
   const { token } = theme.useToken();
@@ -47,7 +47,7 @@ function fn_ManPower() {
     SL_Factory: null,
     txt_ReqStatus: "Create",
     ID_Status: "MR0101",
-    StatusCode: "",
+    // StatusCode: "",
     txt_ReqDate: DateToday,
     txt_ReqNo: "",
     txt_ReqBy: "",
@@ -57,7 +57,6 @@ function fn_ManPower() {
     SL_Position: null,
     Date_Target: null,
     CB_EmpRequirment: [],
-    // txt_ReqTotal: 0,
     SL_EmployeeType: null,
     txt_EmpType_Other: "",
     txt_EmpReq_Other: "",
@@ -138,16 +137,172 @@ function fn_ManPower() {
     //step4
   });
 
+  const [Disable, setDisable] = useState({
+    //false โชว์ true ซ่อน
+    SL_Factory: false,
+    SL_Department: false,
+    txt_Email: false,
+    txt_TelNo: false,
+    SL_Position: false,
+    Date_Target: false,
+    CB_EmpRequirment: false,
+    SL_EmployeeType: false,
+    txt_EmpType_Other: false,
+    txt_EmpReq_Other: false,
+    txt_Remark: false,
+    //Step2
+    CB_Substitube: false,
+    CB_FileSubstitube: false,
+    ButtonSUB_ADD: false,
+
+    // ---
+      Sub_CopyNo: false,
+      Sub_ID_Code: false,
+      Sub_for_Dept: false,
+      Sub_Req_Jobgrade: false,
+      Sub_Education: false,
+      Sub_EducationOther: false,
+      Sub_Course: false,
+      Sub_CourseOther: false,
+      Sub_FieldOther: false,
+      Sub_Special: false,
+      Sub_Experience: false,
+      Sub_StepLanguage: false,
+      Sub_StepLanguage_other: false,
+      Button_DeleteSub: false,
+
+    //---Step2.add
+    CB_Additional: false,
+    txt_TargetCapacity1: false,
+    txt_TargetCapacity2: false,
+    CB_FileAdditional: false,
+    ButtonADD_ADD: false,
+
+      ADD_CopyNo: false,
+      ADD_Education: false,
+      ADD_EducationOther: false,
+      ADD_Course: false,
+      ADD_CourseOther: false,
+      ADD_Field: false,
+      ADD_FieldOther: false,
+      ADD_Special: false,
+      ADD_Experience: false,
+      ADD_StepLanguage: false,
+      ADD_StepLanguage_other: false,
+      // ADD_Filefeature: false,
+      // ADD_FileServerfeature: false,
+      // ADD_DataFilefeature: false,
+      Button_DeleteAdd: false,
+    // //step3
+    // SL_DepartmentManager: false,
+    // CB_DepartmentApprove: false,
+    // Date_DepartmentManager: false,
+    // txt_CommentDepartmentmanager: false,
+    // // --
+    // SL_FMGM: false,
+    // CB_FMGMApprove: false,
+    // Date_FMGM: false,
+    // txt_CommentFMGM: false,
+    // // --
+    // SL_HRManager: false,
+    // CB_HRManagerApprove: false,
+    // Date_HRManager: false,
+    // txt_CommentHRManager: false,
+  });
+
   useEffect(() => {
+
     FetchData();
     // handleChange("txt_ReqBy", datauser.LOGIN);
   }, []);
+
+  const DisableChange = (field, value) => {
+    setDisable((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const GetDisable = async (ID_Status) => {
+    console.log("ID_Status0", ID_Status);
+    // let status = formData1.ID_Status;
+    // console.log("ID_Status1", status);
+    if (ID_Status == "MR0101") {
+      DisableChange("SL_Factory", true);
+      DisableChange("SL_Department", true);
+      DisableChange("SL_Position", true);
+    }
+    if (ID_Status == "MR0102") {
+      console.log("ID_Status3", ID_Status);
+      DisableChange("SL_Factory", true);
+      DisableChange("SL_Department", true);
+      DisableChange("SL_Position", true);
+      DisableChange("txt_Email", true);
+      DisableChange("txt_TelNo", true);
+      DisableChange("Date_Target", true);
+      DisableChange("CB_EmpRequirment", true);
+      DisableChange("SL_EmployeeType", true);
+      DisableChange("txt_EmpType_Other", true);
+      DisableChange("txt_EmpReq_Other", true);
+      DisableChange("txt_Remark", true);
+     
+      // step2
+      DisableChange("CB_Substitube", true);
+      DisableChange("CB_FileSubstitube", true);
+      DisableChange("Button_ADD", true);
+      DisableChange("Sub_CopyNo", true);
+      DisableChange("Sub_ID_Code", true);
+      DisableChange("Sub_Dept", true);
+      DisableChange("Sub_Req_Jobgrade", true);
+      DisableChange("Sub_Education", true);
+      DisableChange("Sub_EducationOther", true);
+      DisableChange("Sub_Course", true);
+      DisableChange("Sub_CourseOther", true);
+      DisableChange("Sub_Field", true);
+      DisableChange("Sub_FieldOther", true);
+      DisableChange("Sub_Special", true);
+      DisableChange("Sub_Experience", true);
+      DisableChange("Sub_StepLanguage", true);
+      DisableChange("Sub_StepLanguage_other", true);
+      DisableChange("Button_DeleteSub", true);
+
+      DisableChange("CB_Additional", true);
+      DisableChange("txt_TargetCapacity1", true);
+      DisableChange("handleDelete", true);
+      DisableChange("CB_FileAdditional", true);
+      DisableChange("ButtonADD_ADD", true);
+      DisableChange("ADD_Education", true);
+      DisableChange("ADD_EducationOther", true);
+      DisableChange("ADD_Course", true);
+      DisableChange("ADD_ourseOther", true);
+      DisableChange("ADD_CopyNo", true);
+      // DisableChange("Sub_Course", true);
+      // DisableChange("Sub_CourseOther", true);
+      DisableChange("ADD_Field", true);
+      DisableChange("ADD_FieldOther", true);
+      DisableChange("ADD_Special", true);
+      DisableChange("ADD_Experience", true);
+      DisableChange("ADD_StepLanguage", true);
+      DisableChange("ADD_StepLanguage_other", true);
+      DisableChange("Button_DeleteAdd", true);
+      //step3
+      
+      // DisableChange("Sub_Special", true);
+      // DisableChange("Sub_Experience", true);
+      // DisableChange("Sub_StepLanguage", true);
+      // DisableChange("Sub_StepLanguage_other", true);
+      // DisableChange("Button_DeleteSub", true);
+    }
+  };
 
   const FetchData = async () => {
     if (ReqNo != null) {
       showLoading("Loading...");
       await GetdataEdit();
+      // await GetDisable(formData1.ID_Status);
       hideLoading();
+    }
+    else{
+      handleChange("txt_ReqStatus", "Create");
+      handleChange("ID_Status", "MR0101");
+      await GetDisable(formData1.ID_Status);
     }
   };
 
@@ -156,13 +311,15 @@ function fn_ManPower() {
       .post("/api/RequestManPower/GetDataEdit", {
         ReqNo: ReqNo,
       })
-      .then((res) => {
+      .then(async(res) => {
+        await GetDisable(res.data[0].Status_code);
         console.log(res.data, "GetDataEdit");
         handleChange("txt_ReqNo", res.data[0].Req_No);
         handleChange("SL_Factory", res.data[0].Fac_code || null);
         handleChange("txt_ReqStatus", res.data[0].Status_Desc);
         handleChange("ID_Status", res.data[0].Status_code);
-        handleChange("StatusCode", res.data[0].Status_code);
+        // handleChange("StatusCode", res.data[0].Status_code);
+        handleChange("txt_ReqDate", res.data[0].Req_date);
         handleChange("txt_ReqBy", res.data[0].Dept_by);
         handleChange("SL_Department", res.data[0].Dept || null);
         handleChange("txt_Email", res.data[0].Email);
@@ -171,7 +328,10 @@ function fn_ManPower() {
         handleChange("Date_Target", res.data[0].Target_date);
         handleChange("txt_Remark", res.data[0].Remark);
 
-        handleChange("CB_Substitube", res.data[0].Cb_Sub=== "Y" ? true : false);
+        handleChange(
+          "CB_Substitube",
+          res.data[0].Cb_Sub === "Y" ? true : false
+        );
         handleChange("txt_TotalSubstitube", res.data[0].Sub_Total);
         handleChange(
           "CB_FileSubstitube",
@@ -187,7 +347,10 @@ function fn_ManPower() {
         handleChange("txt_TargetCapacity1", res.data[0].Add_Target1);
         handleChange("txt_TargetCapacity2", res.data[0].Add_Target2);
         handleChange("txt_TotalAdditional", res.data[0].Add_Total);
-        handleChange("CB_FileAdditional", res.data[0].Cb_AddFile=== "Y" ? true : false);
+        handleChange(
+          "CB_FileAdditional",
+          res.data[0].Cb_AddFile === "Y" ? true : false
+        );
         handleChange("FileName_Add", res.data[0].Add_FileName);
         handleChange("FileNameServer_Add", res.data[0].Add_FileNameServer);
 
@@ -496,10 +659,7 @@ function fn_ManPower() {
       });
   };
 
-  const GetFile = (FileNameServer) => {
-
-  };
-
+  const GetFile = (FileNameServer) => {};
 
   const validateStep1 = () => {
     if (formData1.txt_ReqNo == "") {
@@ -558,6 +718,8 @@ function fn_ManPower() {
     prev,
     next,
     contentStyle,
+    Disable,
+    setDisable,
   };
 }
 

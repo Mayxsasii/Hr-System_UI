@@ -13,7 +13,7 @@ const { TextArea } = Input;
 import moment from "moment";
 import { fn_NewManPowerRequset } from "./fn_NewManPowerRequset";
 
-const Step1 = ({ formData1, setFormData1 }) => {
+const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
   const {
     Factory,
     Department,
@@ -50,7 +50,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td style={{ textAlign: "right" }}>Factory :</td>
           <td>
             <Select
-              disabled={formData1.txt_ReqNo != "" ? true : false}
+              disabled={Disable.SL_Factory}
               showSearch
               value={formData1.SL_Factory}
               style={{
@@ -108,7 +108,7 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td style={{ textAlign: "right" }}>Department:</td>
           <td>
             <Select
-              disabled={formData1.txt_ReqNo != "" ? true : false}
+            disabled={Disable.SL_Department}
               showSearch
               value={formData1.SL_Department}
               style={{
@@ -132,6 +132,8 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td colSpan={3}>
             <Input
               value={formData1.txt_Email}
+              // disabled={formData1.ID_Status != "MR0101" ? true : false}
+              disabled={Disable.txt_Email}
               style={{ marginLeft: "5px", width: "600px" }}
               onChange={(e) => handleChange("txt_Email", e.target.value)}
             />
@@ -141,6 +143,8 @@ const Step1 = ({ formData1, setFormData1 }) => {
             <Input
               style={{ marginLeft: "5px", width: "200px" }}
               value={formData1.txt_TelNo}
+              // disabled={formData1.ID_Status != "MR0101" ? true : false}
+              disabled={Disable.txt_TelNo}
               onChange={(e) => handleChange("txt_TelNo", e.target.value)}
             />
           </td>
@@ -149,7 +153,8 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td style={{ textAlign: "right" }}>Position Requirement :</td>
           <td>
             <Select
-              disabled={formData1.txt_ReqNo != "" ? true : false}
+              // disabled={formData1.txt_ReqNo != "" ? true : false}
+              disabled={Disable.SL_Position}
               showSearch
               value={formData1.SL_Position}
               style={{
@@ -172,7 +177,9 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td style={{ textAlign: "right" }}>Target Date :</td>
           <td>
             <DatePicker
-              style={{ marginLeft: "5px", width: "200px" }}
+            //  disabled={formData1.ID_Status != "MR0101" ? true : false}
+            disabled={Disable.Date_Target}
+            style={{ marginLeft: "5px", width: "200px" }}
               value={
                 formData1.Date_Target
                   ? moment(formData1.Date_Target, "DD/MM/YYYY")
@@ -199,6 +206,8 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td style={{ textAlign: "right" }}>Employee Requirment :</td>
           <td colSpan={5}>
             <Checkbox.Group
+            //  disabled={formData1.ID_Status != "MR0101" ? true : false}
+            disabled={Disable.CB_EmpRequirment}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -229,6 +238,8 @@ const Step1 = ({ formData1, setFormData1 }) => {
 
                 <Select
                   showSearch
+                  disabled={Disable.SL_EmployeeType}
+                  // disabled={formData1.ID_Status != "MR0101" ? true : false}
                   value={formData1.SL_EmployeeType}
                   style={{
                     width: "200px",
@@ -254,6 +265,8 @@ const Step1 = ({ formData1, setFormData1 }) => {
                   }}
                 />
                 <Input
+                //  disabled={formData1.ID_Status != "MR0101" ? true : false}
+                disabled={Disable.txt_EmpType_Other}
                   style={{
                     width: "450px",
                     display:
@@ -272,6 +285,8 @@ const Step1 = ({ formData1, setFormData1 }) => {
               <div style={{ marginTop: "2px" }}>
                 <Checkbox value="MR0290">Other</Checkbox>
                 <Input
+                 disabled={Disable.txt_EmpReq_Other}
+                //  disabled={formData1.ID_Status != "MR0101" ? true : false}
                   style={{
                     width: "815px",
                     display: formData1.CB_EmpRequirment.includes("MR0290")
@@ -291,6 +306,8 @@ const Step1 = ({ formData1, setFormData1 }) => {
           <td style={{ textAlign: "right" }}>Remark :</td>
           <td colSpan={5}>
             <TextArea
+            disabled={Disable.txt_Remark}
+            //  disabled={formData1.ID_Status != "MR0101" ? true : false}
               value={formData1.txt_Remark}
               onChange={(e) => handleChange("txt_Remark", e.target.value)}
               style={{ width: "1000px", height: "50px" }}

@@ -4,7 +4,7 @@ import { useLoading } from "../../loading/fn_loading";
 import { fn_Header } from "../../Header/fn_Header";
 import Swal from "sweetalert2";
 import moment from "moment";
-function fn_NewManPowerRequset(formData1, setFormData1) {
+function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
   const { datauser } = fn_Header();
   const { showLoading, hideLoading } = useLoading();
   const userlogin = localStorage.getItem("username");
@@ -89,6 +89,10 @@ function fn_NewManPowerRequset(formData1, setFormData1) {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
 
+  const DisableChange = (field, value) => {
+    setDisable((prev) => ({ ...prev, [field]: value }));
+  };
+
   const GetStatusCode = async () => {
     let status_code = "";
     await axios
@@ -98,7 +102,7 @@ function fn_NewManPowerRequset(formData1, setFormData1) {
       .then((res) => {
         console.log(res.data, "StatusCode");
         status_code = res.data[0].StatusCode;
-        handleChange("StatusCode ", res.data[0].StatusCode);
+        handleChange("ID_Status ", res.data[0].StatusCode);
       });
     return status_code;
   };
@@ -232,6 +236,9 @@ function fn_NewManPowerRequset(formData1, setFormData1) {
   const GetRunningNo = async () => {
     let GenNo = "";
     console.log(formData1.CB_EmpRequirment.length, "GetRunningNo");
+    DisableChange("SL_Factory", true);
+    DisableChange("SL_Department", true);
+    DisableChange("SL_Position", true);
     const factory = Factory.find((f) => f.value === formData1.SL_Factory);
   
     let status_code = await GetStatusCode();

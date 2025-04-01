@@ -4,7 +4,7 @@ import { useLoading } from "../../loading/fn_loading";
 import { fn_Header } from "../../Header/fn_Header";
 import Swal from "sweetalert2";
 
-function fn_ReasontoRequest(formData1, setFormData1) {
+function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
   console.log(formData1, "fn_ReasontoRequest");
   const { datauser } = fn_Header();
   const [ForDept, setForDept] = useState([]);
@@ -23,11 +23,6 @@ function fn_ReasontoRequest(formData1, setFormData1) {
     GetField();
     GetEnglish();
     GetRequestJobGrade();
-    // handlePersonSubChange(0, "Dept", formData1.SL_Department);
-    // handlePersonSubChange(0, "Req_Jobgrade", formData1.SL_Department);
-    // formData1.Person_Sub.forEach((_, index) => {
-    //   handlePersonSubChange(index, "Dept", formData1.SL_Department);
-    // });
   }, []);
 
   const GetForDept = async () => {
@@ -589,6 +584,9 @@ function fn_ReasontoRequest(formData1, setFormData1) {
     }
   };
   
+  const DisableChange = (field, value) => {
+    setDisable((prev) => ({ ...prev, [field]: value }));
+  };
 
 
   return {
@@ -614,6 +612,7 @@ function fn_ReasontoRequest(formData1, setFormData1) {
     handleFileChange,
     handleFilefeatureChange,
     DeleteFile,
+    DisableChange
   };
 }
 
