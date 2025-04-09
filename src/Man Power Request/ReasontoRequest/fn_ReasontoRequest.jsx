@@ -14,8 +14,6 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
   const [Field, setField] = useState([]);
   const [English, setEnglish] = useState([]);
 
-  
-
   useEffect(() => {
     GetForDept();
     GetEducation();
@@ -171,6 +169,8 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
     if (formData1.CB_Substitube == false) {
       setFormData1({ ...formData1, CB_Substitube: e.target.checked });
       handleChange("txt_TotalSubstitube", 1);
+      DisableChange("ButtonSUB_ADD",false);
+      DisableChange("CB_FileSubstitube",false);
     } else {
       Swal.fire({
         title: "Do you not want to Substitube?",
@@ -181,6 +181,8 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
+          DisableChange("ButtonSUB_ADD",true);
+          DisableChange("CB_FileSubstitube",true);
           setFormData1({ ...formData1, CB_Substitube: e.target.checked });
           handleChange("txt_TotalSubstitube", 0);
           //
@@ -189,6 +191,9 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
             CB_Substitube: e.target.checked,
             txt_TotalSubstitube: 0,
             CB_FileSubstitube: "",
+            FileName_Sub: "",
+            FileNameServer_Sub: "",
+            DataFileSub: null,
             Person_Sub: [
               {
                 CopyNo: "",
@@ -222,6 +227,10 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
       console.log("กงนี้");
       setFormData1({ ...formData1, CB_Additional: e.target.checked });
       handleChange("txt_TotalAdditional", 1);
+      DisableChange("ButtonADD_ADD",false);
+      DisableChange("CB_FileAdditional",false);
+      DisableChange("txt_TargetCapacity1",false);
+      DisableChange("txt_TargetCapacity2",false);
     } else {
       Swal.fire({
         title: "Do you not want to Additional?",
@@ -232,6 +241,10 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
         cancelButtonText: "ยกเลิก",
       }).then((result) => {
         if (result.isConfirmed) {
+          DisableChange("ButtonADD_ADD",true);
+          DisableChange("CB_FileAdditional",true);
+          DisableChange("txt_TargetCapacity1",true);
+          DisableChange("txt_TargetCapacity2",true);
           setFormData1({
             ...formData1,
             CB_Additional: e.target.checked,
@@ -239,6 +252,9 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
             txt_TargetCapacity2: "",
             txt_TotalAdditional: 0,
             CB_FileAdditional: "",
+            FileName_Add: "",
+            FileNameServer_Add: "",
+            DataFileADD: null,
             Person_ADD: [
               {
                 CopyNo: "",
@@ -250,6 +266,8 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
                 StepLanguage: null,
                 StepLanguage_other: "",
                 Filefeature: "",
+                FileServerfeature: "",
+                DataFilefeature: null,
               },
             ],
           });
@@ -259,7 +277,7 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
   };
 
   const handleCopySub = (PersonNoCopy, index) => {
-    if (PersonNoCopy > formData1.txt_TotalSubstitube || PersonNoCopy == 0) {
+    if (PersonNoCopy >= formData1.txt_TotalSubstitube || PersonNoCopy == 0) {
       handlePersonSubChange(index, "CopyNo", "");
       Swal.fire({
         title: "Data not found",
@@ -304,6 +322,8 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
         const sourcePerson = { ...PersonSub[PersonNoCopy - 1] };
         newPersonADD[index] = {
           ...newPersonADD[index],
+          Dept: sourcePerson.Dept,
+          Req_Jobgrade: sourcePerson.Req_Jobgrade,
           Education: sourcePerson.Education,
           EducationOther: sourcePerson.EducationOther,
           Course: sourcePerson.Course,
@@ -319,7 +339,7 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
         setFormData1({ ...formData1, Person_ADD: newPersonADD });
       }
     } else {
-      if (PersonNoCopy > formData1.txt_TotalAdditional || PersonNoCopy == 0) {
+      if (PersonNoCopy >= formData1.txt_TotalAdditional || PersonNoCopy == 0) {
         handlePersonAddChange(index, "CopyNo", "");
         Swal.fire({
           title: "Data not found",
@@ -355,6 +375,8 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
  
   if(e.target.checked){ //true
     console.log( e.target.checked,'Check')
+    setDisable((prev) => ({
+      ...prev,ButtonSUB_ADD:true}))
     setFormData1((prev) => ({
       ...prev,
       CB_FileSubstitube: e.target.checked,
@@ -391,6 +413,8 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
     handleChange("FileName_Sub", '');
     handleChange("FileNameServer_Sub", '');
     handleChange("DataFileSub", null);
+    setDisable((prev) => ({
+      ...prev,ButtonSUB_ADD:false}))
     const input = document.getElementById("fileInputSUB");
     if (input) input.value = "";
   }
@@ -399,6 +423,8 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
   const CB_AttachFileAdd = (e) => {
     // setFormData1({ ...formData1, CB_FileSubstitube: e.target.checked });
     if(e.target.checked){ //true
+      setDisable((prev) => ({
+        ...prev,ButtonADD_ADD:true}))
     setFormData1((prev) => ({
       ...prev,
       CB_FileAdditional : e.target.checked,
@@ -423,6 +449,8 @@ function fn_ReasontoRequest(formData1, setFormData1,Disable,setDisable) {
       ],
     }));
   }else{
+    setDisable((prev) => ({
+      ...prev,ButtonADD_ADD:false}))
     handleChange("CB_FileAdditional", e.target.checked);
     handleChange("txt_TotalAdditional", 1);
     handleChange("FileName_Add", '');

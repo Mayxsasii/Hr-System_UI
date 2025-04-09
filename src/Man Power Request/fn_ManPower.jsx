@@ -47,7 +47,7 @@ function fn_ManPower() {
     SL_Factory: null,
     txt_ReqStatus: "Create",
     ID_Status: "MR0101",
-    // StatusCode: "",
+    StatusType: "C",
     txt_ReqDate: DateToday,
     txt_ReqNo: "",
     txt_ReqBy: "",
@@ -77,7 +77,6 @@ function fn_ManPower() {
         Cost_Center: "",
         Job_grade: "",
         Dept: null,
-        for_Dept: "",
         Req_Jobgrade: null,
         Education: null,
         EducationOther: null,
@@ -106,6 +105,8 @@ function fn_ManPower() {
     Person_ADD: [
       {
         CopyNo: "",
+        Dept: null,
+        Req_Jobgrade: null,
         Education: null,
         EducationOther: "",
         Course: null,
@@ -123,18 +124,45 @@ function fn_ManPower() {
     ],
     //step3
     SL_DepartmentManager: null,
-    CB_DepartmentApprove: "Approve",
-    Date_DepartmentManager: "",
+    CB_DepartmentApprove: "A",
+    Date_DepartmentManager: DateToday,
     txt_CommentDepartmentmanager: "",
     SL_FMGM: null,
-    CB_FMGMApprove: "Approve",
-    Date_FMGM: "",
+    CB_FMGMApprove: "A",
+    Date_FMGM: DateToday,
     txt_CommentFMGM: "",
     SL_HRManager: null,
-    CB_HRManagerApprove: "Approve",
-    Date_HRManager: "",
+    CB_HRManagerApprove: "A",
+    Date_HRManager: DateToday,
     txt_CommentHRManager: "",
     //step4
+    Radio_HrStatus: "MR0106",
+    Sl_HrCloseBy: null,
+    Date_HrAction: DateToday,
+    txt_HrComment: "",
+    txt_TotalManual: 0,
+    txt_TotalRemain: 0,
+    CB_HrFileAttach: false,
+    Hr_FileAttach: "",
+    Hr_FileAttachServer: "",
+    Hr_DataFileAttach: null,
+   
+    Hr_Add:[{
+      CB_Complete: false,
+      Emp_id:"",
+      Emp_name:"",
+      Emp_sername:"",
+      Emp_JoinDate:'',
+    }],
+    Hr_Sub:[{
+      CB_Complete: false,
+      Emp_id:"",
+      Emp_name:"",
+      Emp_sername:"",
+      Emp_JoinDate:'',
+    }],
+ 
+
   });
 
   const [Disable, setDisable] = useState({
@@ -152,85 +180,96 @@ function fn_ManPower() {
     txt_Remark: false,
     //Step2
     CB_Substitube: false,
-    CB_FileSubstitube: false,
-    ButtonSUB_ADD: false,
+    CB_FileSubstitube: true,
+    ButtonSUB_ADD: true,
 
     // ---
-      Sub_CopyNo: false,
-      Sub_ID_Code: false,
-      Sub_for_Dept: false,
-      Sub_Req_Jobgrade: false,
-      Sub_Education: false,
-      Sub_EducationOther: false,
-      Sub_Course: false,
-      Sub_CourseOther: false,
-      Sub_FieldOther: false,
-      Sub_Special: false,
-      Sub_Experience: false,
-      Sub_StepLanguage: false,
-      Sub_StepLanguage_other: false,
-      Button_DeleteSub: false,
+    Sub_CopyNo: false,
+    Sub_ID_Code: false,
+    Sub_Req_Jobgrade: false,
+    Sub_Education: false,
+    Sub_EducationOther: false,
+    Sub_Course: false,
+    Sub_CourseOther: false,
+    Sub_FieldOther: false,
+    Sub_Special: false,
+    Sub_Experience: false,
+    Sub_StepLanguage: false,
+    Sub_StepLanguage_other: false,
+    Button_DeleteSub: false,
 
     //---Step2.add
     CB_Additional: false,
-    txt_TargetCapacity1: false,
-    txt_TargetCapacity2: false,
-    CB_FileAdditional: false,
-    ButtonADD_ADD: false,
+    txt_TargetCapacity1: true,
+    txt_TargetCapacity2: true,
+    CB_FileAdditional: true,
+    ButtonADD_ADD: true,
 
-      ADD_CopyNo: false,
-      ADD_Education: false,
-      ADD_EducationOther: false,
-      ADD_Course: false,
-      ADD_CourseOther: false,
-      ADD_Field: false,
-      ADD_FieldOther: false,
-      ADD_Special: false,
-      ADD_Experience: false,
-      ADD_StepLanguage: false,
-      ADD_StepLanguage_other: false,
-      // ADD_Filefeature: false,
-      // ADD_FileServerfeature: false,
-      // ADD_DataFilefeature: false,
-      Button_DeleteAdd: false,
+    ADD_CopyNo: false,
+    ADD_Dept: false,
+    ADD_Req_Jobgrade: false,
+    ADD_Education: false,
+    ADD_EducationOther: false,
+    ADD_Course: false,
+    ADD_CourseOther: false,
+    ADD_Field: false,
+    ADD_FieldOther: false,
+    ADD_Special: false,
+    ADD_Experience: false,
+    ADD_StepLanguage: false,
+    ADD_StepLanguage_other: false,
+    Button_DeleteAdd: false,
     // //step3
-    // SL_DepartmentManager: false,
-    // CB_DepartmentApprove: false,
-    // Date_DepartmentManager: false,
-    // txt_CommentDepartmentmanager: false,
+    SL_DepartmentManager: false,
+    CB_DepartmentApprove: false,
+    txt_CommentDepartmentmanager: false,
     // // --
-    // SL_FMGM: false,
-    // CB_FMGMApprove: false,
-    // Date_FMGM: false,
-    // txt_CommentFMGM: false,
+    SL_FMGM: false,
+    CB_FMGMApprove: false,
+    txt_CommentFMGM: false,
     // // --
-    // SL_HRManager: false,
-    // CB_HRManagerApprove: false,
-    // Date_HRManager: false,
-    // txt_CommentHRManager: false,
+    SL_HRManager: false,
+    CB_HRManagerApprove: false,
+    txt_CommentHRManager: false,
   });
 
   useEffect(() => {
-
     FetchData();
-    // handleChange("txt_ReqBy", datauser.LOGIN);
   }, []);
 
   const DisableChange = (field, value) => {
     setDisable((prev) => ({ ...prev, [field]: value }));
   };
 
-  const GetDisable = async (ID_Status) => {
-    console.log("ID_Status0", ID_Status);
-    // let status = formData1.ID_Status;
-    // console.log("ID_Status1", status);
-    if (ID_Status == "MR0101") {
-      DisableChange("SL_Factory", true);
-      DisableChange("SL_Department", true);
-      DisableChange("SL_Position", true);
-    }
-    if (ID_Status == "MR0102") {
-      console.log("ID_Status3", ID_Status);
+  const GetDisable = async (ID_Status, StatusType) => {
+    console.log("ID_Status0", ID_Status, StatusType);
+    if (StatusType == "C" || StatusType == "R" ) {
+      // if(formData1.)
+      DisableChange("CB_DepartmentApprove", true);
+      DisableChange("txt_CommentDepartmentmanager", true);
+      DisableChange("CB_FMGMApprove", true);
+      DisableChange("txt_CommentFMGM", true);
+      DisableChange("CB_HRManagerApprove", true);
+      DisableChange("txt_CommentHRManager", true);
+      console.log("CB_Substitube", formData1.CB_Substitube);
+      // if (!formData1.CB_Substitube == true) {
+      // DisableChange("ButtonSUB_ADD", true);
+      // DisableChange("ButtonADD_ADD", true);
+
+      // DisableChange("CB_FileAdditional", false);
+      // DisableChange("CB_FileSubstitube", false);
+      // DisableChange("txt_TargetCapacity1", true);
+      // DisableChange("txt_TargetCapacity2", true);
+      // }
+    } else if (StatusType == "R") {
+      //StatusType == "C"||
+      // DisableChange("SL_Factory", true);
+      // DisableChange("SL_Department", true);
+      // DisableChange("SL_Position", true);
+      // DisableChange("SL_Factory", true);
+      // DisableChange("SL_Department", true);
+      // DisableChange("SL_Position", true);
+    } else {
       DisableChange("SL_Factory", true);
       DisableChange("SL_Department", true);
       DisableChange("SL_Position", true);
@@ -242,7 +281,7 @@ function fn_ManPower() {
       DisableChange("txt_EmpType_Other", true);
       DisableChange("txt_EmpReq_Other", true);
       DisableChange("txt_Remark", true);
-     
+
       // step2
       DisableChange("CB_Substitube", true);
       DisableChange("CB_FileSubstitube", true);
@@ -265,16 +304,17 @@ function fn_ManPower() {
 
       DisableChange("CB_Additional", true);
       DisableChange("txt_TargetCapacity1", true);
+      DisableChange("txt_TargetCapacity2", true);
       DisableChange("handleDelete", true);
       DisableChange("CB_FileAdditional", true);
       DisableChange("ButtonADD_ADD", true);
       DisableChange("ADD_Education", true);
+      DisableChange("ADD_Dept", true);
+      DisableChange("ADD_Req_Jobgrade", true);
       DisableChange("ADD_EducationOther", true);
       DisableChange("ADD_Course", true);
       DisableChange("ADD_ourseOther", true);
       DisableChange("ADD_CopyNo", true);
-      // DisableChange("Sub_Course", true);
-      // DisableChange("Sub_CourseOther", true);
       DisableChange("ADD_Field", true);
       DisableChange("ADD_FieldOther", true);
       DisableChange("ADD_Special", true);
@@ -282,13 +322,29 @@ function fn_ManPower() {
       DisableChange("ADD_StepLanguage", true);
       DisableChange("ADD_StepLanguage_other", true);
       DisableChange("Button_DeleteAdd", true);
-      //step3
-      
-      // DisableChange("Sub_Special", true);
-      // DisableChange("Sub_Experience", true);
-      // DisableChange("Sub_StepLanguage", true);
-      // DisableChange("Sub_StepLanguage_other", true);
-      // DisableChange("Button_DeleteSub", true);
+
+      DisableChange("SL_DepartmentManager", true);
+      DisableChange("SL_FMGM", true);
+      DisableChange("SL_HRManager", true);
+
+      if (StatusType == "A") {
+        if (ID_Status == "MR0103") {
+          DisableChange("CB_DepartmentApprove", true);
+          DisableChange("txt_CommentDepartmentmanager", true);
+        } else if (ID_Status == "MR0104") {
+          DisableChange("CB_DepartmentApprove", true);
+          DisableChange("txt_CommentDepartmentmanager", true);
+          DisableChange("CB_FMGMApprove", true);
+          DisableChange("txt_CommentFMGM", true);
+        }
+      } else if (StatusType == "H"|| StatusType == "F") {
+        DisableChange("CB_DepartmentApprove", true);
+        DisableChange("txt_CommentDepartmentmanager", true);
+        DisableChange("CB_FMGMApprove", true);
+        DisableChange("txt_CommentFMGM", true);
+        DisableChange("CB_HRManagerApprove", true);
+        DisableChange("txt_CommentHRManager", true);
+      }
     }
   };
 
@@ -298,11 +354,10 @@ function fn_ManPower() {
       await GetdataEdit();
       // await GetDisable(formData1.ID_Status);
       hideLoading();
-    }
-    else{
+    } else {
       handleChange("txt_ReqStatus", "Create");
       handleChange("ID_Status", "MR0101");
-      await GetDisable(formData1.ID_Status);
+      await GetDisable(formData1.ID_Status, "C");
     }
   };
 
@@ -311,14 +366,31 @@ function fn_ManPower() {
       .post("/api/RequestManPower/GetDataEdit", {
         ReqNo: ReqNo,
       })
-      .then(async(res) => {
-        await GetDisable(res.data[0].Status_code);
+      .then(async (res) => {
+        await GetDisable(res.data[0].Status_code, res.data[0].Status_Type);
         console.log(res.data, "GetDataEdit");
         handleChange("txt_ReqNo", res.data[0].Req_No);
         handleChange("SL_Factory", res.data[0].Fac_code || null);
         handleChange("txt_ReqStatus", res.data[0].Status_Desc);
         handleChange("ID_Status", res.data[0].Status_code);
-        // handleChange("StatusCode", res.data[0].Status_code);
+        if (res.data[0].Status_Type == "C" || res.data[0].Status_Type == "R") {
+          console.log("vvvvvvv", res.data[0].Cb_Sub);
+          DisableChange("SL_Factory", true);
+          DisableChange("SL_Department", true);
+          DisableChange("SL_Position", true);
+
+          if (res.data[0].Cb_Sub == "Y") {
+            DisableChange("ButtonSUB_ADD", false);
+            DisableChange("CB_FileSubstitube", false);
+          }
+          if (res.data[0].Cb_Add == "Y") {
+            DisableChange("ButtonADD_ADD", false);
+            DisableChange("CB_FileAdditional", false);
+            DisableChange("txt_TargetCapacity1", false);
+            DisableChange("txt_TargetCapacity2", false);
+          }
+        }
+        handleChange("StatusType", res.data[0].Status_Type);
         handleChange("txt_ReqDate", res.data[0].Req_date);
         handleChange("txt_ReqBy", res.data[0].Dept_by);
         handleChange("SL_Department", res.data[0].Dept || null);
@@ -327,7 +399,6 @@ function fn_ManPower() {
         handleChange("SL_Position", res.data[0].Position || null);
         handleChange("Date_Target", res.data[0].Target_date);
         handleChange("txt_Remark", res.data[0].Remark);
-
         handleChange(
           "CB_Substitube",
           res.data[0].Cb_Sub === "Y" ? true : false
@@ -339,7 +410,6 @@ function fn_ManPower() {
         );
         handleChange("FileName_Sub", res.data[0].Sub_FileName);
         handleChange("FileNameServer_Sub", res.data[0].Sub_FileNameServer);
-
         handleChange(
           "CB_Additional",
           res.data[0].Cb_Add === "Y" ? true : false
@@ -347,6 +417,12 @@ function fn_ManPower() {
         handleChange("txt_TargetCapacity1", res.data[0].Add_Target1);
         handleChange("txt_TargetCapacity2", res.data[0].Add_Target2);
         handleChange("txt_TotalAdditional", res.data[0].Add_Total);
+        // handleChange("Hr_Add", Array.from({ length:  res.data[0].Add_Total }, () => ({
+        //   Emp_id: "",
+        //   Emp_name: "",
+        //   Emp_sername: "",
+        //   Emp_JoinDate: null,
+        // })));
         handleChange(
           "CB_FileAdditional",
           res.data[0].Cb_AddFile === "Y" ? true : false
@@ -354,22 +430,28 @@ function fn_ManPower() {
         handleChange("FileName_Add", res.data[0].Add_FileName);
         handleChange("FileNameServer_Add", res.data[0].Add_FileNameServer);
 
+        if (res.data[0].Status_code == "MR0102") {
+          handleChange("Date_HRManager", DateToday);
+        } else if (res.data[0].Status_code == "MR0103") {
+          handleChange("Date_HRManager", DateToday);
+        } else if (res.data[0].Status_code == "MR0104") {
+          handleChange("Date_HRManager", DateToday);
+        } else {
+          handleChange("Date_DepartmentManager", res.data[0].Dept_date);
+          handleChange("Date_FMGM", res.data[0].FMGM_Date);
+          handleChange("Date_HRManager", res.data[0].FMGM_Date);
+        }
         handleChange("SL_DepartmentManager", res.data[0].Dept_by || null);
         handleChange("CB_DepartmentApprove", res.data[0].Dept_Radio);
-        handleChange("Date_DepartmentManager", res.data[0].Dept_date);
         handleChange("txt_CommentDepartmentmanager", res.data[0].Dept_Comment);
-
         handleChange("SL_FMGM", res.data[0].FMGM_By || null);
         handleChange("CB_FMGMApprove", res.data[0].FMGM_Radio);
-        handleChange("Date_FMGM", res.data[0].FMGM_Date);
         handleChange("txt_CommentFMGM", res.data[0].FMGM_Comment);
-
         handleChange("SL_HRManager", res.data[0].Hr_By || null);
         handleChange("CB_HRManagerApprove", res.data[0].Hr_Radio);
-        handleChange("Date_HRManager", res.data[0].Hr_Date);
+        // handleChange("Date_HRManager", res.data[0].Hr_Date);
         handleChange("txt_CommentHRManager", res.data[0].Hr_Comment);
-        // handleChange("SL_Department", res.data[0].Dept);
-        // handleChange(CB_EmpRequirment)
+        handleChange("txt_TotalRemain",res.data[0].Sub_Total+res.data[0].Add_Total);
       });
     await axios
       .post("/api/RequestManPower/GetDataDetailStep1", {
@@ -402,9 +484,12 @@ function fn_ManPower() {
         ReqNo: ReqNo,
       })
       .then((res) => {
+        console.log(res.data, "mmmmmm1");
         if (res.data.length > 0) {
           const DataPerson_Sub = [];
           const DataPerson_ADD = [];
+          const DataPersonJoinSub= [];
+          const DataPersonJoinAdd= [];
           for (let i = 0; i < res.data.length; i++) {
             if (res.data[i].Req_flg == "SUBS") {
               DataPerson_Sub.push({
@@ -413,24 +498,37 @@ function fn_ManPower() {
                 Emp_Name: res.data[i].Emp_name + " " + res.data[i].Emp_sername,
                 Cost_Center: res.data[i].Emp_Dept,
                 Job_grade: res.data[i].Emp_Jobgrade,
-                Dept: res.data[i].Emp_Dept,
-                for_Dept: res.data[i].ForDept,
+                Dept: res.data[i].ForDept,
                 Special: res.data[i].Spacial,
                 Experience: res.data[i].experience,
-                StepLanguage: res.data[i].lang_skill,
+                StepLanguage: res.data[i].lang_skill || null,
                 StepLanguage_other: res.data[i].lang_other,
                 Filefeature: res.data[i].FileName,
+              });
+              DataPersonJoinSub.push({
+                Emp_id:res.data[i].Hr_EmpId,
+                Emp_name:res.data[i].Hr_EmpName,
+                Emp_sername:res.data[i].Hr_EmpSername,
+                Emp_JoinDate:res.data[i].Hr_JoinDate||null,
               });
             } else if (res.data[i].Req_flg == "ADD") {
               DataPerson_ADD.push({
                 CopyNo: "",
                 Special: res.data[i].Spacial,
+                Dept: res.data[i].ForDept,
                 Experience: res.data[i].experience,
-                StepLanguage: res.data[i].lang_skill,
+                StepLanguage: res.data[i].lang_skill || null,
                 StepLanguage_other: res.data[i].lang_other,
                 Filefeature: res.data[i].FileName,
               });
+              DataPersonJoinAdd.push({
+                Emp_id:res.data[i].Hr_EmpId,
+                Emp_name:res.data[i].Hr_EmpName,
+                Emp_sername:res.data[i].Hr_EmpSername,
+                Emp_JoinDate:res.data[i].Hr_JoinDate,
+              });
             }
+            // DataPersonJoinHr.push({
           }
           if (DataPerson_Sub.length > 0) {
             setFormData1((prev) => ({
@@ -442,6 +540,18 @@ function fn_ManPower() {
             setFormData1((prev) => ({
               ...prev,
               Person_ADD: DataPerson_ADD,
+            }));
+          }
+          if (DataPersonJoinSub.length > 0) {
+            setFormData1((prev) => ({
+              ...prev,
+              Hr_Sub: DataPersonJoinSub,
+            }));
+          }
+          if (DataPersonJoinAdd.length > 0) {
+            setFormData1((prev) => ({
+              ...prev,
+              Hr_Add: DataPersonJoinAdd,
             }));
           }
         }
@@ -678,7 +788,7 @@ function fn_ManPower() {
     }
     setCurrent(current + 1);
   };
-
+  console.log(" hideLoading();", current);
   const prev = () => {
     setCurrent(current - 1);
   };
@@ -720,6 +830,7 @@ function fn_ManPower() {
     contentStyle,
     Disable,
     setDisable,
+    setCurrent,
   };
 }
 

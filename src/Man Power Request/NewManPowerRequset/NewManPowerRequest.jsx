@@ -25,7 +25,7 @@ const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
     GetPosition,
     handleChange,
     GetRunningNo,
-  } = fn_NewManPowerRequset(formData1, setFormData1);
+  } = fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable );
 
   return (
     <div>

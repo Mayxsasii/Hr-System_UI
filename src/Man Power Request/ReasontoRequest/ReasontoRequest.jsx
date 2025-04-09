@@ -57,7 +57,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
         Reason to request {""}
         {formData1.txt_ReqNo ? (
           <>
-            {">>"} {formData1.txt_ReqNo}
+            {" >>"} {formData1.txt_ReqNo}
           </>
         ) : (
           ""
@@ -107,7 +107,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               className={`custom-file-upload ${
                 !formData1.CB_Substitube ||
                 !formData1.CB_FileSubstitube ||
-                formData1.ID_Status !== "MR0101"
+                (formData1.StatusType !== "C" && formData1.StatusType !== "R")
                   ? "disabled"
                   : ""
               }`}
@@ -115,17 +115,21 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                 pointerEvents:
                   !formData1.CB_Substitube ||
                   !formData1.CB_FileSubstitube ||
-                  formData1.ID_Status !== "MR0101"
+                  (formData1.StatusType !== "C" && formData1.StatusType !== "R")
                     ? "none"
                     : "auto",
                 opacity:
                   !formData1.CB_Substitube ||
                   !formData1.CB_FileSubstitube ||
-                  formData1.ID_Status !== "MR0101"
+                  (formData1.StatusType !== "C" && formData1.StatusType !== "R")
                     ? 0.5
                     : 1,
               }}
             >
+              {console.log(
+                "formData1.formData1.StatusType ",
+                formData1.StatusType
+              )}
               <UploadOutlined /> Click to Attach file
             </label>
             <input
@@ -135,7 +139,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               disabled={
                 !formData1.CB_Substitube ||
                 !formData1.CB_FileSubstitube ||
-                formData1.ID_Status !== "MR0101"
+                (formData1.StatusType !== "C" && formData1.StatusType !== "R")
               }
             />
             <p
@@ -145,7 +149,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                 color:
                   !formData1.CB_Substitube ||
                   !formData1.CB_FileSubstitube ||
-                  formData1.ID_Status !== "MR0101"
+                  (formData1.StatusType !== "C" && formData1.StatusType !== "R")
                     ? "gray"
                     : "blue",
                 textDecoration: "underline",
@@ -159,7 +163,13 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
           // disabled={!formData1.CB_Substitube || formData1.CB_FileSubstitube}
           disabled={Disable.ButtonSUB_ADD}
           type="primary"
-          style={{ marginRight: "30px" }}
+          style={{
+            marginRight: "30px",
+            display:
+              formData1.StatusType == "C" || formData1.StatusType == "R"
+                ? ""
+                : "none",
+          }}
           onClick={() => {
             handleChange(
               "txt_TotalSubstitube",
@@ -185,7 +195,10 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                 marginLeft: "20px",
                 cursor: "pointer",
                 color: "red",
-                display: formData1.ID_Status !== "MR0101" ? "none" : "",
+                display:
+                  formData1.StatusType !== "C" && formData1.StatusType !== "R"
+                    ? "none"
+                    : "",
               }}
             />
           </p>
@@ -553,16 +566,25 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                   <label
                     htmlFor="fileInputFeatureSUB"
                     className={`custom-file-upload ${
-                      formData1.CB_FileSubstitube||
-                      formData1.ID_Status !== "MR0101" ? "disabled" : ""
+                      formData1.CB_FileSubstitube ||
+                      (formData1.StatusType !== "C" &&
+                        formData1.StatusType !== "R")
+                        ? "disabled"
+                        : ""
                     }`}
                     style={{
-                      pointerEvents: formData1.CB_FileSubstitube||
-                  formData1.ID_Status !== "MR0101"
-                        ? "none"
-                        : "auto",
-                      opacity: formData1.CB_FileSubstitube||
-                      formData1.ID_Status !== "MR0101" ? 0.5 : 1,
+                      pointerEvents:
+                        formData1.CB_FileSubstitube ||
+                        (formData1.StatusType !== "C" &&
+                          formData1.StatusType !== "R")
+                          ? "none"
+                          : "auto",
+                      opacity:
+                        formData1.CB_FileSubstitube ||
+                        (formData1.StatusType !== "C" &&
+                          formData1.StatusType !== "R")
+                          ? 0.5
+                          : 1,
                     }}
                   >
                     <UploadOutlined /> Click to Attach file
@@ -571,8 +593,11 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                     id="fileInputFeatureSUB"
                     type="file"
                     onChange={(e) => handleFilefeatureChange("SUB", index, e)}
-                    disabled={formData1.CB_FileSubstitube||
-                  formData1.ID_Status !== "MR0101"}
+                    disabled={
+                      formData1.CB_FileSubstitube ||
+                      (formData1.StatusType !== "C" &&
+                        formData1.StatusType !== "R")
+                    }
                   />
                   {formData1.Person_Sub[index].Filefeature && (
                     <p
@@ -593,7 +618,9 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                           marginLeft: "20px",
                           cursor: "pointer",
                           color: "red",
-                          display: formData1.ID_Status !== "MR0101" ? "none" : "",
+                          display:
+                            formData1.StatusType !== "C" &&
+                            formData1.StatusType !== "R",
                         }}
                       />
                     </p>
@@ -609,7 +636,13 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               icon={<DeleteOutlined />}
               danger
               type="primary"
-              style={{ marginBottom: "5px" }}
+              style={{
+                marginBottom: "5px",
+                display:
+                  formData1.StatusType == "C" || formData1.StatusType == "R"
+                    ? ""
+                    : "none",
+              }}
               onClick={() => {
                 handleDeletePerson("Substitube", index);
               }}
@@ -649,14 +682,14 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
             }
             style={{ width: "1000px", height: "50px", marginLeft: "5px" }}
             maxLength={2000}
-            // disabled={!formData1.CB_Additional}
+           
             disabled={Disable.txt_TargetCapacity1}
           />
         </div>
         <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
           <TextArea
-            // disabled={!formData1.CB_Additional}
-            disabled={Disable.handleDelete}
+            
+            disabled={Disable.txt_TargetCapacity2}
             style={{ width: "1000px", height: "50px", marginLeft: "195px" }}
             maxLength={2000}
             value={formData1.txt_TargetCapacity2}
@@ -699,17 +732,23 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
             <label
               htmlFor="fileInputADD"
               className={`custom-file-upload ${
-                !formData1.CB_Additional || !formData1.CB_FileAdditional ||formData1.ID_Status!="MR0101"
+                !formData1.CB_Additional ||
+                !formData1.CB_FileAdditional ||
+                (formData1.StatusType !== "C" && formData1.StatusType !== "R")
                   ? "disabled"
                   : ""
               }`}
               style={{
                 pointerEvents:
-                  !formData1.CB_Additional || !formData1.CB_FileAdditional||formData1.ID_Status!="MR0101"
+                  !formData1.CB_Additional ||
+                  !formData1.CB_FileAdditional ||
+                  (formData1.StatusType !== "C" && formData1.StatusType !== "R")
                     ? "none"
                     : "auto",
                 opacity:
-                  !formData1.CB_Additional || !formData1.CB_FileAdditional||formData1.ID_Status!="MR0101"
+                  !formData1.CB_Additional ||
+                  !formData1.CB_FileAdditional ||
+                  (formData1.StatusType !== "C" && formData1.StatusType !== "R")
                     ? 0.5
                     : 1,
               }}
@@ -721,7 +760,9 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               type="file"
               onChange={(e) => handleFileChange("ADD", e)}
               disabled={
-                !formData1.CB_Additional || !formData1.CB_FileAdditional||formData1.ID_Status!="MR0101"
+                !formData1.CB_Additional ||
+                !formData1.CB_FileAdditional ||
+                (formData1.StatusType !== "C" && formData1.StatusType !== "R")
               }
             />
             <p
@@ -730,7 +771,9 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                 marginLeft: "10px",
                 cursor: "pointer",
                 color:
-                  !formData1.CB_Additional || !formData1.CB_FileAdditional||formData1.ID_Status!="MR0101"
+                  !formData1.CB_Additional ||
+                  !formData1.CB_FileAdditional ||
+                  (formData1.StatusType !== "C" && formData1.StatusType !== "R")
                     ? "gray"
                     : "blue",
                 textDecoration: "underline",
@@ -741,10 +784,15 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
           </div>
         </div>
         <Button
-          // disabled={!formData1.CB_Additional || formData1.CB_FileAdditional}
           disabled={Disable.ButtonADD_ADD}
           type="primary"
-          style={{ marginRight: "30px" }}
+          style={{
+            marginRight: "30px",
+            display:
+              formData1.StatusType == "C" || formData1.StatusType == "R"
+                ? ""
+                : "none",
+          }}
           onClick={() => {
             handleChange(
               "txt_TotalAdditional",
@@ -757,6 +805,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
           Add
         </Button>
       </div>
+
       <div style={{ marginLeft: "395px" }}>
         {formData1.FileName_Add && (
           <p style={{ color: "black", margin: 0, marginTop: "0px" }}>
@@ -766,7 +815,15 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               onClick={() => {
                 DeleteFile("ADD", "");
               }}
-              style={{ marginLeft: "20px", cursor: "pointer", color: "red" ,display:formData1.ID_Status!="MR0101"?'none':''}}
+              style={{
+                marginLeft: "20px",
+                cursor: "pointer",
+                color: "red",
+                display:
+                  formData1.StatusType !== "C" && formData1.StatusType !== "R"
+                    ? "none"
+                    : "",
+              }}
             />
           </p>
         )}
@@ -822,15 +879,52 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
           </div>
           <table className="TB_ReasontoRequest" style={{ marginLeft: "80px" }}>
             <tr>
+              <td align="right">For Dept. :</td>
+              <td colSpan={2} style={{ }}>
+                <Select
+                  disabled={Disable.ADD_Dept}
+                  showSearch
+                  value={formData1.Person_ADD[index].Dept}
+                  style={{ width: "80px", marginLeft: "5px",marginRight:"40px" }}
+                  placeholder="Select Dept"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={ForDept}
+                  onChange={(value) => {
+                    handlePersonAddChange(index, "Dept", value);
+                  }}
+                />
+               Request Job Grade :
+                <Select
+                  disabled={Disable.ADD_Req_Jobgrade}
+                  showSearch
+                  mode="multiple"
+                  value={formData1.Person_ADD[index].Req_Jobgrade}
+                  style={{ width: "250px", marginLeft: "5px" }}
+                  placeholder="Select Dept"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={ForReqJobGrade}
+                  onChange={(value) => {
+                    handlePersonAddChange(index, "Req_Jobgrade", value);
+                  }}
+                />
+              </td>
+            </tr>
+            <tr>
               <td align="right">วุฒิการศึกษา (Education) :</td>
               <td colSpan={1}>
                 <Select
                   mode="multiple"
-                  // maxTagCount={"responsive"}
-                  // disabled={formData1.CB_FileAdditional}
                   disabled={Disable.ADD_Education}
-                  // disabled
-                  // gutter={[16, 16]}
                   showSearch
                   value={formData1.Person_ADD[index].Education}
                   style={{ width: "400px", marginLeft: "5px" }}
@@ -897,7 +991,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               <td>
                 {" "}
                 <Input
-                 disabled={Disable.ADD_CourseOther}
+                  disabled={Disable.ADD_CourseOther}
                   style={{
                     display:
                       formData1.Person_ADD[index].Course &&
@@ -941,7 +1035,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               <td>
                 {" "}
                 <Input
-                disabled={Disable.ADD_FieldOther}
+                  disabled={Disable.ADD_FieldOther}
                   style={{
                     display:
                       formData1.Person_ADD[index].Field &&
@@ -1016,7 +1110,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               <td>
                 {" "}
                 <Input
-                disabled={Disable.ADD_StepLanguage_other}
+                  disabled={Disable.ADD_StepLanguage_other}
                   style={{
                     display:
                       formData1.Person_ADD[index].StepLanguage &&
@@ -1042,13 +1136,25 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                   <label
                     htmlFor="fileInputFeatureADD"
                     className={`custom-file-upload ${
-                      formData1.CB_FileAdditional||formData1.ID_Status!='MR0101' ? "disabled" : ""
+                      formData1.CB_FileAdditional ||
+                      (formData1.StatusType !== "C" &&
+                        formData1.StatusType !== "R")
+                        ? "disabled"
+                        : ""
                     }`}
                     style={{
-                      pointerEvents: formData1.CB_FileAdditional||formData1.ID_Status!='MR0101'
-                        ? "none"
-                        : "auto",
-                      opacity: formData1.CB_FileAdditional||formData1.ID_Status!='MR0101' ? 0.5 : 1,
+                      pointerEvents:
+                        formData1.CB_FileAdditional ||
+                        (formData1.StatusType !== "C" &&
+                          formData1.StatusType !== "R")
+                          ? "none"
+                          : "auto",
+                      opacity:
+                        formData1.CB_FileAdditional ||
+                        (formData1.StatusType !== "C" &&
+                          formData1.StatusType !== "R")
+                          ? 0.5
+                          : 1,
                     }}
                   >
                     <UploadOutlined /> Click to Attach file
@@ -1057,7 +1163,11 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                     id="fileInputFeatureADD"
                     type="file"
                     onChange={(e) => handleFilefeatureChange("ADD", index, e)}
-                    disabled={formData1.CB_FileAdditional||formData1.ID_Status!='MR0101'}
+                    disabled={
+                      formData1.CB_FileAdditional ||
+                      (formData1.StatusType !== "C" &&
+                        formData1.StatusType !== "R")
+                    }
                   />
                   {formData1.Person_ADD[index].Filefeature && (
                     <p
@@ -1078,7 +1188,11 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                           marginLeft: "20px",
                           cursor: "pointer",
                           color: "red",
-                          display: formData1.ID_Status !== "MR0101" ? "none" : "",
+                          display:
+                            formData1.StatusType !== "C" &&
+                            formData1.StatusType !== "R"
+                              ? "none"
+                              : "",
                         }}
                       />
                     </p>
@@ -1095,7 +1209,13 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               icon={<DeleteOutlined />}
               danger
               type="primary"
-              style={{ marginBottom: "5px" }}
+              style={{
+                marginBottom: "5px",
+                display:
+                  formData1.StatusType == "C" || formData1.StatusType == "R"
+                    ? ""
+                    : "none",
+              }}
               onClick={() => {
                 handleDeletePerson("Additional", index);
               }}
@@ -1107,9 +1227,22 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
       ))}
       <div align="center" style={{ marginTop: "10px" }}>
         {" "}
+
         <Button
           type="primary"
           style={{
+            
+            display: formData1.ID_Status != "MR0101" ? "none" : "",
+            backgroundColor: "#FF9D23",
+          }}
+          onClick={() => SaveDraft("2")}
+        >
+          Save Draft
+        </Button>
+        <Button
+          type="primary"
+          style={{
+            marginLeft: "10px",
             display: formData1.ID_Status != "MR0101" ? "none" : "",
 
             backgroundColor: "#758694",
@@ -1117,17 +1250,6 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
           }}
         >
           Reset
-        </Button>
-        <Button
-          type="primary"
-          style={{
-            marginLeft: "10px",
-            display: formData1.ID_Status != "MR0101" ? "none" : "",
-            backgroundColor: "#FF9D23",
-          }}
-          onClick={() => SaveDraft()}
-        >
-          Save Draft
         </Button>
       </div>
     </div>
