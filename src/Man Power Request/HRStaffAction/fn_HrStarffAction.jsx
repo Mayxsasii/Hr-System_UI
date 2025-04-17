@@ -7,10 +7,7 @@ import moment from "moment";
 
 function fn_HrStarffAction(
   formData1,
-  setFormData1,
-  Disable,
-  setDisable,
-  setCurrent
+  setFormData1
 ) {
   console.log(formData1, "fn_HrStarffAction");
   const { datauser } = fn_Header();
@@ -21,9 +18,10 @@ function fn_HrStarffAction(
   ).padStart(2, "0")}/${today.getFullYear()}`;
   const { showLoading, hideLoading } = useLoading();
   const [ConditionClose, setConditionClose] = useState([]);
-
+console.log(formData1.Sl_HrCloseBy, "ConditionClose");
   useEffect(() => {
     GetCondition();
+    CheckRemain();
   }, []);
 
   useEffect(() => {
@@ -45,32 +43,46 @@ function fn_HrStarffAction(
       });
   };
 
+  const CheckRemain = async () => {
+    const totalCompletedSub = formData1.Hr_Sub.filter((person) => person.CB_Complete).length;
+    const totalCompletedAdd = formData1.Hr_Add.filter((person) => person.CB_Complete).length;
+    const totalRequested = formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional;
+    const totalRemain = totalRequested - (totalCompletedSub + totalCompletedAdd);
+    console.log(`Completed Sub: ${totalCompletedSub}, Completed Add: ${totalCompletedAdd}`);
+    console.log(`Total Remain: ${totalRemain}`);
+    handleChange("txt_TotalRemain", totalRemain);
+    if(totalRemain == 0) {
+      handleChange("Radio_HrStatus", "MR0107");
+    }
+  }
+
   const Save = async (save) => {
-    console.log(save,'checksave')
+    console.log(save,formData1.Radio_HrStatus ,'checksave')
+    console.log(save==''? formData1.Radio_HrStatus:'MR0106', "Req_Status");
     showLoading("กำลังบันทึกข้อมูล...");
     await axios
       .post("/api/RequestManPower/SaveDarftHr", {
         ReqNo: formData1.txt_ReqNo,
-        UpdateBy: datauser.LOGIN,
+        UpdateBy: formData1.ID_Status=='MR0105'?datauser.LOGIN:'',
+        UpdateByLast: datauser.LOGIN,
         Radio_Status: formData1.Radio_HrStatus || "",
-        Req_Status:save==''? formData1.Sl_HrCloseBy:'MR0106',
+        Req_Status: save==''? formData1.Radio_HrStatus:'MR0106',
         Sl_Condition: formData1.Sl_HrCloseBy || "",
         txt_Comment: formData1.txt_HrComment || "",
         Cb_AttFile: formData1.CB_HrFileAttach ? "Y" : "N",
         txt_TotalComplete:
-          formData1.txt_TotalManual > 0 ? formData1.txt_TotalManual : null,
+        formData1.txt_TotalManual > 0 ? formData1.txt_TotalManual : null,
         FileName: formData1.Hr_FileAttach || "",
         FileNameServer: formData1.Hr_FileAttachServer || "",
       })
       .then((res) => {
         console.log(res.data, "SaveDarftHr");
       });
-    // if (formData1.CB_HrFileAttach) {}
-    console.log(formData1.CB_HrFileAttach, "mayyy11111");
+    console.log(formData1.Hr_Sub, "mayyy11111");
     if (formData1.CB_HrFileAttach == false) {
       for (let i = 0; i < formData1.Hr_Add.length; i++) {
         const Rec_id = `A${String(i + 1).padStart(2, "0")}`;
-        if (formData1.Hr_Add[i].CB_Complete == true) {
+        // if (formData1.Hr_Add[i].CB_Complete == true) {
           await axios
             .post("/api/RequestManPower/UpdateUserJoin", {
               FlgComplete: formData1.Hr_Add[i].CB_Complete ? "Y" : "",
@@ -85,11 +97,11 @@ function fn_HrStarffAction(
             .then((res) => {
               console.log(res.data, "SaveDarftHr");
             });
-        }
+        // }
       }
       for (let i = 0; i < formData1.Hr_Sub.length; i++) {
         const Rec_id = `S${String(i + 1).padStart(2, "0")}`;
-        if (formData1.Hr_Sub[i].CB_Complete == true) {
+        // if (formData1.Hr_Sub[i].CB_Complete == true) {
           await axios
             .post("/api/RequestManPower/UpdateUserJoin", {
               FlgComplete: formData1.Hr_Sub[i].CB_Complete ? "Y" : "",
@@ -104,7 +116,7 @@ function fn_HrStarffAction(
             .then((res) => {
               console.log(res.data, "SaveDarftHr");
             });
-        }
+        // }
       }
     }
     hideLoading();
@@ -126,7 +138,6 @@ function fn_HrStarffAction(
         });
         return;
       } else {
-        console.log(formData1.CB_HrFileAttach, "mayyy111ccc11");
         if (formData1.CB_HrFileAttach == true) {
           Save('');
         } else {
@@ -139,8 +150,8 @@ function fn_HrStarffAction(
                 title: "Cannot be submit",
                 text: `Please Input Name`,
               });
-              isValid = false; // ตั้งค่าเป็น false หากพบข้อผิดพลาด
-              return true; // หยุดการตรวจสอบเพิ่มเติม
+              isValid = false; 
+              return true; 
             } else if (person.Emp_sername === "") {
               Swal.fire({
                 icon: "warning",
@@ -363,10 +374,15 @@ function fn_HrStarffAction(
         handleChange("txt_TotalRemain", formData1.txt_TotalRemain - 1);
       } else {
         console.log(`Checkbox at index ${index} is unchecked.`);
-        handleChangeHr_Sub(index, "Emp_id", "");
-        handleChangeHr_Sub(index, "Emp_name", "");
-        handleChangeHr_Sub(index, "Emp_sername", "");
-        handleChangeHr_Sub(index, "Emp_JoinDate", null);
+        newHrSub[index].Emp_id = '';
+        newHrSub[index].Emp_name = '';
+        newHrSub[index].Emp_sername = '';
+        newHrSub[index].Emp_JoinDate = null;
+      //  -----------------------------------------------
+        // handleChangeHr_Sub(index, "Emp_id", "");
+        // handleChangeHr_Sub(index, "Emp_name", "");
+        // handleChangeHr_Sub(index, "Emp_sername", "");
+        // handleChangeHr_Sub(index, "Emp_JoinDate", null);
         handleChange("txt_TotalRemain", formData1.txt_TotalRemain + 1);
       }
       setFormData1((prev) => ({ ...prev, Hr_Sub: newHrSub }));

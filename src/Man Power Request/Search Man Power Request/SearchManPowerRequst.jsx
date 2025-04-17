@@ -39,7 +39,13 @@ const SearchManPower = () => {
     settxt_ReqNoFrom,
     settxt_ReqNoTo,
     bt_Search,
-    dataSearch
+    dataSearch,
+    SL_Status,
+    setSL_Status,
+    Status,
+    settxt_ReqBy,
+    txt_ReqBy,
+    Path
   } = fn_SearchManPowerRequst();
 
   return (
@@ -54,7 +60,7 @@ const SearchManPower = () => {
       <div
         style={{
           borderRadius: "15px",
-          
+
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -89,7 +95,6 @@ const SearchManPower = () => {
                   showSearch
                   value={SL_Factory}
                   style={{
-                    
                     display: "block",
                     marginTop: "5px",
                   }}
@@ -114,7 +119,6 @@ const SearchManPower = () => {
                   maxTagCount={"responsive"}
                   value={SL_Department}
                   style={{
-                    
                     display: "block",
                     marginTop: "5px",
                   }}
@@ -138,7 +142,7 @@ const SearchManPower = () => {
                   maxTagCount={"responsive"}
                   value={SL_Position}
                   style={{
-                    // 
+                    //
                     display: "block",
                     marginTop: "5px",
                   }}
@@ -161,7 +165,6 @@ const SearchManPower = () => {
                   maxTagCount={"responsive"}
                   value={SL_JobGrade}
                   style={{
-                    
                     display: "block",
                     marginTop: "5px",
                   }}
@@ -181,40 +184,78 @@ const SearchManPower = () => {
             <tr>
               <td style={{ textAlign: "right", padding: "4px" }}>Req No.:</td>
               <td style={{ padding: "4px" }}>
-                <Input value={txt_ReqNoFrom} style={{ width: "100%" }}  onChange={(e) => settxt_ReqNoFrom(e.target.value)} />
+                <Input
+                  value={txt_ReqNoFrom}
+                  style={{ width: "100%" }}
+                  onChange={(e) => settxt_ReqNoFrom(e.target.value)}
+                />
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>To:</td>
               <td style={{ padding: "4px" }}>
-              <Input value={txt_ReqNoTo} style={{ width: "100%" }}   onChange={(e) => settxt_ReqNoTo(e.target.value)} />
+                <Input
+                  value={txt_ReqNoTo}
+                  style={{ width: "100%" }}
+                  onChange={(e) => settxt_ReqNoTo(e.target.value)}
+                />
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>
                 Request Date:
               </td>
               <td style={{ padding: "4px" }}>
                 {/* <DatePicker value={DateFrom} style={{ width: "100%" }}   onChange={setDateFrom}/> */}
-                <Input type="date" style={{ width: "100%" }}  value={DateFrom} onChange={(e) => setDateFrom(e.target.value)}/>
+                <Input
+                  type="date"
+                  style={{ width: "100%" }}
+                  value={DateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                />
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>To:</td>
               <td style={{ padding: "4px" }}>
-              {/* <DatePicker value={DateTo} style={{ width: "100%" }}  onChange={setDateTo}/> */}
-              <Input type="date" style={{ width: "100%" }}  value={DateTo} onChange={(e) => setDateTo(e.target.value)}/>
+                {/* <DatePicker value={DateTo} style={{ width: "100%" }}  onChange={setDateTo}/> */}
+                <Input
+                  type="date"
+                  style={{ width: "100%" }}
+                  value={DateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                />
               </td>
             </tr>
             <tr>
-              <td style={{ textAlign: "right", padding: "4px" }} >
+              <td style={{ textAlign: "right", padding: "4px" }}>
                 Request by:
               </td>
               <td style={{ padding: "4px" }}>
-                <Input value={datauser.LOGIN}style={{ width: "100%" }} disabled/>
+                <Input
+                  value={txt_ReqBy}
+                  onChange={(e) => settxt_ReqBy(e.target.value)}
+                  style={{ width: "100%" }}
+                  disabled={Path == "ManPowerRequest" ? true : false} 
+                />
               </td>
               <td style={{ textAlign: "right", padding: "4px" }}>
                 Request Status:
               </td>
               <td style={{ padding: "4px" }}>
-                <Select style={{ width: "100%" }}>
-                  <Option value="status1">Status 1</Option>
-                  <Option value="status2">Status 2</Option>
-                </Select>
+              <Select
+                  showSearch
+                  mode="multiple"
+                  maxTagCount={"responsive"}
+                  value={SL_Status}
+                  style={{
+                    display: "block",
+                    marginTop: "5px",
+                  }}
+                  placeholder="Select Status"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={Status}
+                  onChange={setSL_Status}
+                />
               </td>
               <td colSpan={4}>
                 <Button
@@ -264,15 +305,14 @@ const SearchManPower = () => {
           </Button>
         </div>
         <Table
-  columns={columns}
-  dataSource={dataSearch}
-  bordered
-  pagination={{ pageSize: 5 }}
-
-  size="middle"
-  scroll={{ x: "max-content" }}
-className="tableSerachAnalysis"
-/>
+          columns={columns}
+          dataSource={dataSearch}
+          bordered
+          pagination={{ pageSize: 5 }}
+          size="middle"
+          scroll={{ x: "max-content" }}
+          className="tableSerachAnalysis"
+        />
       </div>
     </div>
   );

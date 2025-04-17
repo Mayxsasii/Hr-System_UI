@@ -34,6 +34,7 @@ function fn_ManPower() {
   const queryParams = new URLSearchParams(location.search);
   const ReqNo = queryParams.get("ReqNo");
   const Email = localStorage.getItem("Email");
+  const UserLogin = localStorage.getItem("username");
 
   const { token } = theme.useToken();
   const today = new Date();
@@ -235,11 +236,17 @@ function fn_ManPower() {
 
   useEffect(() => {
     FetchData();
+    // validateStep4();
   }, []);
 
   const DisableChange = (field, value) => {
     setDisable((prev) => ({ ...prev, [field]: value }));
   };
+
+  const GetRoll = () => {
+
+  };
+
 
   const GetDisable = async (ID_Status, StatusType) => {
     console.log("ID_Status0", ID_Status, StatusType);
@@ -252,23 +259,9 @@ function fn_ManPower() {
       DisableChange("CB_HRManagerApprove", true);
       DisableChange("txt_CommentHRManager", true);
       console.log("CB_Substitube", formData1.CB_Substitube);
-      // if (!formData1.CB_Substitube == true) {
-      // DisableChange("ButtonSUB_ADD", true);
-      // DisableChange("ButtonADD_ADD", true);
 
-      // DisableChange("CB_FileAdditional", false);
-      // DisableChange("CB_FileSubstitube", false);
-      // DisableChange("txt_TargetCapacity1", true);
-      // DisableChange("txt_TargetCapacity2", true);
-      // }
     } else if (StatusType == "R") {
-      //StatusType == "C"||
-      // DisableChange("SL_Factory", true);
-      // DisableChange("SL_Department", true);
-      // DisableChange("SL_Position", true);
-      // DisableChange("SL_Factory", true);
-      // DisableChange("SL_Department", true);
-      // DisableChange("SL_Position", true);
+
     } else {
       DisableChange("SL_Factory", true);
       DisableChange("SL_Department", true);
@@ -367,8 +360,9 @@ function fn_ManPower() {
         ReqNo: ReqNo,
       })
       .then(async (res) => {
-        await GetDisable(res.data[0].Status_code, res.data[0].Status_Type);
         console.log(res.data, "GetDataEdit");
+        await GetDisable(res.data[0].Status_code, res.data[0].Status_Type);
+      
         handleChange("txt_ReqNo", res.data[0].Req_No);
         handleChange("SL_Factory", res.data[0].Fac_code || null);
         handleChange("txt_ReqStatus", res.data[0].Status_Desc);
@@ -449,15 +443,23 @@ function fn_ManPower() {
         handleChange("txt_CommentFMGM", res.data[0].FMGM_Comment);
         handleChange("SL_HRManager", res.data[0].Hr_By || null);
         handleChange("CB_HRManagerApprove", res.data[0].Hr_Radio);
-        // handleChange("Date_HRManager", res.data[0].Hr_Date);
         handleChange("txt_CommentHRManager", res.data[0].Hr_Comment);
-        handleChange("txt_TotalRemain",res.data[0].Sub_Total+res.data[0].Add_Total);
+        //step4
+        handleChange("Radio_HrStatus", res.data[0].HrStaff_Status);
+        handleChange("Sl_HrCloseBy", res.data[0].HrStaff_Condition);
+        console.log(res.data[0].HrStaff_Condition,'Sl_HrCloseBy');
+        handleChange("txt_HrComment", res.data[0].HrStaff_Comment);
+        handleChange("txt_TotalManual", res.data[0].HrStaff_Complete);
+        handleChange("CB_HrFileAttach", res.data[0].HrStaff_CBFile== "Y" ? true : false);
+        handleChange("Hr_FileAttach", res.data[0].HrStaff_Filename);
+        handleChange("Hr_FileAttachServer", res.data[0].HrStaff_FileNameServer);
       });
     await axios
       .post("/api/RequestManPower/GetDataDetailStep1", {
         ReqNo: ReqNo,
       })
       .then((res) => {
+        console.log(res.data, "GetDataDetailStep1");
         if (res.data.length > 0) {
           const empRequirements = [];
           for (let i = 0; i < res.data.length; i++) {
@@ -506,6 +508,7 @@ function fn_ManPower() {
                 Filefeature: res.data[i].FileName,
               });
               DataPersonJoinSub.push({
+                CB_Complete: res.data[i].Flg_Complte === "Y" ? true : false,
                 Emp_id:res.data[i].Hr_EmpId,
                 Emp_name:res.data[i].Hr_EmpName,
                 Emp_sername:res.data[i].Hr_EmpSername,
@@ -522,6 +525,7 @@ function fn_ManPower() {
                 Filefeature: res.data[i].FileName,
               });
               DataPersonJoinAdd.push({
+                CB_Complete: res.data[i].Flg_Complte === "Y" ? true : false,
                 Emp_id:res.data[i].Hr_EmpId,
                 Emp_name:res.data[i].Hr_EmpName,
                 Emp_sername:res.data[i].Hr_EmpSername,
@@ -782,19 +786,50 @@ function fn_ManPower() {
     return true;
   };
 
-  const next = () => {
+  const validateStep4 = async() => {
+    await axios
+    .post("/api/RequestManPower/GetHrStarff", {
+      User: UserLogin,
+    })
+    .then(async (res) => {
+      console.log(res.data, "GetPersonData");
+      if(res.data.length > 0){
+     return true;
+      }
+      else{
+      Swal.fire({
+        icon: "error",
+        title: "For HR Staff Only",
+      });
+      return false;
+      }
+    })
+  };
+
+  const next =async () => {
+    console.log(current, "currentnext");
     if (current === 0 && !validateStep1()) {
       return;
     }
+    else if (current == 2 && !await validateStep4()) {
+      // console.log("validateStep4");
+      return;
+    }
+
     setCurrent(current + 1);
   };
-  console.log(" hideLoading();", current);
+
   const prev = () => {
     setCurrent(current - 1);
   };
 
-  const onChange = (current) => {
+  const onChange =async (current) => {
+    // console.log(current, "current",validateStep4());
     if (current > 0 && !validateStep1()) {
+      return;
+    }
+    else if (current == 3 && ! await validateStep4()) {
+      console.log("validateStep4");
       return;
     }
     setCurrent(current);
@@ -831,6 +866,7 @@ function fn_ManPower() {
     Disable,
     setDisable,
     setCurrent,
+    GetdataEdit
   };
 }
 

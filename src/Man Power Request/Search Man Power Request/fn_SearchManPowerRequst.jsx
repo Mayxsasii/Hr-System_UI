@@ -9,24 +9,30 @@ import { fn_Header } from "../../Header/fn_Header";
 import Swal from "sweetalert2";
 
 function fn_SearchManPowerRequst() {
+
   const navigate = useNavigate();
+  const url = window.location.href;
+  const Path = url.split("/").pop();
   const userlogin = localStorage.getItem("username");
   const { showLoading, hideLoading } = useLoading();
   const { datauser } = fn_Header();
-  console.log(datauser, "datauser");
+
   const [Factory, setFactory] = useState([]);
   const [Department, setDepartment] = useState([]);
   const [Position, setPosition] = useState([]);
   const [JobGrade, setJobGrade] = useState([]);
+  const [Status, setStatus] = useState([]);
   // select
   const [SL_Factory, setSL_Factory] = useState(null);
   const [SL_Department, setSL_Department] = useState(null);
   const [SL_Position, setSL_Position] = useState(null);
   const [SL_JobGrade, setSL_JobGrade] = useState(null);
+  const [SL_Status, setSL_Status] = useState(null);
 
   //txt
   const [txt_ReqNoFrom, settxt_ReqNoFrom] = useState("");
   const [txt_ReqNoTo, settxt_ReqNoTo] = useState("");
+  const [txt_ReqBy, settxt_ReqBy] = useState("");
   const [DateFrom, setDateFrom] = useState("");
   const [DateTo, setDateTo] = useState("");
 
@@ -35,6 +41,10 @@ function fn_SearchManPowerRequst() {
   useEffect(() => {
     GetFactory();
     GetDepartment();
+    GetStatus();
+    if (Path == "ManPowerRequest") {
+      settxt_ReqBy(userlogin);
+    }
   }, []);
 
   const GetFactory = async () => {
@@ -43,6 +53,26 @@ function fn_SearchManPowerRequst() {
       .then((res) => {
         console.log(res.data, "GetFactory");
         setFactory(res.data);
+      });
+  };
+
+  const GetStatus = async () => {
+    await axios
+      .post("/api/RequestManPower/GetStatusSearch", {
+        type:
+          Path == "ManPowerRequest"
+            ? ["C", "R"]
+          : Path == "ApproveManPower"
+            ? ["A"]
+          : Path == "HrActionManPowerRequest"
+            ? ["H"]
+          : Path == "ManPowerMasterList"
+            ? ["C", "R", "H", "A", "D", "F"]
+            : [],
+      })
+      .then((res) => {
+        console.log(res.data, "GetStatus");
+        setStatus(res.data);
       });
   };
 
@@ -85,6 +115,7 @@ function fn_SearchManPowerRequst() {
     setSL_Factory(value);
     GetPosition(value);
   };
+
   const handlePosition = (value) => {
     setSL_Position(value);
     GetJobGrade(value);
@@ -95,12 +126,10 @@ function fn_SearchManPowerRequst() {
     console.log("Edit record:", record.ReqNo);
 
     navigate(`/HrSystem/NewManPowerRequest?ReqNo=${record.ReqNo}`);
-    // Add your edit logic here
   };
 
   const handleDelete = (record) => {
     console.log("Delete record:", record);
-    // Add your delete logic here
   };
 
   const bt_New = async () => {
@@ -111,6 +140,7 @@ function fn_SearchManPowerRequst() {
   const bt_Search = async () => {
     setDataSearch([]);
     console.log("Search", DateFrom, DateTo);
+
     if (
       DateFrom == "" &&
       DateTo == "" &&
@@ -119,7 +149,8 @@ function fn_SearchManPowerRequst() {
       SL_JobGrade == null &&
       SL_Position == null &&
       txt_ReqNoFrom == "" &&
-      txt_ReqNoTo == ""
+      txt_ReqNoTo == "" &&
+      SL_Status == null
     ) {
       Swal.fire({ icon: "warning", title: "Please fill in the information" });
     } else {
@@ -143,7 +174,38 @@ function fn_SearchManPowerRequst() {
           ReqNoTo: txt_ReqNoTo || "",
           DateFrom: DateFrom || "",
           DateTo: DateTo || "",
-          ReqBy: datauser.LOGIN || null,
+          ReqBy: Path == "ManPowerRequest" ? datauser.LOGIN : txt_ReqBy || "",
+          Status:
+            Path == "ManPowerRequest"
+              ? Array.isArray(SL_Status) && SL_Status.length > 0
+                ? SL_Status
+                : ["MR0101", "MR0129", "MR0139", "MR0149"]
+              : Path == "ApproveManPower"
+              ? Array.isArray(SL_Status) && SL_Status.length > 0
+                ? SL_Status
+                : ["MR0102", "MR0103", "MR0103"]
+              : Path == "HrActionManPowerRequest"
+              ? Array.isArray(SL_Status) && SL_Status.length > 0
+                ? SL_Status
+                : ["MR0105", "MR0106"]
+              : Path == "ManPowerMasterList"
+              ? Array.isArray(SL_Status) && SL_Status.length > 0
+                ? SL_Status
+                : [
+                    "MR0101",
+                    "MR0102",
+                    "MR0103",
+                    "MR0104",
+                    "MR0105",
+                    "MR0129",
+                    "MR0139",
+                    "MR0149",
+                    "MR0106",
+                    "MR0107",
+                    "MR0190",
+                    "MR0108",
+                  ]
+              : [],
         })
         .then((res) => {
           if (res.data.length == 0) {
@@ -151,7 +213,6 @@ function fn_SearchManPowerRequst() {
           } else {
             console.log(res.data, "SearchManPower");
             setDataSearch(res.data);
-            // window.location.href = "/HrSystem/SearchManPowerRequest";
           }
         });
     }
@@ -234,7 +295,7 @@ function fn_SearchManPowerRequst() {
           record.Status_value == "MR0101" ||
           record.Status_value == "MR0106"
         ) {
-          return <Tag color="processing" >{text}</Tag>;
+          return <Tag color="processing">{text}</Tag>;
         } else if (
           record.Status_value == "MR0102" ||
           record.Status_value == "MR0103" ||
@@ -301,7 +362,14 @@ function fn_SearchManPowerRequst() {
     GetFactory,
     bt_Search,
     dataSearch,
+    SL_Status,
+    setSL_Status,
+    Status,
+    settxt_ReqBy,
+    txt_ReqBy,
+    Path,
   };
+
 }
 
 export { fn_SearchManPowerRequst };

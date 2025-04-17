@@ -111,6 +111,15 @@ function fn_Sider() {
     if (selectedMenu.MENU_NAME === "Man Power Request") {
       window.location.href = "/HrSystem/ManPowerRequest";
     }
+    else if (selectedMenu.MENU_NAME === "Approve Man Power"){
+      window.location.href = "/HrSystem/ApproveManPower";
+    }
+    else if (selectedMenu.MENU_NAME === "Man Power Request (HR Staff Action)"){
+      window.location.href = "/HrSystem/HrActionManPowerRequest";
+    }
+    else if(selectedMenu.MENU_NAME === "Man Power Master List"){
+      window.location.href = "/HrSystem/ManPowerMasterList";
+    }
   };
   
   const handleMouseLeave = () => {

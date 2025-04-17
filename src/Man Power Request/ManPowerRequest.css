@@ -57,3 +57,9 @@
   input[type="file"] {
     display: none;
   }
+
+  :disabled {
+    color: #504b4b !important; /* สีฟอนต์ที่เข้มขึ้น */
+    /* opacity: 1 !important; ปรับ opacity เพื่อให้สีชัดเจน */
+    cursor: not-allowed; /* เปลี่ยนเคอร์เซอร์ */
+  }

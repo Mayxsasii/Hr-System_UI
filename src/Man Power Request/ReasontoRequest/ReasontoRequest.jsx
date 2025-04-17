@@ -222,7 +222,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                 marginLeft: "45px",
                 marginRight: "10px",
                 paddingLeft: "10px",
-                display: "flex",
+                display: Disable.Sub_CopyNo==true? 'none':"flex",
                 alignItems: "center",
                 paddingTop: "10px",
               }}
@@ -308,7 +308,6 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
             <p style={{ marginLeft: "10px" }}>For Dept.:</p>
 
             <Select
-              // disabled={formData1.CB_FileSubstitube}
               disabled={Disable.Sub_Dept}
               showSearch
               value={formData1.Person_Sub[index].Dept}
@@ -837,6 +836,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
             marginRight: "10px",
             alignItems: "center",
             border: "1px dashed #b0aeae",
+            paddingTop: "5px",
           }}
         >
           <div
@@ -845,8 +845,8 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               marginLeft: "10px",
               marginRight: "10px",
               paddingLeft: "10px",
-              display: "flex",
-              alignItems: "center",
+              display: Disable.ADD_CopyNo==true? 'none':"flex",
+              alignItems: "center"
             }}
           >
             <p style={{ marginRight: "30px" }}>{index + 1}.</p>
@@ -856,7 +856,6 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               <p>Copy detail from No.</p>
             )}
             <Input
-              // disabled={formData1.CB_FileAdditional}
               disabled={Disable.ADD_CopyNo}
               size="middle"
               style={{ width: "70px", marginLeft: "10px" }}
@@ -866,7 +865,6 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               }
             />
             <Button
-              // disabled={formData1.CB_FileAdditional}
               disabled={Disable.ADD_CopyNo}
               type="primary"
               style={{ marginLeft: "10px" }}

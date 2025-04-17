@@ -10,6 +10,7 @@ import NewManPowerRequest from './Man Power Request/ManPowerRequest';
 import ManPowerRequest from './Man Power Request/Search Man Power Request/SearchManPowerRequst';
 import Login from './Login/Login';
 import Home from './Homepage/homepage';
+import ReqManPowerList from './Man Power Request/ManPowerMasterList/NewManPowerRequest';
 import { LoadingProvider } from "./loading/fn_loading";
 const { Content } = Layout;
 
@@ -42,8 +43,12 @@ const App = () => {
             <Route path="/test_page" element={<Page />} />
             <Route path="/HrSystem/NewManPowerRequest" element={<NewManPowerRequest />} />
             <Route path="/HrSystem/ManPowerRequest" element={<ManPowerRequest />} />
+            <Route path="/HrSystem/ApproveManPower" element={<ManPowerRequest />} />
+            <Route path="/HrSystem/HrActionManPowerRequest" element={<ManPowerRequest />} />
+            <Route path="/HrSystem/ManPowerMasterList" element={<ManPowerRequest />} />
             <Route path="/HrSystem/Login" element={<Login />} />
             <Route path="/HrSystem/Home" element={<Home />} />
+            <Route path="/HrSystem/ManPowerList" element={<ReqManPowerList />} />
           </Routes>
         </AppLayout>
       </Router>

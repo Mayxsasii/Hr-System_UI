@@ -41,13 +41,7 @@ const Step4 = ({
     CheckComplete,
     CheckCompleteAdd,
     Submit,
-  } = fn_HrStarffAction(
-    formData1,
-    setFormData1,
-    Disable,
-    setDisable,
-    setCurrent
-  );
+  } = fn_HrStarffAction(formData1, setFormData1);
   return (
     <>
       <div>
@@ -150,6 +144,8 @@ const Step4 = ({
         >
           <p style={{ marginRight: "5px" }}>Comment:</p>
           <TextArea
+            value={formData1.txt_HrComment}
+            onChange={(e) => handleChange("txt_HrComment", e.target.value)}
             disabled={
               formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"
                 ? true
@@ -178,7 +174,7 @@ const Step4 = ({
                   ? "none"
                   : "",
             }}
-            onClick={() => Save()}
+            onClick={() => Save("SaveDarft")}
           >
             Save Draft
           </Button>
@@ -282,7 +278,7 @@ const Step4 = ({
         <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
           {" "}
           <Checkbox
-           disabled={
+            disabled={
               formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"
                 ? true
                 : false
@@ -297,11 +293,20 @@ const Step4 = ({
             <label
               htmlFor="fileInputHr"
               className={`custom-file-upload ${
-                formData1.CB_HrFileAttach|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108" ? "disabled" : ""
+                formData1.CB_HrFileAttach ||
+                formData1.ID_Status == "MR0107" ||
+                formData1.ID_Status == "MR0108"
+                  ? "disabled"
+                  : ""
               }`}
               style={{
                 pointerEvents: !formData1.CB_HrFileAttach ? "none" : "auto",
-                opacity: !formData1.CB_HrFileAttach|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108" ? 0.5 : 1,
+                opacity:
+                  !formData1.CB_HrFileAttach ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                    ? 0.5
+                    : 1,
               }}
             >
               <UploadOutlined /> Click to Attach file
@@ -310,7 +315,11 @@ const Step4 = ({
               id="fileInputHr"
               type="file"
               onChange={(e) => handleFileChange(e)}
-              disabled={!formData1.CB_HrFileAttach|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+              disabled={
+                !formData1.CB_HrFileAttach ||
+                formData1.ID_Status == "MR0107" ||
+                formData1.ID_Status == "MR0108"
+              }
             />
             {formData1.Hr_FileAttach && (
               <p
@@ -414,7 +423,11 @@ const Step4 = ({
               ></Input>
             </div>
             <Checkbox
-              disabled={formData1.CB_HrFileAttach|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+              disabled={
+                formData1.CB_HrFileAttach ||
+                formData1.ID_Status == "MR0107" ||
+                formData1.ID_Status == "MR0108"
+              }
               checked={formData1.Hr_Sub[index].CB_Complete}
               onChange={(e) => {
                 CheckComplete(e, index);
@@ -440,7 +453,11 @@ const Step4 = ({
                 onChange={(e) =>
                   handleChangeHr_Sub(index, "Emp_id", e.target.value)
                 }
-                disabled={!formData1.Hr_Sub[index].CB_Complete|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+                disabled={
+                  !formData1.Hr_Sub[index].CB_Complete ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                }
                 value={formData1.Hr_Sub[index].Emp_id}
                 style={{
                   width: "100px",
@@ -451,7 +468,11 @@ const Step4 = ({
               Name :
               <Input
                 size="middle"
-                disabled={!formData1.Hr_Sub[index].CB_Complete}
+                disabled={
+                  !formData1.Hr_Sub[index].CB_Complete ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                }
                 onChange={(e) =>
                   handleChangeHr_Sub(index, "Emp_name", e.target.value)
                 }
@@ -466,7 +487,11 @@ const Step4 = ({
               <Input
                 size="middle"
                 value={formData1.Hr_Sub[index].Emp_sername}
-                disabled={!formData1.Hr_Sub[index].CB_Complete|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+                disabled={
+                  !formData1.Hr_Sub[index].CB_Complete ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                }
                 onChange={(e) =>
                   handleChangeHr_Sub(index, "Emp_sername", e.target.value)
                 }
@@ -476,7 +501,11 @@ const Step4 = ({
               <p style={{ marginLeft: "10px" }}>Join date:</p>
               <Input
                 type="date"
-                disabled={!formData1.Hr_Sub[index].CB_Complete|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+                disabled={
+                  !formData1.Hr_Sub[index].CB_Complete ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                }
                 style={{ marginLeft: "5px", width: "200px" }}
                 value={
                   formData1.Hr_Sub[index].Emp_JoinDate
@@ -529,7 +558,11 @@ const Step4 = ({
             >
               <p style={{ margin: 0 }}>{index + 1}.</p>
               <Checkbox
-                disabled={formData1.CB_HrFileAttach|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+                disabled={
+                  formData1.CB_HrFileAttach ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                }
                 checked={formData1.Hr_Add[index].CB_Complete}
                 onChange={(e) => {
                   CheckCompleteAdd(e, index);
@@ -577,7 +610,11 @@ const Step4 = ({
               Emp ID :
               <Input
                 size="middle"
-                disabled={!formData1.Hr_Add[index].CB_Complete|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+                disabled={
+                  !formData1.Hr_Add[index].CB_Complete ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                }
                 onChange={(e) =>
                   handleChangeHr_Add(index, "Emp_id", e.target.value)
                 }
@@ -591,7 +628,11 @@ const Step4 = ({
               Name :
               <Input
                 size="middle"
-                disabled={!formData1.Hr_Add[index].CB_Complete|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+                disabled={
+                  !formData1.Hr_Add[index].CB_Complete ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                }
                 onChange={(e) =>
                   handleChangeHr_Add(index, "Emp_name", e.target.value)
                 }
@@ -605,7 +646,11 @@ const Step4 = ({
               Surname :
               <Input
                 size="middle"
-                disabled={!formData1.Hr_Add[index].CB_Complete|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+                disabled={
+                  !formData1.Hr_Add[index].CB_Complete ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                }
                 value={formData1.Hr_Add[index].Emp_sername}
                 onChange={(e) =>
                   handleChangeHr_Add(index, "Emp_sername", e.target.value)
@@ -616,7 +661,11 @@ const Step4 = ({
               {console.log("JoinDate1", formData1.Hr_Add[index].Emp_JoinDate)}
               <Input
                 type="date"
-                disabled={!formData1.Hr_Add[index].CB_Complete|| formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"}
+                disabled={
+                  !formData1.Hr_Add[index].CB_Complete ||
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                }
                 style={{ marginLeft: "5px", width: "200px" }}
                 value={
                   formData1.Hr_Add[index].Emp_JoinDate
@@ -650,8 +699,15 @@ const Step4 = ({
           {" "}
           <Button
             type="primary"
-            style={{ backgroundColor: "#FF9D23" ,display: formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108" ? "none" : ""}}
-            onClick={() => Save('SaveDarft')}
+            style={{
+              backgroundColor: "#FF9D23",
+              display:
+                formData1.ID_Status == "MR0107" ||
+                formData1.ID_Status == "MR0108"
+                  ? "none"
+                  : "",
+            }}
+            onClick={() => Save("SaveDarft")}
           >
             Save Draft
           </Button>
