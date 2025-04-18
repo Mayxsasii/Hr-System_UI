@@ -5,11 +5,14 @@ import { useLoading } from "../../loading/fn_loading";
 import { EditOutlined, DeleteOutlined, CloseOutlined } from "@ant-design/icons";
 import { Button, Space, FloatButton, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
+import ImgViewFile from "../../assets/search.png";
+import ImgEdit from "../../assets/edit.png";
+import ImgApprove from "../../assets/approved.png";
+import ImgDelete from "../../assets/trash.png";
 import { fn_Header } from "../../Header/fn_Header";
 import Swal from "sweetalert2";
 
 function fn_SearchManPowerRequst() {
-
   const navigate = useNavigate();
   const url = window.location.href;
   const Path = url.split("/").pop();
@@ -36,16 +39,31 @@ function fn_SearchManPowerRequst() {
   const [DateFrom, setDateFrom] = useState("");
   const [DateTo, setDateTo] = useState("");
 
+  const [TitlePage, setTitlePage] = useState(userlogin);
+
   const [dataSearch, setDataSearch] = useState([]);
 
   useEffect(() => {
     GetFactory();
     GetDepartment();
     GetStatus();
+    Title();
     if (Path == "ManPowerRequest") {
       settxt_ReqBy(userlogin);
     }
   }, []);
+
+  const Title = async () => {
+    if (Path == "ManPowerRequest") {
+      setTitlePage("Man Power Request");
+    } else if (Path == "ApproveManPower") {
+      setTitlePage("Approve Man Power");
+    } else if (Path == "HrActionManPowerRequest") {
+      setTitlePage("Man Power Request (HR Staff Action)");
+    } else if (Path == "ManPowerMasterList") {
+      setTitlePage("Man Power Master List");
+    }
+  };
 
   const GetFactory = async () => {
     await axios
@@ -62,11 +80,11 @@ function fn_SearchManPowerRequst() {
         type:
           Path == "ManPowerRequest"
             ? ["C", "R"]
-          : Path == "ApproveManPower"
+            : Path == "ApproveManPower"
             ? ["A"]
-          : Path == "HrActionManPowerRequest"
+            : Path == "HrActionManPowerRequest"
             ? ["H"]
-          : Path == "ManPowerMasterList"
+            : Path == "ManPowerMasterList"
             ? ["C", "R", "H", "A", "D", "F"]
             : [],
       })
@@ -124,8 +142,12 @@ function fn_SearchManPowerRequst() {
 
   const handleEdit = (record) => {
     console.log("Edit record:", record.ReqNo);
-
     navigate(`/HrSystem/NewManPowerRequest?ReqNo=${record.ReqNo}`);
+  };
+
+  const handleViewMasterList= (record) => {
+    console.log("Edit record:", record.ReqNo);
+    navigate(`/HrSystem/ManPowerMasterList/ManPowerRequest?ReqNo=${record.ReqNo}`);
   };
 
   const handleDelete = (record) => {
@@ -174,7 +196,7 @@ function fn_SearchManPowerRequst() {
           ReqNoTo: txt_ReqNoTo || "",
           DateFrom: DateFrom || "",
           DateTo: DateTo || "",
-          ReqBy: Path == "ManPowerRequest" ? datauser.LOGIN : txt_ReqBy || "",
+          ReqBy: txt_ReqBy || "",
           Status:
             Path == "ManPowerRequest"
               ? Array.isArray(SL_Status) && SL_Status.length > 0
@@ -225,7 +247,7 @@ function fn_SearchManPowerRequst() {
       width: "91px",
       render: (_, record) => (
         <div>
-          <Button
+          {/* <Button
             onClick={() => handleEdit(record)}
             style={{ marginRight: 10, fontSize: "18px" }}
             icon={<EditOutlined style={{ color: "#EF9651" }} />}
@@ -234,6 +256,58 @@ function fn_SearchManPowerRequst() {
             onClick={() => handleDelete(record)}
             style={{ fontSize: "18px" }}
             icon={<CloseOutlined style={{ color: "red" }} />}
+          /> */}
+          {console.log(record, "record")}
+          <img
+            src={ImgApprove}
+            onClick={() => handleEdit(record)}
+            alt="Approve"
+            style={{
+              width: "30px",
+              height: "30px",
+              cursor: "pointer",
+              display:
+                Path == "ApproveManPower" || Path == "HrActionManPowerRequest"
+                  ? ""
+                  : "none",
+            }}
+          />
+          <img
+            src={ImgEdit}
+            onClick={() => handleEdit(record)}
+            alt="Edit"
+            style={{
+              width: "30px",
+              height: "30px",
+              cursor: "pointer",
+              display: Path == "ManPowerRequest" ? "" : "none",
+            }}
+          />
+          <img
+            src={ImgDelete}
+            onClick={() => handleDelete(record)}
+            alt="Delete"
+            style={{
+              width: "30px",
+              height: "30px",
+              cursor: "pointer",
+              display:
+                Path == "ManPowerRequest" && record.Status == "Create"
+                  ? ""
+                  : "none",
+            }}
+          />
+
+          <img
+            src={ImgViewFile}
+            onClick={() => handleViewMasterList(record)}
+            alt="View"
+            style={{
+              width: "30px",
+              height: "30px",
+              cursor: "pointer",
+              display: Path == "ManPowerMasterList" ? "" : "none",
+            }}
           />
         </div>
       ),
@@ -368,8 +442,8 @@ function fn_SearchManPowerRequst() {
     settxt_ReqBy,
     txt_ReqBy,
     Path,
+    TitlePage,
   };
-
 }
 
 export { fn_SearchManPowerRequst };

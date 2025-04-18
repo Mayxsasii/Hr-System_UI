@@ -24,7 +24,9 @@ import { fn_NewManPowerRequset } from "../NewManPowerRequset/fn_NewManPowerRequs
 import { fn_ReasontoRequest } from "../ReasontoRequest/fn_ReasontoRequest";
 import { Await, useLocation } from "react-router-dom";
 import { useLoading } from "../../loading/fn_loading";
+
 const Step1 = ({}) => {
+
   const {
     formData1,
     GetdataEdit
@@ -39,6 +41,9 @@ const Step1 = ({}) => {
 
   useEffect(async() => {
     if (ReqNo != null) {
+      queryParams.delete("ReqNo");
+      const newUrl = `${location.pathname}?${queryParams.toString()}`;
+      window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
       showLoading("Loading...");
       await GetdataEdit();
       hideLoading();
@@ -47,9 +52,6 @@ const Step1 = ({}) => {
 
   return (
     <>
-    {/* <div style={{ marginBottom: "20px", marginLeft: "10px",  fontSize: "18px",  fontWeight: "bold", }}>
-      <p>Man Power Master List</p>
-  </div> */}
     <div
       style={{
         padding: "10px",
@@ -294,13 +296,6 @@ const Step1 = ({}) => {
         }}
       >
         Reason to request {""}
-        {/* {formData1.txt_ReqNo ? (
-          <>
-            {" >>"} {formData1.txt_ReqNo}
-          </>
-        ) : (
-          ""
-        )} */}
       </p>
         <Checkbox
           style={{ marginLeft: "10px" }}
@@ -366,7 +361,7 @@ const Step1 = ({}) => {
             </div>
           </div>
           <Button
-            // disabled={!formData1.CB_Substitube || formData1.CB_FileSubstitube}
+            
             disabled
             type="primary"
             style={{
@@ -789,7 +784,7 @@ const Step1 = ({}) => {
                   <Select
                     disabled
                     showSearch
-                    value={formData1.Person_ADD[index].Dept||null}
+                    value={formData1.Person_ADD[index]?.Dept||null}
                     style={{
                       width: "80px",
                       marginLeft: "5px",
@@ -803,7 +798,7 @@ const Step1 = ({}) => {
                   <Select
                     disabled
                     mode="multiple"
-                    value={formData1.Person_ADD[index].Req_Jobgrade||null}
+                    value={formData1.Person_ADD[index]?.Req_Jobgrade||null}
                     style={{ width: "250px", marginLeft: "5px" }}
                     placeholder="Select Dept"
 
@@ -817,7 +812,7 @@ const Step1 = ({}) => {
                   <Select
                     mode="multiple"
                     disabled
-                    value={formData1.Person_ADD[index].Education||null}
+                    value={formData1.Person_ADD[index]?.Education||null}
                     style={{ width: "400px", marginLeft: "5px" }}
                     placeholder="Select Education"
 
@@ -829,12 +824,12 @@ const Step1 = ({}) => {
                   <Input
                     style={{
                       display:
-                        formData1.Person_ADD[index].Education &&
-                        formData1.Person_ADD[index].Education.includes("MR0490")
+                        formData1.Person_ADD[index]?.Education &&
+                        formData1.Person_ADD[index]?.Education.includes("MR0490")
                           ? ""
                           : "none",
                     }}
-                    value={formData1.Person_ADD[index].EducationOther||''}
+                    value={formData1.Person_ADD[index]?.EducationOther||''}
                     disabled
                   ></Input>
                 </td>
@@ -846,7 +841,7 @@ const Step1 = ({}) => {
                   <Select
                     mode="multiple"
                     disabled
-                    value={formData1.Person_ADD[index].Course||null}
+                    value={formData1.Person_ADD[index]?.Course||null}
                     style={{ width: "400px", marginLeft: "5px" }}
                     placeholder="Select Course"
 
@@ -859,13 +854,13 @@ const Step1 = ({}) => {
                     disabled
                     style={{
                       display:
-                        formData1.Person_ADD[index].Course &&
+                        formData1.Person_ADD[index]?.Course &&
                         // formData1.Person_ADD[index].Course == "MR0507"
-                        formData1.Person_ADD[index].Course.includes("MR0507")
+                        formData1.Person_ADD[index]?.Course.includes("MR0507")
                           ? ""
                           : "none",
                     }}
-                    value={formData1.Person_ADD[index].CourseOther||''}
+                    value={formData1.Person_ADD[index]?.CourseOther||''}
                   ></Input>
                 </td>
               </tr>
@@ -876,7 +871,7 @@ const Step1 = ({}) => {
                   <Select
                     disabled
                     mode="multiple"
-                    value={formData1.Person_ADD[index].Field||null}
+                    value={formData1.Person_ADD[index]?.Field||null}
                     style={{ width: "400px", marginLeft: "5px" }}
                     placeholder="Select Field"
 
@@ -889,12 +884,12 @@ const Step1 = ({}) => {
                     disabled
                     style={{
                       display:
-                        formData1.Person_ADD[index].Field &&
-                        formData1.Person_ADD[index].Field.includes("MR0699")
+                        formData1.Person_ADD[index]?.Field &&
+                        formData1.Person_ADD[index]?.Field.includes("MR0699")
                           ? ""
                           : "none",
                     }}
-                    value={formData1.Person_ADD[index].FieldOther||''}
+                    value={formData1.Person_ADD[index]?.FieldOther||''}
                   />
                 </td>
               </tr>
@@ -910,7 +905,7 @@ const Step1 = ({}) => {
                       marginLeft: "5px",
                     }}
                     maxLength={2000}
-                    value={formData1.Person_ADD[index].Special||''}
+                    value={formData1.Person_ADD[index]?.Special||''}
                   />
                 </td>
               </tr>
@@ -926,7 +921,7 @@ const Step1 = ({}) => {
                       marginLeft: "5px",
                     }}
                     maxLength={2000}
-                    value={formData1.Person_ADD[index].Experience||''}
+                    value={formData1.Person_ADD[index]?.Experience||''}
                   />
                 </td>
               </tr>
@@ -937,7 +932,7 @@ const Step1 = ({}) => {
                   {" "}
                   <Select
                     // disabled={Disable.ADD_StepLanguage}
-                    value={formData1.Person_ADD[index].StepLanguage||null}
+                    value={formData1.Person_ADD[index]?.StepLanguage||null}
                     style={{ width: "400px", marginLeft: "5px" }}
                     placeholder="Select English Language or other"
                     disabled
@@ -955,7 +950,7 @@ const Step1 = ({}) => {
                           ? ""
                           : "none",
                     }}
-                    value={formData1.Person_ADD[index].StepLanguage_other||''}
+                    value={formData1.Person_ADD[index]?.StepLanguage_other||''}
                   ></Input>
                 </td>
               </tr>
@@ -1000,7 +995,7 @@ const Step1 = ({}) => {
                         }}
                       >
                         <LinkOutlined style={{ marginRight: "5px" }} />{" "}
-                        {formData1.Person_ADD[index].Filefeature||''}{" "}
+                        {formData1.Person_ADD[index]?.Filefeature||''}{" "}
                       </p>
                     )}
                   </div>
@@ -1019,13 +1014,7 @@ const Step1 = ({}) => {
         }}
       >
         For Approve{""}
-        {/* {formData1.txt_ReqNo ? (
-          <>
-            {" >>"} {formData1.txt_ReqNo}
-          </>
-        ) : (
-          ""
-        )} */}
+       
       </p>
       <table className="TB_ForApp">
         <tr>

@@ -10,10 +10,12 @@ import {
   HomeOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import { Layout, Menu } from "antd";
 const { SubMenu } = Menu;
 
 function fn_Sider() {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
   const [menuData, setMenuData] = useState([]);
   const [selectedKey, setSelectedKey] = useState("1");
@@ -110,15 +112,19 @@ function fn_Sider() {
     console.log(e.key, selectedMenu.MENU_NAME, "e.key and menu name");
     if (selectedMenu.MENU_NAME === "Man Power Request") {
       window.location.href = "/HrSystem/ManPowerRequest";
+      // navigate(`/HrSystem/ManPowerRequest`);
     }
     else if (selectedMenu.MENU_NAME === "Approve Man Power"){
       window.location.href = "/HrSystem/ApproveManPower";
+      // navigate(`/HrSystem/ApproveManPower`);
     }
     else if (selectedMenu.MENU_NAME === "Man Power Request (HR Staff Action)"){
       window.location.href = "/HrSystem/HrActionManPowerRequest";
+      // navigate(`/HrSystem/HrActionManPowerRequest`);
     }
     else if(selectedMenu.MENU_NAME === "Man Power Master List"){
       window.location.href = "/HrSystem/ManPowerMasterList";
+      // navigate(`/HrSystem/HrActionManPowerRequest`);
     }
   };
   

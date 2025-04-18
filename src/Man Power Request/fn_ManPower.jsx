@@ -343,6 +343,9 @@ function fn_ManPower() {
 
   const FetchData = async () => {
     if (ReqNo != null) {
+      queryParams.delete("ReqNo");
+      const newUrl = `${location.pathname}?${queryParams.toString()}`;
+      window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
       showLoading("Loading...");
       await GetdataEdit();
       // await GetDisable(formData1.ID_Status);
@@ -565,6 +568,7 @@ function fn_ManPower() {
         ReqNo: ReqNo,
       })
       .then((res) => {
+        console.log(res.data, "GetDataPersonDetail");
         let Data_Sub = [];
         let Data_Add = [];
         for (let i = 0; i < res.data.length; i++) {

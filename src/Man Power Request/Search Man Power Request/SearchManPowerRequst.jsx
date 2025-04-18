@@ -45,7 +45,8 @@ const SearchManPower = () => {
     Status,
     settxt_ReqBy,
     txt_ReqBy,
-    Path
+    Path,
+    TitlePage
   } = fn_SearchManPowerRequst();
 
   return (
@@ -71,7 +72,7 @@ const SearchManPower = () => {
       >
         <p style={{ margin: 0, fontSize: "20px", fontWeight: "bold" }}>
           <SearchOutlined style={{ marginRight: "8px" }} />
-          Man Power Request
+          {TitlePage}
         </p>
       </div>
 
@@ -233,10 +234,10 @@ const SearchManPower = () => {
                   disabled={Path == "ManPowerRequest" ? true : false} 
                 />
               </td>
-              <td style={{ textAlign: "right", padding: "4px" }}>
+              <td style={{ textAlign: "right", padding: "4px",display:Path=='ApproveManPower'||Path=='HrActionManPowerRequest'?'none':'' }} >
                 Request Status:
               </td>
-              <td style={{ padding: "4px" }}>
+              <td style={{ padding: "4px",display:Path=='ApproveManPower'||Path=='HrActionManPowerRequest'?'none':''  }}>
               <Select
                   showSearch
                   mode="multiple"
@@ -261,7 +262,7 @@ const SearchManPower = () => {
                 <Button
                   type="primary"
                   icon={<SearchOutlined />}
-                  style={{ marginRight: "10px", marginLeft: "30px" }}
+                  style={{ marginRight: "10px", marginLeft: "50px" }}
                   onClick={() => bt_Search()}
                 >
                   Search
