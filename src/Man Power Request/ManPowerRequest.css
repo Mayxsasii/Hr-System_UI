@@ -1,31 +1,30 @@
-
 .tableSerachAnalysis .ant-table-thead > tr > th {
-    background-color: #81BFDA; /* Green header */
-    color: white;
-    text-align: center;
-    font-weight: bold;
-    padding: 10px;
+  background-color: #81bfda; /* Green header */
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
 }
 
 .tableSerachAnalysis .ant-table-tbody > tr > td {
-    font-family: 'Varela Round', sans-serif;
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ddd; /* Row separator */
+  font-family: "Varela Round", sans-serif;
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd; /* Row separator */
 }
 
 .tableSerachAnalysis .ant-table-tbody > tr:hover {
-    background-color: #f1f1f1; /* Highlight row on hover */
-    transition: background-color 0.3s ease; /* Smooth transition */
+  background-color: #f1f1f1; /* Highlight row on hover */
+  transition: background-color 0.3s ease; /* Smooth transition */
 }
 
 .tableSerachAnalysis .ant-table-pagination {
-    margin-top: 10px;
-    text-align: center;
+  margin-top: 10px;
+  text-align: center;
 }
 
 .tableSerachAnalysis .ant-table-tbody > tr > td:first-child {
-    font-weight: bold; /* Highlight first column */
+  font-weight: bold; /* Highlight first column */
 }
 
 .scrollable-column {
@@ -34,32 +33,67 @@
   white-space: nowrap;
 }
 .file-upload {
-    display: flex;
-    align-items: center;
-  }
-  
-  .custom-file-upload {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #ccc;
-    border-radius: 7px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-  }
-  
-  .custom-file-upload:hover {
-    background-color: #f5f5f5;
-    color: #000;
-  }
-  
-  input[type="file"] {
-    display: none;
-  }
+  display: flex;
+  align-items: center;
+}
 
-  :disabled {
-    color: #504b4b !important; /* สีฟอนต์ที่เข้มขึ้น */
-    /* opacity: 1 !important; ปรับ opacity เพื่อให้สีชัดเจน */
-    cursor: not-allowed; /* เปลี่ยนเคอร์เซอร์ */
-  }
+.custom-file-upload {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.custom-file-upload:hover {
+  background-color: #f5f5f5;
+  color: #000;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+:disabled {
+  color: #504b4b !important; /* สีฟอนต์ที่เข้มขึ้น */
+  /* opacity: 1 !important; ปรับ opacity เพื่อให้สีชัดเจน */
+  cursor: not-allowed; /* เปลี่ยนเคอร์เซอร์ */
+}
+
+.NameFile {
+  margin: 0;
+  margin-top: 0;
+  margin-left: 15px;
+  padding: 3px;
+  color: rgb(0, 38, 206);
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.NameFile:hover {
+  background-color: #d3d2d2;
+  border-radius: 5px;
+  padding: 3px;
+  cursor: pointer; /* เปลี่ยนเคอร์เซอร์เป็น pointer */
+  /* text-decoration: underline;  */
+}
+
+.DeleteFile {
+  margin-left: 30px;
+  cursor: pointer;
+  color: red;
+  padding: 5px;
+}
+
+.DeleteFile:hover {
+  background-color: #bbb9b9;
+  border-radius: 5px;
+  padding: 5px; /* เพิ่มพื้นที่รอบข้อความ */
+  display: inline-block; /* ทำให้องค์ประกอบรองรับ padding */
+}

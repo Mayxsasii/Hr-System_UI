@@ -1,48 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { theme } from "antd";
-import Step1 from "./NewManPowerRequset/NewManPowerRequest";
-import Step2 from "./ReasontoRequest/ReasontoRequest";
-import Step3 from "./ForApprove/ForApprove";
-import Step4 from "./HRStaffAction/HRStaffAction";
-import { fn_Header } from "../Header/fn_Header";
+// import Step1 from "./NewManPowerRequset/NewManPowerRequest";
+// import Step2 from "./ReasontoRequest/ReasontoRequest";
+// import Step3 from "./ForApprove/ForApprove";
+// import Step4 from "./HRStaffAction/HRStaffAction";
+// import { fn_Header } from "../Header/fn_Header";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useLoading } from "../loading/fn_loading";
-import { Await, useLocation } from "react-router-dom";
+import { useLoading } from "../../loading/fn_loading";
+import { useLocation } from "react-router-dom";
 
-function fn_ManPower() {
-  const steps = [
-    {
-      title: "New Man Power Request",
-      content: (props) => <Step1 {...props} />,
-    },
-    {
-      title: "Reason to request",
-      content: (props) => <Step2 {...props} />,
-    },
-    {
-      title: "For Approve",
-      content: (props) => <Step3 {...props} />,
-    },
-    {
-      title: "HR Staff Action",
-      content: (props) => <Step4 {...props} />,
-    },
-  ];
+function fn_ManPowerMasterList() {
+
   const { showLoading, hideLoading } = useLoading();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ReqNo = queryParams.get("ReqNo");
   const Email = localStorage.getItem("Email");
-  const UserLogin = localStorage.getItem("username");
+  const userlogin = localStorage.getItem("username");
 
-  const { token } = theme.useToken();
   const today = new Date();
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
   ).padStart(2, "0")}/${today.getFullYear()}`;
-  const [current, setCurrent] = useState(0);
 
+  const [Factory, setFactory] = useState([]);
+  const [Education, setEducation] = useState([]);
+  const [Course, setCourse] = useState([]);
+  const [Field, setField] = useState([]);
+  const [English, setEnglish] = useState([]);
   const [formData1, setFormData1] = useState({
     //Step1
     SL_Factory: null,
@@ -170,194 +156,53 @@ function fn_ManPower() {
       },
     ],
   });
+  useEffect(async() => {
+    GetFactory();
+    GetEducation();
+    GetCourse();
+    GetField
+    GetField();
+    GetEnglish();
 
-  const [Disable, setDisable] = useState({
-    //false โชว์ true ซ่อน
-    SL_Factory: false,
-    SL_Department: false,
-    txt_Email: false,
-    txt_TelNo: false,
-    SL_Position: false,
-    Date_Target: false,
-    CB_EmpRequirment: false,
-    SL_EmployeeType: false,
-    txt_EmpType_Other: false,
-    txt_EmpReq_Other: false,
-    txt_Remark: false,
-    //Step2
-    CB_Substitube: false,
-    CB_FileSubstitube: true,
-    ButtonSUB_ADD: true,
-
-    // ---
-    Sub_CopyNo: false,
-    Sub_ID_Code: false,
-    Sub_Req_Jobgrade: false,
-    Sub_Education: false,
-    Sub_EducationOther: false,
-    Sub_Course: false,
-    Sub_CourseOther: false,
-    Sub_FieldOther: false,
-    Sub_Special: false,
-    Sub_Experience: false,
-    Sub_StepLanguage: false,
-    Sub_StepLanguage_other: false,
-    Button_DeleteSub: false,
-
-    //---Step2.add
-    CB_Additional: false,
-    txt_TargetCapacity1: true,
-    txt_TargetCapacity2: true,
-    CB_FileAdditional: true,
-    ButtonADD_ADD: true,
-
-    ADD_CopyNo: false,
-    ADD_Dept: false,
-    ADD_Req_Jobgrade: false,
-    ADD_Education: false,
-    ADD_EducationOther: false,
-    ADD_Course: false,
-    ADD_CourseOther: false,
-    ADD_Field: false,
-    ADD_FieldOther: false,
-    ADD_Special: false,
-    ADD_Experience: false,
-    ADD_StepLanguage: false,
-    ADD_StepLanguage_other: false,
-    Button_DeleteAdd: false,
-    // //step3
-    SL_DepartmentManager: false,
-    CB_DepartmentApprove: false,
-    txt_CommentDepartmentmanager: false,
-    // // --
-    SL_FMGM: false,
-    CB_FMGMApprove: false,
-    txt_CommentFMGM: false,
-    // // --
-    SL_HRManager: false,
-    CB_HRManagerApprove: false,
-    txt_CommentHRManager: false,
-  });
-
-  useEffect(() => {
-    FetchData();
-  }, []);
-
-  const DisableChange = (field, value) => {
-    setDisable((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const GetDisable = async (ID_Status, StatusType) => {
-    console.log("ID_Status0", ID_Status, StatusType);
-    if (StatusType == "C" || StatusType == "R") {
-      // if(formData1.)
-      DisableChange("CB_DepartmentApprove", true);
-      DisableChange("txt_CommentDepartmentmanager", true);
-      DisableChange("CB_FMGMApprove", true);
-      DisableChange("txt_CommentFMGM", true);
-      DisableChange("CB_HRManagerApprove", true);
-      DisableChange("txt_CommentHRManager", true);
-    } else if (StatusType == "R") {
-    } else {
-      DisableChange("SL_Factory", true);
-      DisableChange("SL_Department", true);
-      DisableChange("SL_Position", true);
-      DisableChange("txt_Email", true);
-      DisableChange("txt_TelNo", true);
-      DisableChange("Date_Target", true);
-      DisableChange("CB_EmpRequirment", true);
-      DisableChange("SL_EmployeeType", true);
-      DisableChange("txt_EmpType_Other", true);
-      DisableChange("txt_EmpReq_Other", true);
-      DisableChange("txt_Remark", true);
-
-      // step2
-      DisableChange("CB_Substitube", true);
-      DisableChange("CB_FileSubstitube", true);
-      DisableChange("Button_ADD", true);
-      DisableChange("Sub_CopyNo", true);
-      DisableChange("Sub_ID_Code", true);
-      DisableChange("Sub_Dept", true);
-      DisableChange("Sub_Req_Jobgrade", true);
-      DisableChange("Sub_Education", true);
-      DisableChange("Sub_EducationOther", true);
-      DisableChange("Sub_Course", true);
-      DisableChange("Sub_CourseOther", true);
-      DisableChange("Sub_Field", true);
-      DisableChange("Sub_FieldOther", true);
-      DisableChange("Sub_Special", true);
-      DisableChange("Sub_Experience", true);
-      DisableChange("Sub_StepLanguage", true);
-      DisableChange("Sub_StepLanguage_other", true);
-      DisableChange("Button_DeleteSub", true);
-
-      DisableChange("CB_Additional", true);
-      DisableChange("txt_TargetCapacity1", true);
-      DisableChange("txt_TargetCapacity2", true);
-      DisableChange("handleDelete", true);
-      DisableChange("CB_FileAdditional", true);
-      DisableChange("ButtonADD_ADD", true);
-      DisableChange("ADD_Education", true);
-      DisableChange("ADD_Dept", true);
-      DisableChange("ADD_Req_Jobgrade", true);
-      DisableChange("ADD_EducationOther", true);
-      DisableChange("ADD_Course", true);
-      DisableChange("ADD_CourseOther", true);
-      DisableChange("ADD_CopyNo", true);
-      DisableChange("ADD_Field", true);
-      DisableChange("ADD_FieldOther", true);
-      DisableChange("ADD_Special", true);
-      DisableChange("ADD_Experience", true);
-      DisableChange("ADD_StepLanguage", true);
-      DisableChange("ADD_StepLanguage_other", true);
-      DisableChange("Button_DeleteAdd", true);
-
-      DisableChange("SL_DepartmentManager", true);
-      DisableChange("SL_FMGM", true);
-      DisableChange("SL_HRManager", true);
-
-      if (StatusType == "A") {
-        if (ID_Status == "MR0103") {
-          DisableChange("CB_DepartmentApprove", true);
-          DisableChange("txt_CommentDepartmentmanager", true);
-        } else if (ID_Status == "MR0104") {
-          DisableChange("CB_DepartmentApprove", true);
-          DisableChange("txt_CommentDepartmentmanager", true);
-          DisableChange("CB_FMGMApprove", true);
-          DisableChange("txt_CommentFMGM", true);
-        }
-      } else if (StatusType == "H" || StatusType == "F") {
-        DisableChange("CB_DepartmentApprove", true);
-        DisableChange("txt_CommentDepartmentmanager", true);
-        DisableChange("CB_FMGMApprove", true);
-        DisableChange("txt_CommentFMGM", true);
-        DisableChange("CB_HRManagerApprove", true);
-        DisableChange("txt_CommentHRManager", true);
-      }
-    }
-  };
-
-  const FetchData = async () => {
     if (ReqNo != null) {
-      //กลับมาเปิดด้วย
-      // queryParams.delete("ReqNo");
-      // const newUrl = `${location.pathname}?${queryParams.toString()}`;
-      // window.history.replaceState(
-      //   null,
-      //   "",
-      //   newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl
-      // );
+    //   queryParams.delete("ReqNo");
+    //   const newUrl = `${location.pathname}?${queryParams.toString()}`;
+    //   window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
       showLoading("Loading...");
       await GetdataEdit();
+      await GetFileDetail();
       await GetFile();
-      await GetFileDetail()
-      // await GetDisable(formData1.ID_Status);
       hideLoading();
-    } else {
-      handleChange("txt_ReqStatus", "Create");
-      handleChange("ID_Status", "MR0101");
-      await GetDisable(formData1.ID_Status, "C");
     }
+  }, []);
+
+
+
+
+
+
+  const GetEducation = async () => {
+    await axios.post("/api/RequestManPower/GetEducation", {}).then((res) => {
+      setEducation(res.data);
+    });
+  };
+
+  const GetCourse = async () => {
+    await axios.post("/api/RequestManPower/GetCourse", {}).then((res) => {
+      setCourse(res.data);
+    });
+  };
+
+  const GetField = async () => {
+    await axios.post("/api/RequestManPower/GetField", {}).then((res) => {
+      setField(res.data);
+    });
+  };
+
+  const GetEnglish = async () => {
+    await axios.post("/api/RequestManPower/GetEnglish", {}).then((res) => {
+      setEnglish(res.data);
+    });
   };
 
   const GetdataEdit = async () => {
@@ -367,7 +212,6 @@ function fn_ManPower() {
       })
       .then(async (res) => {
         console.log(res.data, "GetDataEdit");
-        await GetDisable(res.data[0].Status_code, res.data[0].Status_Type);
 
         handleChange("txt_ReqNo", res.data[0].Req_No);
         handleChange("SL_Factory", res.data[0].Fac_code || null);
@@ -375,19 +219,19 @@ function fn_ManPower() {
         handleChange("ID_Status", res.data[0].Status_code);
         if (res.data[0].Status_Type == "C" || res.data[0].Status_Type == "R") {
           console.log("vvvvvvv", res.data[0].Cb_Sub);
-          DisableChange("SL_Factory", true);
-          DisableChange("SL_Department", true);
+        //   DisableChange("SL_Factory", true);
+        //   DisableChange("SL_Department", true);
           // DisableChange("SL_Position", true);
 
           if (res.data[0].Cb_Sub == "Y") {
-            DisableChange("ButtonSUB_ADD", false);
-            DisableChange("CB_FileSubstitube", false);
+            // DisableChange("ButtonSUB_ADD", false);
+            // DisableChange("CB_FileSubstitube", false);
           }
           if (res.data[0].Cb_Add == "Y") {
-            DisableChange("ButtonADD_ADD", false);
-            DisableChange("CB_FileAdditional", false);
-            DisableChange("txt_TargetCapacity1", false);
-            DisableChange("txt_TargetCapacity2", false);
+            // DisableChange("ButtonADD_ADD", false);
+            // DisableChange("CB_FileAdditional", false);
+            // DisableChange("txt_TargetCapacity1", false);
+            // DisableChange("txt_TargetCapacity2", false);
           }
         }
         handleChange("StatusType", res.data[0].Status_Type);
@@ -941,83 +785,13 @@ function fn_ManPower() {
     }
   };
 
-  const validateStep1 = () => {
-    if (formData1.txt_ReqNo == "") {
-      Swal.fire({
-        icon: "error",
-        title: "Please Generate Req No.",
-      });
-      return false;
-    }
-    return true;
-  };
-
-  const validateStep4 = async () => {
-    let check = true;
+  const GetFactory = async () => {
     await axios
-      .post("/api/RequestManPower/GetHrStarff", {
-        User: UserLogin,
-      })
-      .then(async (res) => {
-        console.log(res.data, "GetPersonData");
-        if (res.data.length <= 0) {
-          Swal.fire({
-            icon: "error",
-            title: "For HR Staff Only",
-          });
-          check = false;
-        }
+      .post("/api/RequestManPower/GetFactory", { User_login: userlogin || "" })
+      .then((res) => {
+        console.log(res.data, "GetFactory");
+        setFactory(res.data);
       });
-    return check;
-  };
-
-  const next = async () => {
-    console.log(current, "currentnext");
-    if (current === 0 && !validateStep1()) {
-      // return;
-    } else if (current == 2 && !(await validateStep4())) {
-      // console.log("validateStep4");
-      return;
-    }
-
-    setCurrent(current + 1);
-  };
-
-  const prev = () => {
-    console.log(current-1, "currentprev");
-    if(current-1 == -1){
-       showLoading("Loading...");
-      window.history.back(); // ย้อนกลับไปยังหน้าก่อนหน้า
-      hideLoading();
-      return;
-    }else{
-      setCurrent(current - 1);
-    }
-    // setCurrent(current - 1);
-  };
-
-  const onChange = async (current) => {
-    if (current > 0 && !validateStep1()) {
-      return;
-    }
-    if (current == 3 && !(await validateStep4())) {
-      return;
-    }
-    setCurrent(current);
-  };
-
-  const items = steps.map((item) => ({
-    key: item.title,
-    title: item.title,
-  }));
-
-  const contentStyle = {
-    padding: "10px",
-    backgroundColor: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    border: `1px dashed ${token.colorBorder}`,
-    marginTop: 30,
-    marginRight: 10,
   };
 
   const handleChange = (field, value) => {
@@ -1025,29 +799,17 @@ function fn_ManPower() {
   };
 
   
-  const handlePersonSubChange = (index, field, value) => {
-    console.log(index, field, value, "handlePersonSubChange");
-    console.log(formData1, "handlePersonSubChange");
-    const newPersonSub = [...formData1.Person_Sub];
-    newPersonSub[index][field] = value;
-    setFormData1({ ...formData1, Person_Sub: newPersonSub });
-  };
+//   const handlePersonSubChange = (index, field, value) => {
+//     console.log(index, field, value, "handlePersonSubChange");
+//     console.log(formData1, "handlePersonSubChange");
+//     const newPersonSub = [...formData1.Person_Sub];
+//     newPersonSub[index][field] = value;
+//     setFormData1({ ...formData1, Person_Sub: newPersonSub });
+//   };
 
   return {
-    current,
-    onChange,
-    items,
-    steps,
-    formData1,
-    setFormData1,
-    prev,
-    next,
-    contentStyle,
-    Disable,
-    setDisable,
-    setCurrent,
-    GetdataEdit,
+    formData1,Factory,Education,Course,Field,English
   };
 }
 
-export { fn_ManPower };
+export { fn_ManPowerMasterList };

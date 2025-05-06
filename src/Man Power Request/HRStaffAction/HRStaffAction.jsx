@@ -16,8 +16,10 @@ import {
   LinkOutlined,
   CloseOutlined,
   CaretDownOutlined,
+  SendOutlined
 } from "@ant-design/icons";
 const { TextArea } = Input;
+import ImgExcel from "../../assets/excel.png";
 import { fn_HrStarffAction } from "./fn_HrStarffAction";
 const Step4 = ({
   formData1,
@@ -41,6 +43,9 @@ const Step4 = ({
     CheckComplete,
     CheckCompleteAdd,
     Submit,
+    DownloadFileforUpload,
+    ReadFile,
+    handleFileOtherChange
   } = fn_HrStarffAction(formData1, setFormData1);
   return (
     <>
@@ -61,6 +66,7 @@ const Step4 = ({
             ""
           )}
         </p>
+
         <div
           style={{
             display: "flex",
@@ -208,11 +214,17 @@ const Step4 = ({
           </Button>
         </div>
         <div
-          style={{ display: "flex", alignItems: "center", marginLeft: "30px" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between", // จัดตำแหน่งให้มีระยะห่างระหว่างองค์ประกอบ
+            marginLeft: "30px",
+          }}
         >
+
+          <div style={{ display: "flex", alignItems: "center" }}>
           <div
             style={{
-              //   border: "2px dashed #80CBC4",
               borderRadius: "15px",
               width: "180px",
               display: "flex",
@@ -222,60 +234,82 @@ const Step4 = ({
               backgroundColor: "#FFB433",
             }}
           >
-            <p style={{ margin: 4, fontSize: "16px" }}>
-              Result after interview
-            </p>
+            <p style={{ margin: 4, fontSize: "16px" }}>Result after interview</p>
           </div>
-          Total Request:{" "}
-          <Input
-            value={
-              formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional
-            }
-            disabled
-            style={{ width: "80px", marginLeft: "10px", marginRight: "5px" }}
-          />{" "}
-          <p style={{ marginLeft: "" }}> Person</p>
-          <p
-            style={{
-              marginLeft: "50px",
-              display: !formData1.CB_HrFileAttach ? "none" : "",
-            }}
-          >
-            Manual Completed :
-          </p>
-          <Input
-            value={formData1.txt_TotalManual}
-            style={{
-              width: "80px",
-              marginLeft: "10px",
-              marginRight: "5px",
-              display: !formData1.CB_HrFileAttach ? "none" : "",
-            }}
-            disabled={
-              formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"
-                ? true
-                : false
-            }
-            onChange={(e) => {
-              const value = e.target.value;
-              if (/^\d*$/.test(value)) {
-                ManualCompleted(e.target.value);
+            Total Request:{" "}
+            <Input
+              value={formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional}
+              disabled
+              style={{ width: "80px", marginLeft: "10px", marginRight: "5px" }}
+            />{" "}
+            <p style={{ marginLeft: "" }}> Person</p>
+            <p
+              style={{
+                marginLeft: "50px",
+                display: !formData1.CB_HrFileAttach ? "none" : "",
+              }}
+            >
+              Manual Completed :
+            </p>
+            <Input
+              value={formData1.txt_TotalManual}
+              style={{
+                width: "80px",
+                marginLeft: "10px",
+                marginRight: "5px",
+                display: !formData1.CB_HrFileAttach ? "none" : "",
+              }}
+              disabled={
+                formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"
+                  ? true
+                  : false
               }
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  ManualCompleted(e.target.value);
+                }
+              }}
+            />{" "}
+            <p style={{ display: !formData1.CB_HrFileAttach ? "none" : "" }}> Person</p>
+            <p style={{ marginLeft: "50px" }}>Remain :</p>
+            <Input
+              value={formData1.txt_TotalRemain}
+              disabled
+              style={{ width: "80px", marginLeft: "10px", marginRight: "5px" }}
+            />{" "}
+            <p style={{ marginRight: "20px" }}> Person</p>
+          </div>
+          <Button
+            style={{
+              marginRight:'20px',
+              display:
+                formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"
+                  ? "none"
+                  : "",
             }}
-          />{" "}
-          <p style={{ display: !formData1.CB_HrFileAttach ? "none" : "" }}>
-            {" "}
-            Person
-          </p>
-          <p style={{ marginLeft: "50px" }}>Remain :</p>
-          <Input
-            value={formData1.txt_TotalRemain}
-            disabled
-            style={{ width: "80px", marginLeft: "10px", marginRight: "5px" }}
-          />{" "}
-          <p style={{ marginLeft: "" }}> Person</p>
+            onClick={DownloadFileforUpload}
+          >
+            <img
+              src={ImgExcel}
+              alt="Excel Icon"
+              style={{
+                width: "20px",
+                height: "20px",
+                marginRight: "4px",
+              }}
+            />
+            File For Upload
+          </Button>
         </div>
-        <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            margin: "10px",
+            marginBottom: "0",
+          }}
+        >
           {" "}
           <Checkbox
             disabled={
@@ -287,9 +321,9 @@ const Step4 = ({
             onChange={CB_AttachFile}
             style={{ marginLeft: "30px" }}
           >
-            Attach file:
+            Upload File :
           </Checkbox>
-          <div className="file-upload" style={{ marginLeft: "10px" }}>
+          <div className="file-upload" style={{ marginLeft: "1px" }}>
             <label
               htmlFor="fileInputHr"
               className={`custom-file-upload ${
@@ -321,35 +355,105 @@ const Step4 = ({
                 formData1.ID_Status == "MR0108"
               }
             />
-            {formData1.Hr_FileAttach && (
-              <p
-                style={{
-                  color: "black",
-                  margin: 0,
-                  marginTop: "0px",
-                  marginLeft: "10px",
-                }}
-              >
-                <LinkOutlined style={{ marginRight: "5px" }} />{" "}
-                {formData1.Hr_FileAttach}{" "}
-                <CloseOutlined
-                  onClick={() => {
-                    // DeleteFile("ADDFeature", index);
-                  }}
-                  style={{
-                    marginLeft: "20px",
-                    cursor: "pointer",
-                    color: "red",
-                    // display:
-                    //   formData1.StatusType !== "C" &&
-                    //   formData1.StatusType !== "R"
-                    //     ? "none"
-                    //     : "",
-                  }}
-                />
-              </p>
-            )}
+            <Button
+            disabled={!formData1.CB_HrFileAttach ||
+              formData1.ID_Status == "MR0107" ||
+              formData1.ID_Status == "MR0108"}
+          type="primary"
+          style={{
+            marginLeft: "10px",
+           marginRight:'40px',
+            display:formData1.ID_Status == "MR0107" ||
+              formData1.ID_Status == "MR0108"? "none" : "",
+          }}
+          onClick={() => {
+            ReadFile();
+          }}
+          icon={<SendOutlined />}
+        >
+          Read File
+        </Button>
+        <span style={{marginRight:'5px',marginLeft:'10px'}}>  Other documents :</span>
+       
+        <div className="file-upload" style={{ marginLeft: "1px" }}>
+            <label
+              htmlFor="fileInputHrOther"
+              className={`custom-file-upload ${
+                formData1.ID_Status == "MR0107" ||
+                formData1.ID_Status == "MR0108"
+                  ? "disabled"
+                  : ""
+              }`}
+              style={{
+                pointerEvents: !formData1.CB_HrFileAttach ? "none" : "auto",
+                opacity:
+                  formData1.ID_Status == "MR0107" ||
+                  formData1.ID_Status == "MR0108"
+                    ? 0.5
+                    : 1,
+              }}
+            >
+              <UploadOutlined /> Click to Attach file
+            </label>
+            <input
+              id="fileInputHrOther"
+              type="file"
+              onChange={(e) => handleFileOtherChange(e)}
+              disabled={
+                formData1.ID_Status == "MR0107" ||
+                formData1.ID_Status == "MR0108"
+              }
+            />
           </div>
+          </div>
+          {formData1.Hr_NameFileOther && (
+            <p style={{marginLeft:'7px'}}
+             className="NameFile"
+            >
+              <LinkOutlined style={{ marginRight: "5px" }} /> {formData1.Hr_NameFileOther}{" "}
+              <CloseOutlined
+               className="DeleteFile"
+                onClick={() => {
+                  // DeleteFile("ADDFeature", index);
+                }}
+                style={{
+                  marginLeft: "20px",
+                  cursor: "pointer",
+                  color: "red",
+                  display:
+                    formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"
+                      ? "none"
+                      : "",
+                }}
+              />
+            </p>
+          )}
+        </div>
+        <div style={{ marginLeft: "130px", display: "flex", alignItems: "center",marginTop:'5px'}}>
+
+          {formData1.Hr_FileAttach && (
+            <p
+             className="NameFile"
+            >
+              <LinkOutlined style={{ marginRight: "5px" }} /> {formData1.Hr_FileAttach}{" "}
+              <CloseOutlined
+               className="DeleteFile"
+                onClick={() => {
+                  // DeleteFile("ADDFeature", index);
+                }}
+                style={{
+                  marginLeft: "20px",
+                  cursor: "pointer",
+                  color: "red",
+                  display:
+                    formData1.ID_Status == "MR0107" || formData1.ID_Status == "MR0108"
+                      ? "none"
+                      : "",
+                }}
+              />
+            </p>
+          )}
+
         </div>
         <div>
           <p
@@ -424,7 +528,7 @@ const Step4 = ({
             </div>
             <Checkbox
               disabled={
-                formData1.CB_HrFileAttach ||
+                
                 formData1.ID_Status == "MR0107" ||
                 formData1.ID_Status == "MR0108"
               }
@@ -454,7 +558,7 @@ const Step4 = ({
                   handleChangeHr_Sub(index, "Emp_id", e.target.value)
                 }
                 disabled={
-                  !formData1.Hr_Sub[index].CB_Complete ||
+                 
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -469,7 +573,7 @@ const Step4 = ({
               <Input
                 size="middle"
                 disabled={
-                  !formData1.Hr_Sub[index].CB_Complete ||
+                 
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -502,7 +606,7 @@ const Step4 = ({
               <Input
                 type="date"
                 disabled={
-                  !formData1.Hr_Sub[index].CB_Complete ||
+                 
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -559,7 +663,7 @@ const Step4 = ({
               <p style={{ margin: 0 }}>{index + 1}.</p>
               <Checkbox
                 disabled={
-                  formData1.CB_HrFileAttach ||
+                 
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -611,7 +715,7 @@ const Step4 = ({
               <Input
                 size="middle"
                 disabled={
-                  !formData1.Hr_Add[index].CB_Complete ||
+                
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -629,7 +733,7 @@ const Step4 = ({
               <Input
                 size="middle"
                 disabled={
-                  !formData1.Hr_Add[index].CB_Complete ||
+                  
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -647,7 +751,7 @@ const Step4 = ({
               <Input
                 size="middle"
                 disabled={
-                  !formData1.Hr_Add[index].CB_Complete ||
+                  
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -662,7 +766,7 @@ const Step4 = ({
               <Input
                 type="date"
                 disabled={
-                  !formData1.Hr_Add[index].CB_Complete ||
+                  
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }

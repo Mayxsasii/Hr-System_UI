@@ -4,7 +4,7 @@ import { useLoading } from "../../loading/fn_loading";
 import { fn_Header } from "../../Header/fn_Header";
 import Swal from "sweetalert2";
 import moment from "moment";
-function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
+function fn_NewManPowerRequset(formData1, setFormData1, Disable, setDisable) {
   const { datauser } = fn_Header();
   const { showLoading, hideLoading } = useLoading();
   const userlogin = localStorage.getItem("username");
@@ -22,8 +22,11 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
     GetFactory();
     GetDepartment();
     GetEmployeeType();
-    GetPosition(formData1.SL_Factory);
   }, []);
+
+  useEffect(() => {
+    GetPosition(formData1.SL_Factory);
+  }, [formData1.SL_Factory]);
 
   const GetFactory = async () => {
     await axios
@@ -38,17 +41,15 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
     console.log(value, "handleEmpRequirment");
     if (value.includes("MR0202")) {
       console.log("External selected");
-    }
-    else{
-      handleChange('SL_EmployeeType',null)
-      handleChange('txt_EmpType_Other','')
+    } else {
+      handleChange("SL_EmployeeType", null);
+      handleChange("txt_EmpType_Other", "");
     }
     if (value.includes("MR0290")) {
-    console.log("Internal selected");
-    }else{
-      handleChange("txt_EmpReq_Other", '')
+      console.log("Internal selected");
+    } else {
+      handleChange("txt_EmpReq_Other", "");
     }
-
   };
 
   const GetPosition = async (Fac) => {
@@ -107,6 +108,40 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
     return status_code;
   };
 
+  const HandleSelectPosition = async (value) => {
+    console.log("HandleSelectPosition0", value,formData1);
+    if (formData1.SL_Position) {
+      //มี
+      if(formData1.CB_Substitube==true){
+        Swal.fire({
+          icon: "error",
+          text: "Please cancel the Substitube selection.",
+        });
+        return;
+      } 
+      if(formData1.CB_Additional==true){
+        Swal.fire({
+          icon: "error",
+          text: "Please cancel the Additional selection.",
+        });
+        return;
+      } 
+      handleChange("SL_Position", value);
+      // if(formData1.Person_ADD.length > 0){
+      //   Swal.fire({
+      //     icon: "error",
+      //     text: "Please Clear Additional ",
+      //   });
+      //   return;
+      // } 
+      console.log("HandleSelectPosition1", value);
+    } else {
+      //ไม่มี
+      handleChange("SL_Position", value);
+      console.log("HandleSelectPosition2", value);
+    }
+  };
+
   // const GetRunningNo = async () => {
   //   let GenNo = "";
   //   console.log(formData1.CB_EmpRequirment.length, "GetRunningNo");
@@ -144,7 +179,7 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
   //       });
   //      return
   //     }
-       
+
   //     showLoading("กำลัง Gen Request No.");
   //     await axios
   //       .post("/api/RequestManPower/GenRunNo", {
@@ -236,13 +271,11 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
   const GetRunningNo = async () => {
     let GenNo = "";
     console.log(formData1.CB_EmpRequirment.length, "GetRunningNo");
-    DisableChange("SL_Factory", true);
-    DisableChange("SL_Department", true);
-    DisableChange("SL_Position", true);
+
     const factory = Factory.find((f) => f.value === formData1.SL_Factory);
-  
+
     let status_code = await GetStatusCode();
-  
+
     if (!formData1.SL_Factory) {
       Swal.fire({
         icon: "error",
@@ -250,7 +283,6 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
       });
       return;
     }
-  
 
     if (!formData1.SL_Department) {
       Swal.fire({
@@ -274,9 +306,7 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
       });
       return;
     }
-  
 
-  
     if (!formData1.SL_Position) {
       Swal.fire({
         icon: "error",
@@ -284,7 +314,7 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
       });
       return;
     }
-  
+
     if (!formData1.Date_Target) {
       Swal.fire({
         icon: "error",
@@ -292,7 +322,7 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
       });
       return;
     }
-  
+
     if (formData1.CB_EmpRequirment.length === 0) {
       Swal.fire({
         icon: "error",
@@ -300,32 +330,45 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
       });
       return;
     }
-  
-    if (formData1.CB_EmpRequirment.includes("MR0202") && !formData1.SL_EmployeeType) {
+
+    if (
+      formData1.CB_EmpRequirment.includes("MR0202") &&
+      !formData1.SL_EmployeeType
+    ) {
       Swal.fire({
         icon: "error",
         text: "Please select an employee type.",
       });
       return;
     }
-  
-    if (formData1.CB_EmpRequirment.includes("MR0202") && formData1.SL_EmployeeType === 'MR0390' && !formData1.txt_EmpType_Other) {
+
+    if (
+      formData1.CB_EmpRequirment.includes("MR0202") &&
+      formData1.SL_EmployeeType === "MR0390" &&
+      !formData1.txt_EmpType_Other
+    ) {
       Swal.fire({
         icon: "error",
         text: "Please input employee type other.",
       });
       return;
     }
-  
-    if (formData1.CB_EmpRequirment.includes("MR0290") && !formData1.txt_EmpReq_Other) {
+
+    if (
+      formData1.CB_EmpRequirment.includes("MR0290") &&
+      !formData1.txt_EmpReq_Other
+    ) {
       Swal.fire({
         icon: "error",
         text: "Please input employee requirement other.",
       });
       return;
     }
-  
+
     showLoading("กำลัง Gen Request No.");
+    DisableChange("SL_Factory", true);
+    DisableChange("SL_Department", true);
+    // DisableChange("SL_Position", true);
     await axios
       .post("/api/RequestManPower/GenRunNo", {
         Fac_code: factory.value,
@@ -335,10 +378,15 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
         console.log(res.data, "GenRunNo");
         GenNo = res.data[0].RUNNING;
       });
-  
-    const formattedReqDate = moment(formData1.txt_ReqDate, "DD/MM/YYYY").format("YYYY-MM-DD");
-    const formattedTargetDate = moment(formData1.Date_Target, "DD/MM/YYYY").format("YYYY-MM-DD");
-  
+
+    const formattedReqDate = moment(formData1.txt_ReqDate, "DD/MM/YYYY").format(
+      "YYYY-MM-DD"
+    );
+    const formattedTargetDate = moment(
+      formData1.Date_Target,
+      "DD/MM/YYYY"
+    ).format("YYYY-MM-DD");
+
     await axios
       .post("/api/RequestManPower/InsGenNoRequest", {
         ReqNo: GenNo,
@@ -351,31 +399,39 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
         ReqTel: formData1.txt_TelNo,
         Position: formData1.SL_Position,
         TargetDate: formattedTargetDate,
-        totalAmount: formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional,
+        totalAmount:
+          formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional,
         Remark: formData1.txt_Remark,
         Create_by: datauser.LOGIN,
       })
       .then((res) => {
         console.log(res.data, "InsGenNoRequest");
       });
-  
+
     for (let i = 0; i < formData1.CB_EmpRequirment.length; i++) {
       const requirement = formData1.CB_EmpRequirment[i];
-      let data = { ReqNo: GenNo, EmpType: '', txt_Other: '', Create_by: datauser.LOGIN, Emp_Req: requirement };
-  
+      let data = {
+        ReqNo: GenNo,
+        EmpType: "",
+        txt_Other: "",
+        Create_by: datauser.LOGIN,
+        Emp_Req: requirement,
+      };
+
       if (requirement === "MR0202") {
         data.EmpType = formData1.SL_EmployeeType;
         data.txt_Other = formData1.txt_EmpType_Other;
       } else if (requirement === "MR0290") {
         data.txt_Other = formData1.txt_EmpReq_Other;
       }
-  
-      await axios.post("/api/RequestManPower/InsGenNoRequest2", data)
+
+      await axios
+        .post("/api/RequestManPower/InsGenNoRequest2", data)
         .then((res) => {
           console.log(res.data, "InsGenNoRequest2");
         });
     }
-  
+
     handleChange("txt_ReqNo", GenNo);
     hideLoading();
   };
@@ -390,6 +446,7 @@ function fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable) {
     GetPosition,
     handleChange,
     GetRunningNo,
+    HandleSelectPosition,
   };
 }
 

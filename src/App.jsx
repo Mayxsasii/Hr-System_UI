@@ -32,7 +32,7 @@ const AppLayout = ({ children }) => {
 };
 
 const App = () => {
-  const backendUrl = `http://${window.location.hostname}:4005`;
+  const backendUrl = `http://${window.location.hostname}:4007`;
   axios.defaults.baseURL = backendUrl;
 
   return (

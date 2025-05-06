@@ -135,10 +135,12 @@ function fn_ForApprove(
       }
       if (CB_Substitube) {
         if (CB_FileSubstitube) {
-          await UploadFile(formData1.DataFileSub);
-        } else {
+          await UploadFileSub(formData1.DataFileSub);
+        } 
+        
+        
           for (let i = 0; i < Person_Sub.length; i++) {
-            await UploadFile(formData1.Person_Sub[i].DataFilefeature);
+            // 
             const Rec_id = `S${String(i + 1).padStart(2, "0")}`;
             const Emp_Name = Person_Sub[i].Emp_Name || "";
             await axios
@@ -149,7 +151,7 @@ function fn_ForApprove(
                 Emp_id: Person_Sub[i].ID_Code || "",
                 Emp_name: Emp_Name.split(" ")[0].trim(),
                 Emp_Surname: Emp_Name.split(" ").slice(1).join(" ").trim(),
-                Emp_dept: Person_Sub[i].Dept || "",
+                Emp_dept: Person_Sub[i].Cost_Center || "",
                 Emp_Jobgrade: Person_Sub[i].Job_grade || "",
                 For_Dept: Person_Sub[i].Dept || "",
                 Special: Person_Sub[i].Special || "",
@@ -157,7 +159,7 @@ function fn_ForApprove(
                 Lang_skill: Person_Sub[i].StepLanguage || "",
                 Lang_other: Person_Sub[i].StepLanguage_other || "",
                 Filename: Person_Sub[i].Filefeature || "",
-                FilenameServer: Person_Sub[i].FileServerfeature || "",
+                // FilenameServer: Person_Sub[i].FileServerfeature || "",
                 Create_by: datauser.LOGIN,
               })
               .then((res) => {
@@ -257,16 +259,16 @@ function fn_ForApprove(
                   });
               }
             }
+            await UploadFileDedailPerson(formData1.Person_Sub[i].DataFilefeature,Rec_id);
           }
-        }
+        
       }
 
       if (CB_Additional) {
         if (CB_FileAdditional) {
-          await UploadFile(formData1.DataFileADD);
-        } else {
+          await UploadFileADD(formData1.DataFileADD);
+        } 
           for (let i = 0; i < Person_ADD.length; i++) {
-            await UploadFile(formData1.Person_ADD[i].DataFilefeature);
             const Rec_id = `A${String(i + 1).padStart(2, "0")}`;
             await axios
               .post("/api/RequestManPower/InsPerson", {
@@ -283,8 +285,8 @@ function fn_ForApprove(
                 Expereince: Person_ADD[i].Experience,
                 Lang_skill: Person_ADD[i].StepLanguage || "",
                 Lang_other: Person_ADD[i].StepLanguage_other,
-                Filename: Person_ADD[i].Filefeature,
-                FilenameServer: Person_ADD[i].FileServerfeature||'',
+                Filename: Person_ADD[i].Filefeature||'',
+                // FilenameServer: Person_ADD[i].FileServerfeature||'',
                 Create_by: datauser.LOGIN,
               })
               .then((res) => {
@@ -383,8 +385,9 @@ function fn_ForApprove(
                   });
               }
             }
+            await UploadFileDedailPerson(formData1.Person_ADD[i].DataFilefeature,Rec_id);
           }
-        }
+        
       }
 
 
@@ -424,7 +427,6 @@ function fn_ForApprove(
         icon: "success",
         title: "Save Success",
       }).then(() => {
-        //window.location.href = "/HrSystem/ManPowerRequest";
       });
     } catch (error) {
       Swal.fire({ icon: "error", title: "Error", text: error.message });
@@ -445,20 +447,131 @@ function fn_ForApprove(
       });
   };
   
-  const UploadFile = async (file) => {
-    console.log(file, "UploadFile");
+  const UploadFileDedailPerson = async (file,RecID) => {
     if (!file) {
-      console.log("เข้ามาแล้ว  ไม่มีไฟล์");
       return;
     } else {
-      const formData = new FormData();
-      formData.append("file", file);
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const fileData = reader.result; 
+        const byteArray = new Uint8Array(fileData); 
+  
+        try {
+          const response = await axios.post("/api/Common/UploadFileDetail", {
+            fileData: Array.from(byteArray), 
+            ReqNo: formData1.txt_ReqNo,
+            RecID:RecID
+          });
+          console.log("File uploaded successfully:", response.data);
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          alert(
+            "Error uploading file: " +
+              (error.response?.data?.message || error.message)
+          );
+        }
+      };
+      reader.readAsArrayBuffer(file); 
+    }
+  };
+
+  const UploadFileSub = async (file) => {
+    console.log('formData1.txt_ReqNo',formData1.txt_ReqNo)
+    if (!file) {
+      return;
+    } else {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const fileData = reader.result; 
+        const byteArray = new Uint8Array(fileData); 
+  
+        try {
+          const response = await axios.post("/api/Common/UploadSub", {
+            fileData: Array.from(byteArray), 
+            ReqNo: formData1.txt_ReqNo,
+          
+          });
+          console.log("File uploaded successfully:", response.data);
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          alert(
+            "Error uploading file: " +
+              (error.response?.data?.message || error.message)
+          );
+        }
+      };
+      reader.readAsArrayBuffer(file); 
+    }
+  };
+  
+  const UploadFileADD = async (file) => {
+    if (!file) {
+      return;
+    } else {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const fileData = reader.result; 
+        const byteArray = new Uint8Array(fileData); 
+  
+        try {
+          const response = await axios.post("/api/Common/UploadAdd", {
+            fileData: Array.from(byteArray), 
+            ReqNo: formData1.txt_ReqNo,
+           
+          });
+          console.log("File uploaded successfully:", response.data);
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          alert(
+            "Error uploading file: " +
+              (error.response?.data?.message || error.message)
+          );
+        }
+      };
+      reader.readAsArrayBuffer(file); 
+    }
+  };
+
+  const UploadFile = async (file, ColumnName) => {
+    console.log(file, "UploadFile");
+  
+    if (!file) {
+      console.warn("No file provided for upload.");
+      return;
+    }
+  
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const fileData = reader.result;
+      const byteArray = new Uint8Array(fileData);
+  
       try {
-        const response = await axios.post("/api/Common/UploadFile", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        let response;
+        if (ColumnName === "mrh_subs_fileserver") {
+          console.log("FileSSS SubS");
+          response = await axios.post("/api/Common/UploadSub", {
+            fileData: Array.from(byteArray),
+            ReqNo: formData1.txt_ReqNo,
+          });
+        } else if (ColumnName === "mrh_add_fileserver") {
+          console.log("FileSSS aDD");
+          response = await axios.post("/api/Common/UploadAdd", {
+            fileData: Array.from(byteArray),
+            ReqNo: formData1.txt_ReqNo,
+          });
+        } else {
+          console.error("Invalid ColumnName provided:", ColumnName);
+          alert("Invalid ColumnName provided.");
+          return;
+        }
+  
+        if (response && response.data) {
+          console.log("File uploaded successfully:", response.data);
+          alert("File uploaded successfully.");
+        } else {
+          console.warn("No response data received from the server.");
+          alert("File upload completed, but no response data received.");
+        }
       } catch (error) {
         console.error("Error uploading file:", error);
         alert(
@@ -466,6 +579,13 @@ function fn_ForApprove(
             (error.response?.data?.message || error.message)
         );
       }
+    };
+  
+    try {
+      reader.readAsArrayBuffer(file);
+    } catch (error) {
+      console.error("Error reading file:", error);
+      alert("Error reading file: " + error.message);
     }
   };
 
@@ -706,10 +826,11 @@ function fn_ForApprove(
       }
       if (CB_Substitube) {
         if (CB_FileSubstitube) {
-          await UploadFile(formData1.DataFileSub);
-        } else {
+          await UploadFileSub(formData1.DataFileSub);
+        } 
+    
           for (let i = 0; i < Person_Sub.length; i++) {
-            await UploadFile(formData1.Person_Sub[i].DataFilefeature);
+            //
             const Rec_id = `S${String(i + 1).padStart(2, "0")}`;
             const Emp_Name = Person_Sub[i].Emp_Name || "";
             await axios
@@ -720,7 +841,7 @@ function fn_ForApprove(
                 Emp_id: Person_Sub[i].ID_Code || "",
                 Emp_name: Emp_Name.split(" ")[0].trim(),
                 Emp_Surname: Emp_Name.split(" ").slice(1).join(" ").trim(),
-                Emp_dept: Person_Sub[i].Dept || "",
+                Emp_dept: Person_Sub[i].Cost_Center || "",
                 Emp_Jobgrade: Person_Sub[i].Job_grade || "",
                 For_Dept: Person_Sub[i].Dept || "",
                 Special: Person_Sub[i].Special || "",
@@ -728,7 +849,7 @@ function fn_ForApprove(
                 Lang_skill: Person_Sub[i].StepLanguage || "",
                 Lang_other: Person_Sub[i].StepLanguage_other || "",
                 Filename: Person_Sub[i].Filefeature || "",
-                FilenameServer: Person_Sub[i].FileServerfeature || "",
+                // FilenameServer: Person_Sub[i].FileServerfeature || "",
                 Create_by: datauser.LOGIN,
               })
               .then((res) => {
@@ -828,16 +949,18 @@ function fn_ForApprove(
                   });
               }
             }
+            await UploadFileDedailPerson(formData1.Person_Sub[i].DataFilefeature,Rec_id);
           }
-        }
+        
       }
 
       if (CB_Additional) {
         if (CB_FileAdditional) {
-          await UploadFile(formData1.DataFileADD);
-        } else {
+          await UploadFileADD(formData1.DataFileADD);
+        } 
+       
           for (let i = 0; i < Person_ADD.length; i++) {
-            await UploadFile(formData1.Person_ADD[i].DataFilefeature);
+            //
             const Rec_id = `A${String(i + 1).padStart(2, "0")}`;
             await axios
               .post("/api/RequestManPower/InsPerson", {
@@ -854,7 +977,7 @@ function fn_ForApprove(
                 Expereince: Person_ADD[i].Experience,
                 Lang_skill: Person_ADD[i].StepLanguage || "",
                 Lang_other: Person_ADD[i].StepLanguage_other,
-                Filename: Person_ADD[i].Filefeature,
+                Filename: Person_ADD[i].Filefeature||'',
                 FilenameServer: Person_ADD[i].FileServerfeature||'',
                 Create_by: datauser.LOGIN,
               })
@@ -953,8 +1076,9 @@ function fn_ForApprove(
                   });
               }
             }
+            await UploadFileDedailPerson(formData1.Person_ADD[i].DataFilefeature,Rec_id);
           }
-        }
+       
       }
 
       const TargetDate = moment(Date_Target, "DD/MM/YYYY").format("YYYY-MM-DD");
@@ -1005,14 +1129,28 @@ function fn_ForApprove(
         icon: "success",
         title: "Save Success",
       }).then(() => {
-        //window.location.href = "/HrSystem/ManPowerRequest";  
+        if(formData1.StatusType == "R"||formData1.StatusType == "C"){
+          SendEmail();
+          window.location.href = "/HrSystem/ManPowerRequest";
+      
+        }
+        else{
+          SendEmail();
+          Swal.fire({
+            icon: "success",
+            title: "Save Success",
+          }).then(() => {
+            window.location.href = "/HrSystem/ApproveManPower";
+          });
+        }
+       
       });
     } catch (error) {
       Swal.fire({ icon: "error", title: "Error", text: error.message });
       console.error(error, "SaveDraft888");
       hideLoading();
     }
-
+   
     hideLoading();
   };
 
@@ -1109,10 +1247,20 @@ function fn_ForApprove(
         .then((res) => {
           console.log(res.data, "UpdateApprove");
         });
-
-
-      Swal.fire({ icon: "success", title: "Submit Success" });
+      Swal.fire({
+        icon: "success",
+        title:"Submit Success",
+      }).then(() => {
+        if(formData1.StatusType == "R"||formData1.StatusType == "C"){
+          window.location.href = "/HrSystem/ManPowerRequest";
+        }
+        else{
+          window.location.href = "/HrSystem/ApproveManPower";
+          // SendEmail();
+        }
+      });
       hideLoading();
+    
     } catch (error) {
       Swal.fire({ icon: "error", title: "Error", text: error.message });
       console.error(error, "SaveDraft888");

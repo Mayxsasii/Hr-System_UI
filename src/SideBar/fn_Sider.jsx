@@ -10,29 +10,48 @@ import {
   HomeOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation} from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import { Layout, Menu } from "antd";
 const { SubMenu } = Menu;
 
 function fn_Sider() {
   const navigate = useNavigate();
+  const location = useLocation(); // ใช้ useLocation เพื่อดึง path ปัจจุบัน
+ 
   const [collapsed, setCollapsed] = useState(true);
   const [menuData, setMenuData] = useState([]);
-  const [selectedKey, setSelectedKey] = useState("1");
+  const [selectedKey, setSelectedKey] = useState("2604");
+  const ROLL = localStorage.getItem("ROLL");
   const siderRef = useRef(null);
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+
+
   }, []);
+  useEffect(() => {
+    const currentPath = location.pathname;
+    console.log(currentPath, "currentPath",menuData);
+    const matchedMenu = menuData.find((item) => item.MENU_URL === currentPath);
+    if (matchedMenu) {
+      console.log(matchedMenu.MENU_URL, "matchedMenu",matchedMenu.MENU_ID);
+      setSelectedKey(matchedMenu.MENU_ID);
+    }
+  }, [location.pathname, menuData]);
 
   useEffect(() => {
     GetMenu();
   }, []);
 
   const GetMenu = async () => {
-    await axios.post("/api/common/GetMenu", {}).then((res) => {
+    console.log(ROLL, "roll");
+    await axios.post("/api/common/GetMenu", {
+      Roll: ROLL,
+    }).then((res) => {
       setMenuData(res.data);
     });
   };
@@ -71,42 +90,45 @@ function fn_Sider() {
   };
 
   const renderMenu = (menuItems, parentId = null) => {
-    return menuItems
-      .filter((item) => item.MENU_PARENT_ID === parentId)
-      .map((item) => {
-        const children = menuItems.filter(
-          (child) => child.MENU_PARENT_ID === item.MENU_ID
-        );
-        const styles =
-          collapsed == false
-            ? {
-                whiteSpace: "normal",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                wordBreak: "break-word",
-                lineHeight: "1.5",
-              }
-            : {};
-        if (children.length > 0) {
-          return (
-            <SubMenu
-              key={item.MENU_ID}
-              icon={GetIconMenu(item)}
-              title={<span style={styles}>{item.MENU_NAME}</span>}
-            >
-              {renderMenu(menuItems, item.MENU_ID)}
-            </SubMenu>
+      return menuItems
+        .filter((item) => item.MENU_PARENT_ID === parentId)
+        .map((item) => {
+          const children = menuItems.filter(
+            (child) => child.MENU_PARENT_ID === item.MENU_ID
           );
-        }
-        return (
-          <Menu.Item key={item.MENU_ID} icon={GetIconMenu(item)} style={styles}>
-            {item.MENU_NAME}
-          </Menu.Item>
-        );
-      });
-  };
+          const styles =
+            collapsed == false
+              ? {
+                  whiteSpace: "normal",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  wordBreak: "break-word",
+                  lineHeight: "1.5",
+                  color: "#FFFFFF"
+                }
+              : { color: "#FFFFFF" };
+          const icon = <span style={{ color: "#FFFFFF" }}>{GetIconMenu(item)}</span>; // กำหนดสีไอคอนเป็นสีขาว
+          if (children.length > 0) {
+            return (
+              <SubMenu
+                key={item.MENU_ID}
+                icon={icon}
+                title={<span style={styles}>{item.MENU_NAME}</span>} // ฟอนต์สีขาวใน SubMenu
+              >
+                {renderMenu(menuItems, item.MENU_ID)}
+              </SubMenu>
+            );
+          }
+          return (
+            <Menu.Item key={item.MENU_ID} icon={icon} style={styles}>
+              <span style={{ color: "#FFFFFF" }}>{item.MENU_NAME}</span> {/* ฟอนต์สีขาว */}
+            </Menu.Item>
+          );
+        });
+    };
 
   const handleMenuClick = (e) => {
+    console.log(e.key, "e.key1111");
     const selectedMenu = menuData.find((item) => item.MENU_ID === e.key);
     setSelectedKey(e.key);
     console.log(e.key, selectedMenu.MENU_NAME, "e.key and menu name");

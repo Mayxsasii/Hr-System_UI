@@ -19,36 +19,34 @@ import {
 } from "@ant-design/icons";
 const { TextArea } = Input;
 import moment from "moment";
-import { fn_ManPower } from "../fn_ManPower";
-import { fn_NewManPowerRequset } from "../NewManPowerRequset/fn_NewManPowerRequset";
-import { fn_ReasontoRequest } from "../ReasontoRequest/fn_ReasontoRequest";
-import { Await, useLocation } from "react-router-dom";
-import { useLoading } from "../../loading/fn_loading";
+import { fn_ManPowerMasterList } from "./fn_ManPowerMasterList";
+// import { fn_NewManPowerRequset } from "../NewManPowerRequset/fn_NewManPowerRequset";
+// import { fn_ReasontoRequest } from "../ReasontoRequest/fn_ReasontoRequest";
+// import { Await, useLocation } from "react-router-dom";
+// import { useLoading } from "../../loading/fn_loading";
 
 const Step1 = ({}) => {
-
-  const {
-    formData1,
-    GetdataEdit
-  } = fn_ManPower();
   const { token } = theme.useToken();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const ReqNo = queryParams.get("ReqNo");
-  const { showLoading, hideLoading } = useLoading();
-  const { Factory } = fn_NewManPowerRequset(formData1);
-  const { Education,Course,Field,English } = fn_ReasontoRequest();
+  const {
+    formData1,Factory,Education,Course,Field,English
 
-  useEffect(async() => {
-    if (ReqNo != null) {
-      queryParams.delete("ReqNo");
-      const newUrl = `${location.pathname}?${queryParams.toString()}`;
-      window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
-      showLoading("Loading...");
-      await GetdataEdit();
-      hideLoading();
-    }
-  }, []);
+  } = fn_ManPowerMasterList();
+
+
+  // const { showLoading, hideLoading } = useLoading();
+  // const { Factory } = fn_NewManPowerRequset(formData1);
+  // const { Education,Course,Field,English } = fn_ReasontoRequest();
+
+  // useEffect(async() => {
+  //   if (ReqNo != null) {
+  //     queryParams.delete("ReqNo");
+  //     const newUrl = `${location.pathname}?${queryParams.toString()}`;
+  //     window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
+  //     showLoading("Loading...");
+  //     await GetdataEdit();
+  //     hideLoading();
+  //   }
+  // }, []);
 
   return (
     <>
@@ -597,7 +595,7 @@ const Step1 = ({}) => {
                     {" "}
                     <Input
                       disabled
-                      value={formData1.Person_Sub[index]?.Sub_StepLanguage_other||''}
+                      value={formData1.Person_Sub[index]?.StepLanguage_other||''}
                       style={{
                         display:
                           formData1.Person_Sub[index]?.StepLanguage &&
@@ -945,8 +943,8 @@ const Step1 = ({}) => {
                     disabled
                     style={{
                       display:
-                        formData1.Person_ADD[index].StepLanguage &&
-                        formData1.Person_ADD[index].StepLanguage == "MR0790"
+                        formData1.Person_ADD[index]?.StepLanguage &&
+                        formData1.Person_ADD[index]?.StepLanguage == "MR0790"
                           ? ""
                           : "none",
                     }}
@@ -985,7 +983,7 @@ const Step1 = ({}) => {
                       <UploadOutlined /> Click to Attach file
                     </label>
                     <input id="fileInputFeatureADD" type="file" disabled />
-                    {formData1.Person_ADD[index].Filefeature && (
+                    {formData1.Person_ADD[index]?.Filefeature && (
                       <p
                         style={{
                           color: "black",
@@ -1624,7 +1622,7 @@ const Step1 = ({}) => {
               <p style={{ margin: 0 }}>{index + 1}.</p>
               <Checkbox
                 disabled
-                checked={formData1.Hr_Add[index].CB_Complete}
+                checked={formData1.Hr_Add[index]?.CB_Complete}
           
                 style={{ marginLeft: "30px" }}
               >

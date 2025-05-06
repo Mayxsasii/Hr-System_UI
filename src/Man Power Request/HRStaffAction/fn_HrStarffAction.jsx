@@ -2,23 +2,24 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLoading } from "../../loading/fn_loading";
 import { fn_Header } from "../../Header/fn_Header";
+// import {fn_ForApprove} form "../ForApprove/fn_ForApprove";
+import { fn_ForApprove } from "../ForApprove/fn_ForApprove";
 import Swal from "sweetalert2";
 import moment from "moment";
+import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
+function fn_HrStarffAction(formData1, setFormData1) {
 
-function fn_HrStarffAction(
-  formData1,
-  setFormData1
-) {
-  console.log(formData1, "fn_HrStarffAction");
   const { datauser } = fn_Header();
-  console.log(datauser, "datauser");
+
   const today = new Date();
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
   ).padStart(2, "0")}/${today.getFullYear()}`;
   const { showLoading, hideLoading } = useLoading();
   const [ConditionClose, setConditionClose] = useState([]);
-console.log(formData1.Sl_HrCloseBy, "ConditionClose");
+  console.log(formData1.Sl_HrCloseBy, "ConditionClose");
+
   useEffect(() => {
     GetCondition();
     CheckRemain();
@@ -44,81 +45,99 @@ console.log(formData1.Sl_HrCloseBy, "ConditionClose");
   };
 
   const CheckRemain = async () => {
-    const totalCompletedSub = formData1.Hr_Sub.filter((person) => person.CB_Complete).length;
-    const totalCompletedAdd = formData1.Hr_Add.filter((person) => person.CB_Complete).length;
-    const totalRequested = formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional;
-    const totalRemain = totalRequested - (totalCompletedSub + totalCompletedAdd);
-    console.log(`Completed Sub: ${totalCompletedSub}, Completed Add: ${totalCompletedAdd}`);
+    const totalCompletedSub = formData1.Hr_Sub.filter(
+      (person) => person.CB_Complete
+    ).length;
+    const totalCompletedAdd = formData1.Hr_Add.filter(
+      (person) => person.CB_Complete
+    ).length;
+    const totalRequested =
+      formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional;
+    const totalRemain =
+      totalRequested - (totalCompletedSub + totalCompletedAdd);
+    console.log(
+      `Completed Sub: ${totalCompletedSub}, Completed Add: ${totalCompletedAdd}`
+    );
     console.log(`Total Remain: ${totalRemain}`);
     handleChange("txt_TotalRemain", totalRemain);
-    if(totalRemain == 0) {
+    if (totalRemain == 0) {
       handleChange("Radio_HrStatus", "MR0107");
     }
-  }
+  };
 
   const Save = async (save) => {
-    console.log(save,formData1.Radio_HrStatus ,'checksave')
-    console.log(save==''? formData1.Radio_HrStatus:'MR0106', "Req_Status");
+    console.log(save, formData1.Radio_HrStatus, "checksave");
+    console.log(save == "" ? formData1.Radio_HrStatus : "MR0106", "Req_Status");
     showLoading("กำลังบันทึกข้อมูล...");
     await axios
       .post("/api/RequestManPower/SaveDarftHr", {
         ReqNo: formData1.txt_ReqNo,
-        UpdateBy: formData1.ID_Status=='MR0105'?datauser.LOGIN:'',
+        UpdateBy: formData1.ID_Status == "MR0105" ? datauser.LOGIN : "",
         UpdateByLast: datauser.LOGIN,
         Radio_Status: formData1.Radio_HrStatus || "",
-        Req_Status: save==''? formData1.Radio_HrStatus:'MR0106',
+        Req_Status: save == "" ? formData1.Radio_HrStatus : "MR0106",
         Sl_Condition: formData1.Sl_HrCloseBy || "",
         txt_Comment: formData1.txt_HrComment || "",
         Cb_AttFile: formData1.CB_HrFileAttach ? "Y" : "N",
         txt_TotalComplete:
-        formData1.txt_TotalManual > 0 ? formData1.txt_TotalManual : null,
-        FileName: formData1.Hr_FileAttach || "",
-        FileNameServer: formData1.Hr_FileAttachServer || "",
+          formData1.txt_TotalManual > 0 ? formData1.txt_TotalManual : null,
+        FileName: formData1.Hr_NameFileOther || "",
       })
       .then((res) => {
-        console.log(res.data, "SaveDarftHr");
+        console.log(res.data, "SaveDarftHr0");
       });
     console.log(formData1.Hr_Sub, "mayyy11111");
-    if (formData1.CB_HrFileAttach == false) {
+    if (formData1.Hr_NameFileOther !='') { 
+     await UploadFile(formData1.Hr_DataFileOther, 'mrh_hrs_fileserver') 
+    }
       for (let i = 0; i < formData1.Hr_Add.length; i++) {
         const Rec_id = `A${String(i + 1).padStart(2, "0")}`;
         // if (formData1.Hr_Add[i].CB_Complete == true) {
-          await axios
-            .post("/api/RequestManPower/UpdateUserJoin", {
-              FlgComplete: formData1.Hr_Add[i].CB_Complete ? "Y" : "",
-              EmpID: formData1.Hr_Add[i].Emp_id || "",
-              EmpName: formData1.Hr_Add[i].Emp_name || "",
-              EmpSurName: formData1.Hr_Add[i].Emp_sername || "",
-              EmpJoinDate: formData1.Hr_Add[i].Emp_JoinDate || null,
-              UpdateBy: datauser.LOGIN,
-              ReqNo: formData1.txt_ReqNo,
-              RecId: Rec_id,
-            })
-            .then((res) => {
-              console.log(res.data, "SaveDarftHr");
-            });
+        await axios
+          .post("/api/RequestManPower/UpdateUserJoin", {
+            FlgComplete: formData1.Hr_Add[i].CB_Complete ? "Y" : "",
+            EmpID: formData1.Hr_Add[i].Emp_id || "",
+            EmpName: formData1.Hr_Add[i].Emp_name || "",
+            EmpSurName: formData1.Hr_Add[i].Emp_sername || "",
+            EmpJoinDate: formData1.Hr_Add[i].Emp_JoinDate || null,
+            UpdateBy: datauser.LOGIN,
+            ReqNo: formData1.txt_ReqNo,
+            RecId: Rec_id,
+          })
+          .then((res) => {
+            console.log(res.data, "SaveDarftHr1");
+          });
         // }
       }
       for (let i = 0; i < formData1.Hr_Sub.length; i++) {
         const Rec_id = `S${String(i + 1).padStart(2, "0")}`;
         // if (formData1.Hr_Sub[i].CB_Complete == true) {
-          await axios
-            .post("/api/RequestManPower/UpdateUserJoin", {
-              FlgComplete: formData1.Hr_Sub[i].CB_Complete ? "Y" : "",
-              EmpID: formData1.Hr_Sub[i].Emp_id || "",
-              EmpName: formData1.Hr_Sub[i].Emp_name || "",
-              EmpSurName: formData1.Hr_Sub[i].Emp_sername || "",
-              EmpJoinDate: formData1.Hr_Sub[i].Emp_JoinDate || null,
-              UpdateBy: datauser.LOGIN,
-              ReqNo: formData1.txt_ReqNo,
-              RecId: Rec_id,
-            })
-            .then((res) => {
-              console.log(res.data, "SaveDarftHr");
-            });
+        await axios
+          .post("/api/RequestManPower/UpdateUserJoin", {
+            FlgComplete: formData1.Hr_Sub[i].CB_Complete ? "Y" : "",
+            EmpID: formData1.Hr_Sub[i].Emp_id || "",
+            EmpName: formData1.Hr_Sub[i].Emp_name || "",
+            EmpSurName: formData1.Hr_Sub[i].Emp_sername || "",
+            EmpJoinDate: formData1.Hr_Sub[i].Emp_JoinDate || null,
+            UpdateBy: datauser.LOGIN,
+            ReqNo: formData1.txt_ReqNo,
+            RecId: Rec_id,
+          })
+          .then((res) => {
+            console.log(res.data, "SaveDarftHr2");
+          });
         // }
-      }
+      // }
     }
+    Swal.fire({
+      icon: "success",
+      title: save == "" ? "Submit Success" : "Save Success",
+    }).then(() => {
+      if (save == "") {
+        window.location.href = "/HrSystem/HrActionManPowerRequest";
+      }
+    });
+
     hideLoading();
   };
 
@@ -138,32 +157,53 @@ console.log(formData1.Sl_HrCloseBy, "ConditionClose");
         });
         return;
       } else {
-        if (formData1.CB_HrFileAttach == true) {
-          Save('');
-        } else {
+        if (
+          formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional ==0
+        ) {
+          // if (formData1.Hr_FileAttach == "") {
+          //   Swal.fire({
+          //     icon: "warning",
+          //     title: "Cannot be submit",
+          //     text: `Please Upload File For close`,
+          //   });
+          //   return;
+          // } else {
+          //   Save("");
+          //   return;
+          // }
+        }
+        // if (formData1.CB_HrFileAttach == true) {
+        //   Save("");
+        // } else {
           let isValid = true;
-          formData1.Hr_Sub.some((person) => {
-            console.log(person, "person0");
-            if (person.Emp_name === "") {
-              Swal.fire({
-                icon: "warning",
-                title: "Cannot be submit",
-                text: `Please Input Name`,
-              });
-              isValid = false; 
-              return true; 
-            } else if (person.Emp_sername === "") {
-              Swal.fire({
-                icon: "warning",
-                title: "Cannot be submit",
-                text: `Please Input Sername`,
-              });
-              isValid = false;
-              return true;
-            }
-          });
-
-          if (isValid) {
+          console.log(
+            formData1.txt_TotalSubstitube,
+            "wwwwwwwwww",
+            formData1.txt_TotalAdditional
+          );
+          if (formData1.txt_TotalSubstitube > 0) {
+            formData1.Hr_Sub.some((person) => {
+              console.log(person, "person0");
+              if (person.Emp_name === "") {
+                Swal.fire({
+                  icon: "warning",
+                  title: "Cannot be submit",
+                  text: `Please Input Name`,
+                });
+                isValid = false;
+                return true;
+              } else if (person.Emp_sername === "") {
+                Swal.fire({
+                  icon: "warning",
+                  title: "Cannot be submit",
+                  text: `Please Input Sername`,
+                });
+                isValid = false;
+                return true;
+              }
+            });
+          }
+          if (formData1.txt_TotalAdditional > 0) {
             formData1.Hr_Add.some((person) => {
               console.log(person, "person0");
               if (person.Emp_name === "") {
@@ -187,12 +227,12 @@ console.log(formData1.Sl_HrCloseBy, "ConditionClose");
           }
 
           if (isValid) {
-            Save('');
+            Save("");
           } else {
             return;
           }
         }
-      }
+      // }
     } else {
       Swal.fire({
         icon: "warning",
@@ -207,24 +247,18 @@ console.log(formData1.Sl_HrCloseBy, "ConditionClose");
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
 
-  const getDateToday = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0"); // เดือนเริ่มจาก 0
-    const day = String(now.getDate()).padStart(2, "0");
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    const seconds = String(now.getSeconds()).padStart(2, "0");
+  // useEffect(() => {
+    // if (formData1.txt_TotalRemain == 0) {
+    //   handleChange("Radio_HrStatus", "MR0107");
+    // } else {
+    //   handleChange("Radio_HrStatus", "MR0106");
+    // }
+  // }, [formData1.txt_TotalRemain]);
 
-    return `${year}${month}${day}${hours}${minutes}${seconds}`;
-  };
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    console.log("file999", e);
-    let DateToday = getDateToday();
-    let FileNameServer = "";
-    let ReqNo = formData1.txt_ReqNo;
     if (!file) {
       return;
     }
@@ -245,16 +279,37 @@ console.log(formData1.Sl_HrCloseBy, "ConditionClose");
       });
       return;
     }
-    FileNameServer = `${ReqNo}-SUBS-${DateToday}.${file.name.substring(
-      file.name.lastIndexOf(".") + 1
-    )}`;
-    console.log("FileNameServer", FileNameServer);
     if (file) {
-      const renamedFile = new File([file], FileNameServer, { type: file.type });
-      console.log("renamedFile", renamedFile);
       handleChange("Hr_FileAttach", file.name);
-      handleChange("Hr_FileAttachServer", renamedFile.name);
-      handleChange("Hr_DataFileAttach", renamedFile.name);
+      handleChange("Hr_DataFileAttach", file);
+    }
+  };
+
+  const handleFileOtherChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+    const allowedExtensions = ["xls", "xlsx", "pdf"];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (!allowedExtensions.includes(fileExtension)) {
+      Swal.fire({
+        title: "รองรับเฉพาะไฟล์ .xls, .xlsx, .pdf เท่านั้น",
+        icon: "warning",
+      });
+      return;
+    }
+    const maxFileSize = 10 * 1024 * 1024;
+    if (file.size > maxFileSize) {
+      Swal.fire({
+        title: "ไฟล์ต้องมีขนาดไม่เกิน 10 MB",
+        icon: "warning",
+      });
+      return;
+    }
+    if (file) {
+      handleChange("Hr_NameFileOther", file.name);
+      handleChange("Hr_DataFileOther", file);
     }
   };
 
@@ -330,7 +385,7 @@ console.log(formData1.Sl_HrCloseBy, "ConditionClose");
             ...formData1,
             CB_HrFileAttach: e.target.checked,
             Hr_FileAttach: "",
-            Hr_FileAttachServer: "",
+            // Hr_FileAttachServer: "",
             Hr_DataFileAttach: null,
             txt_TotalManual: 0,
             txt_TotalRemain:
@@ -374,11 +429,11 @@ console.log(formData1.Sl_HrCloseBy, "ConditionClose");
         handleChange("txt_TotalRemain", formData1.txt_TotalRemain - 1);
       } else {
         console.log(`Checkbox at index ${index} is unchecked.`);
-        newHrSub[index].Emp_id = '';
-        newHrSub[index].Emp_name = '';
-        newHrSub[index].Emp_sername = '';
+        newHrSub[index].Emp_id = "";
+        newHrSub[index].Emp_name = "";
+        newHrSub[index].Emp_sername = "";
         newHrSub[index].Emp_JoinDate = null;
-      //  -----------------------------------------------
+        //  -----------------------------------------------
         // handleChangeHr_Sub(index, "Emp_id", "");
         // handleChangeHr_Sub(index, "Emp_name", "");
         // handleChangeHr_Sub(index, "Emp_sername", "");
@@ -411,6 +466,349 @@ console.log(formData1.Sl_HrCloseBy, "ConditionClose");
     }
   };
 
+  const DownloadFileforUpload = async () => {
+    console.log(formData1.Person_Sub[0].Dept,formData1.Person_ADD[0].Dept)
+    if (
+      formData1.Person_Sub[0].Dept == null &&
+      formData1.Person_ADD[0].Dept == null
+    ) {
+      Swal.fire({
+        icon: "warning",
+        title: "Not Found Data!!!",
+      });
+      return;
+    }
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Sheet1");
+
+    const headers = [
+      "#",
+      "Add/Substitube",
+      "EmpID Old",
+      "Emp Name Old",
+      "Emp Dept. Old",
+      "Emp Job Grade Old",
+      "For Dept",
+      "Request Job Grade",
+      "IDCode New",
+      "Name New",
+      "Surname New",
+      "JoinDate (DD/MM/YYYY)",
+    ];
+
+    worksheet.addRow(headers);
+    if (formData1.Person_Sub[0].Dept != null) {
+      formData1.Person_Sub?.forEach((item, index) => {
+        worksheet.addRow([
+          index + 1,
+          "Substitube",
+          item.ID_Code || "",
+          item.Emp_Name || "",
+          item.Cost_Center || "",
+          item.Job_grade || "",
+          item.Dept || "",
+          (item.Req_Jobgrade || []).join(", "),
+          "",
+          "",
+          "",
+          "",
+        ]);
+      });
+    }
+    if (formData1.Person_ADD[0].Dept != null) {
+      formData1.Person_ADD?.forEach((item, index) => {
+        worksheet.addRow([
+          index + 1 + (formData1.Person_Sub?.length || 0),
+          "Add",
+          "-",
+          "-",
+          "-",
+          "-",
+          item.Dept || "",
+          (item.Req_Jobgrade || []).join(", "),
+          "",
+          "",
+          "",
+          "",
+        ]);
+      });
+    }
+
+    worksheet.eachRow((row, rowNumber) => {
+      if (rowNumber === 1) {
+        // กำหนดสไตล์ให้กับหัวตาราง
+        row.eachCell((cell) => {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "F79646" }, // สีพื้นหลัง #f79646
+          };
+          cell.font = {
+            bold: true,
+            color: { argb: "FFFFFFFF" }, // สีข้อความสีขาว
+          };
+          cell.alignment = { horizontal: "center", vertical: "middle" }; // จัดข้อความให้อยู่ตรงกลาง
+          cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+          }; // เพิ่มเส้นขอบบางให้กับเซลล์
+        });
+      } else {
+        const cell = row.getCell(2);
+        const addOrSub = cell.value;
+
+        if (addOrSub === "Substitube") {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "B8CCE4" },
+          };
+        } else if (addOrSub === "Add") {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "D8E4BC" },
+          };
+        }
+
+        // จัดข้อความให้อยู่ตรงกลาง
+        cell.alignment = { horizontal: "center", vertical: "middle" };
+
+        // เพิ่มเส้นขอบให้กับเซลล์ในคอลัมน์ที่ 2
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+
+        // กำหนดสีพื้นหลังให้กับคอลัมน์ที่ 3 ถึง 8
+        for (let col = 3; col <= 8; col++) {
+          const targetCell = row.getCell(col);
+          targetCell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "FCD5B4" }, // สีพื้นหลัง rgb(252, 213, 180)
+          };
+          targetCell.alignment = { horizontal: "center", vertical: "middle" }; // จัดข้อความให้อยู่ตรงกลาง
+          targetCell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+          }; // เพิ่มเส้นขอบบางให้กับเซลล์
+        }
+      }
+      worksheet.columns = headers.map((header, index) => {
+        const maxLength = Math.max(
+          header.length, // ความยาวของหัวตาราง
+          ...worksheet
+            .getColumn(index + 1)
+            .values.filter((value) => value) // กรองค่า null หรือ undefined
+            .map((value) => value.toString().length) // แปลงเป็น string และคำนวณความยาว
+        );
+        return { width: maxLength + 2 }; // เพิ่มระยะเผื่อ 2 หน่วย
+      });
+      // เพิ่มเส้นขอบให้กับทุกเซลล์ในแถว
+      row.eachCell((cell) => {
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      });
+    });
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: "application/octet-stream" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "example.xlsx";
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
+  const ReadFile = () => {
+    // showLoading("กำลังอ่านไฟล์...");
+    const file = formData1.Hr_DataFileAttach;
+    if (!file) {
+      Swal.fire({
+        title: "กรุณาเลือกไฟล์",
+        icon: "warning",
+      });
+      hideLoading()
+      return;
+    }
+    console.log(file,'fileeeeeeee')
+    // handleChange('txt_FileNameReadData',file.name)
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const data = new Uint8Array(event.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+      
+      const groupedData = [];
+      let currentGroup = [];
+
+      jsonData.forEach((row) => {
+        const first = row[0]; // ค่าของคอลัมน์แรกในแถว
+      
+        // ถ้าเจอแถวที่เริ่มด้วยตัวเลข -> เริ่มกลุ่มใหม่
+        if (!isNaN(first) && first !== null && first !== undefined) {
+          if (currentGroup.length > 0) {
+            groupedData.push(currentGroup); // เก็บกลุ่มเก่าไว้ก่อน
+          }
+          currentGroup = [row]; // เริ่มกลุ่มใหม่ด้วยแถวปัจจุบัน
+        } else if (currentGroup.length > 0) {
+          currentGroup.push(row); // ต่อท้ายกลุ่มล่าสุด
+        }
+      });
+
+      if (currentGroup.length > 0) {
+        groupedData.push(currentGroup);
+      }
+      console.log(groupedData,'currentGroup')
+      let subdata = [];
+      let adddata = [];
+      
+      if (groupedData.length > 0) {
+        groupedData.map((item, index) => {
+          console.log(item[0][1], "item[0][1]");
+          if (item[0][1] == "Substitube") {
+            console.log("Substitube", item);
+            subdata.push(item);
+          } else if (item[0][1] == "Add") {
+            console.log("Additional", item);
+            adddata.push(item);
+          }
+        });
+      }
+      console.log(subdata, "subdata");
+      console.log(adddata, "adddata");
+      if (subdata.length<=0||subdata.length<=0) {
+        Swal.fire({
+          title: "ไฟล์ไม่ถูกต้อง",
+          icon: "warning",
+        });
+        hideLoading()
+        return;
+      }
+      let Remain = 0;
+      if (subdata.length > 0) {
+       
+        for (let i = 0; i < subdata.length; i++) {
+          let dataPerson = subdata[i][0];
+          // const personIndex = i - 1;
+          console.log(subdata[i], "EmpNew");
+          console.log(formatDate(dataPerson[11]), "Empid new",dataPerson[11]);
+          if(dataPerson[8] != ''||dataPerson[9] != ''||dataPerson[10] != ''||dataPerson[11] != ''){
+            // if(dataPerson[9] != ''  || dataPerson[10]!= '') {
+             
+            // }
+             Remain ++;
+            
+            handleChangeHr_Sub(i, "CB_Complete", true);
+            handleChangeHr_Sub(i, "Emp_id", dataPerson[8]);
+            handleChangeHr_Sub(i, "Emp_name", dataPerson[9]);
+            handleChangeHr_Sub(i, "Emp_sername", dataPerson[10]);
+            handleChangeHr_Sub(i, "Emp_JoinDate", formatDate(dataPerson[11]));
+          
+          }
+
+        }
+
+      }
+      if (adddata.length > 0) {
+       
+        for (let i = 0; i < adddata.length; i++) {
+          let dataPerson = adddata[i][0];
+          // const personIndex = i - 1;
+          console.log(adddata[i], "EmpNew");
+          console.log(formatDate(dataPerson[11]), "Empid new");
+          if(dataPerson[8] != ''||dataPerson[9] != ''||dataPerson[10] != ''||dataPerson[11] != ''){
+            handleChangeHr_Add(i, "CB_Complete", true);
+            handleChangeHr_Add(i, "Emp_id", dataPerson[8]);
+            handleChangeHr_Add(i, "Emp_name", dataPerson[9]);
+            handleChangeHr_Add(i, "Emp_sername", dataPerson[10]);
+            handleChangeHr_Add(i, "Emp_JoinDate", formatDate(dataPerson[11]));
+          }
+        }
+      }
+      CheckRemain();
+      hideLoading();
+    };
+
+
+    reader.readAsArrayBuffer(file);
+  };
+  const formatDate = (dateString) => {
+    if (!dateString || dateString.split("/").length !== 3) return ""; // ตรวจสอบความถูกต้องของรูปแบบ
+  
+    const [part1, part2, year] = dateString.split("/"); // แยกส่วนของวันที่
+    const fullYear = year.length === 2 ? (parseInt(year) > 50 ? `19${year}` : `20${year}`) : year;
+    const isMMDDYYYY = parseInt(part1) > 12; // ถ้าค่า part1 มากกว่า 12 แสดงว่าเป็น DD/MM/YYYY
+    const day = isMMDDYYYY ? part1 : part2; // ถ้าเป็น DD/MM/YYYY ให้ part1 เป็นวัน
+    const month = isMMDDYYYY ? part2 : part1; // ถ้าเป็น MM/DD/YYYY ให้ part1 เป็นเดือน
+  
+    // เติม 0 ด้านหน้าให้ day และ month หากมีความยาวน้อยกว่า 2
+    const formattedDay = day.padStart(2, "0");
+    const formattedMonth = month.padStart(2, "0");
+  console.log(formattedDay,formattedMonth,fullYear,'formattedDay')
+    return `${formattedDay}/${formattedMonth}/${fullYear}`; // รวมเป็นรูปแบบ DD/MM/YYYY
+  };
+  
+  const UploadFile = async (file,ColumnName) => {
+    console.log(file, "UploadFile");
+    if (!file) {
+      console.log("เข้ามาแล้ว ไม่มีไฟล์");
+      return;
+    } else {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const fileData = reader.result; 
+        const byteArray = new Uint8Array(fileData); 
+  
+        try {
+          const response = await axios.post("/api/Common/Upload", {
+            fileData: Array.from(byteArray), 
+            ReqNo: formData1.txt_ReqNo,
+            ColumnName:ColumnName
+
+          });
+          console.log("File uploaded successfully:", response.data);
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          alert(
+            "Error uploading file: " +
+              (error.response?.data?.message || error.message)
+          );
+        }
+      };
+      reader.readAsArrayBuffer(file); 
+    }
+  };
+
+  const DeleteFile = (Reason, index) => {
+    if (Reason === "HrFileReadFile") {
+      handlePersonSubChange(index, "Hr_FileAttach", "");
+      handlePersonSubChange(index, "Hr_DataFileAttach", null);
+      const input = document.getElementById(`fileInputSUBFeature-${index}`);
+      if (input) input.value = "";
+    } 
+    else if (Reason === "HrFileOther") {
+      handlePersonSubChange(index, "Hr_NameFileOther", "");
+      handlePersonSubChange(index, "Hr_DataFileOther", null);
+      const input = document.getElementById(`fileInputSUBFeature-${index}`);
+      if (input) input.value = "";
+    }
+  };
+
   return {
     handleChange,
     datauser,
@@ -426,6 +824,9 @@ console.log(formData1.Sl_HrCloseBy, "ConditionClose");
     CheckComplete,
     CheckCompleteAdd,
     Submit,
+    DownloadFileforUpload,
+    ReadFile,
+    handleFileOtherChange
   };
 }
 

@@ -55,7 +55,7 @@ const CustomSider = () => {
         <Menu
           theme="dark"
           mode="inline"
-          style={{ backgroundColor: "#51ada8" }}
+          style={{ backgroundColor: "#51ada8",color:'#FFFFFF' }}
           selectedKeys={[selectedKey]}
           onClick={handleMenuClick}
         >

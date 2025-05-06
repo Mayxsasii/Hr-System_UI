@@ -36,7 +36,7 @@ const App = () => {
         }}
       >
         {/* {current > 0 && ( */}
-          <Button style={{ margin: "10 8px" }} onClick={() => prev()} disabled={current<=0}>
+          <Button style={{ margin: "10 8px" }} onClick={() => prev()} >
             Previous
           </Button>
         {/* )} */}

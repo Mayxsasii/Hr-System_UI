@@ -7,7 +7,6 @@ import {
 } from "@ant-design/icons";
 import ImgExcel from "../../assets/excel.png";
 import { fn_SearchManPowerRequst } from "./fn_SearchManPowerRequst.jsx";
-const { Option } = Select;
 
 const SearchManPower = () => {
   const {
@@ -270,7 +269,7 @@ const SearchManPower = () => {
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
-                  style={{ marginRight: "10px", backgroundColor: "#399918" }}
+                  style={{ marginRight: "10px", backgroundColor: "#399918" ,display:Path=='ManPowerRequest'?'':'none'}}
                   onClick={() => bt_New()}
                 >
                   New

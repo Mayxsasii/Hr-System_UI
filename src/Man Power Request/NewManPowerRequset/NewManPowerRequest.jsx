@@ -25,6 +25,7 @@ const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
     GetPosition,
     handleChange,
     GetRunningNo,
+    HandleSelectPosition
   } = fn_NewManPowerRequset(formData1, setFormData1,Disable,setDisable );
 
   return (
@@ -170,7 +171,7 @@ const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
               }
               options={Position}
               onChange={(value) => {
-                handleChange("SL_Position", value);
+                HandleSelectPosition(value);
               }}
             />
           </td>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Layout, Avatar, Dropdown, Menu } from 'antd';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import axios from "axios";
-// import { fn_login } from "../../Login/fn_login";
+
 
 
 function fn_Header() {
@@ -16,7 +16,7 @@ function fn_Header() {
   const UserMenu = () => (
     <Menu>
       <Menu.Item key="1" icon={<UserOutlined />}>
-        <span>May Sasithorn</span>
+        <span>{user}</span>
       </Menu.Item>
       <Menu.Item key="2" icon={<LogoutOutlined />} onClick={logout}>
         Logout
