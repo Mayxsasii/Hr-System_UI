@@ -1,0 +1,98 @@
+.Home_Status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.Home_Status:hover {
+  transform: scale(1.1); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.card_HomePage {
+  width: 30%;
+  height: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 20px;
+  font-size: 18px;
+  color: #333;
+  gap: 10px;
+}
+
+.Home_Page {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+.Title_card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+.Img_Card {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.Div_Span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.Font_Title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.Font_Count {
+  font-size: 15px;
+  color: #666;
+}
+
+.Div_Status {
+    /* display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    width: "100%", */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    font-size: 14px;
+
+  }
+
+  .P_Title_Status {
+    font-size: 14px;
+    padding-left: 5px;
+    margin: 0;
+
+  }
+
+  .P_Count_Status {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    margin: 0;
+  }
+  
