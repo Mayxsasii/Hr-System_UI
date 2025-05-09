@@ -14,8 +14,9 @@ function fn_login() {
 
 
   useEffect(async() => {
- console.log(User,'User2222');
+
     if (User) {
+
       await axios
       .post("/api/common/Login2", { 
         loginID: User, 

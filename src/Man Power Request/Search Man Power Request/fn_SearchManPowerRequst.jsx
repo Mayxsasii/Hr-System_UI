@@ -66,32 +66,33 @@ function fn_SearchManPowerRequst() {
   };
 
   const GetFactory = async () => {
-    console.log(userlogin,'userlogin')
-    if(Path=='ManPowerRequest'){
+    console.log(userlogin, "userlogin");
+    if (Path == "ManPowerRequest") {
       await axios
-      .post("/api/RequestManPower/GetFactoryIssue", { User_login: userlogin || "" })
-      .then((res) => {
-        console.log(res.data, "GetFactoryIssue");
-        setFactory(res.data);
-      });
-    }else if(Path=='ManPowerMasterList'){
+        .post("/api/RequestManPower/GetFactoryIssue", {
+          User_login: userlogin || "",
+        })
+        .then((res) => {
+          console.log(res.data, "GetFactoryIssue");
+          setFactory(res.data);
+        });
+    } else if (Path == "ManPowerMasterList") {
       await axios
-      .post("/api/RequestManPower/GetFactoryMasterlist", {})
-      .then((res) => {
-        console.log(res.data, "GetFactoryHrAction");
-        setFactory(res.data);
-      });
+        .post("/api/RequestManPower/GetFactoryMasterlist", {})
+        .then((res) => {
+          console.log(res.data, "GetFactoryHrAction");
+          setFactory(res.data);
+        });
+    } else {
+      await axios
+        .post("/api/RequestManPower/GetFactory", {
+          User_login: userlogin || "",
+        })
+        .then((res) => {
+          console.log(res.data, "GetFactory");
+          setFactory(res.data);
+        });
     }
-    
-    else{
-      await axios
-      .post("/api/RequestManPower/GetFactory", { User_login: userlogin || "" })
-      .then((res) => {
-        console.log(res.data, "GetFactory");
-        setFactory(res.data);
-      });
-    }
-    
   };
 
   const GetStatus = async () => {
@@ -115,25 +116,25 @@ function fn_SearchManPowerRequst() {
   };
 
   const GetDepartment = async () => {
-    if(Path=='ManPowerRequest'){
+    if (Path == "ManPowerRequest") {
       await axios
-      .post("/api/RequestManPower/GetDepartmentIssue", { User_login: userlogin || "" })
-      .then((res) => {
-        console.log(res.data, "GetDepartmentIssue");
-        setDepartment(res.data);
-      });
-    }
-    else{
+        .post("/api/RequestManPower/GetDepartmentIssue", {
+          User_login: userlogin || "",
+        })
+        .then((res) => {
+          console.log(res.data, "GetDepartmentIssue");
+          setDepartment(res.data);
+        });
+    } else {
       await axios
-      .post("/api/RequestManPower/GetDepartment", {
-        User_login: userlogin || "",
-      })
-      .then((res) => {
-        console.log(res.data, "GetFactGetDepartmentory");
-        setDepartment(res.data);
-      });
+        .post("/api/RequestManPower/GetDepartment", {
+          User_login: userlogin || "",
+        })
+        .then((res) => {
+          console.log(res.data, "GetFactGetDepartmentory");
+          setDepartment(res.data);
+        });
     }
-    
   };
 
   const GetPosition = async (Fac) => {
@@ -176,9 +177,11 @@ function fn_SearchManPowerRequst() {
     navigate(`/HrSystem/NewManPowerRequest?ReqNo=${record.ReqNo}`);
   };
 
-  const handleViewMasterList= (record) => {
+  const handleViewMasterList = (record) => {
     console.log("Edit record:", record.ReqNo);
-    navigate(`/HrSystem/ManPowerMasterList/ManPowerRequest?ReqNo=${record.ReqNo}`);
+    navigate(
+      `/HrSystem/ManPowerMasterList/ManPowerRequest?ReqNo=${record.ReqNo}`
+    );
   };
 
   const handleDelete = (record) => {
@@ -193,153 +196,152 @@ function fn_SearchManPowerRequst() {
   const bt_Search = async () => {
     setDataSearch([]);
     console.log("Searchhhh", Factory);
-    if(Path=='ApproveManPower'){
-      const factoryValues = Factory.map(item => item.value);
-      console.log(factoryValues,'factoryValues'); 
-      console.log(SL_Factory!=null?'ValueFac' :factoryValues,'SL_Factory');
+    if (Path == "ApproveManPower") {
+      const factoryValues = Factory.map((item) => item.value);
+      console.log(factoryValues, "factoryValues");
+      console.log(
+        SL_Factory != null ? "ValueFac" : factoryValues,
+        "SL_Factory"
+      );
       await axios
-      .post("/api/RequestManPower/SearchManPowerApprove", {
-        UserApprove: userlogin || "",
-        Department:
-          SL_Department != null && SL_Department.length > 0
-            ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
-            : null,
-        Factory:SL_Factory!=null?[SL_Factory]: factoryValues,
-        JobGrade:
-          SL_JobGrade != null && SL_JobGrade.length > 0
-            ? `array[${SL_JobGrade.map((dept) => `'${dept}'`).join(",")}]`
-            : null,
-        Position:
-          SL_Position != null && SL_Position.length > 0
-            ? `array[${SL_Position.map((dept) => `'${dept}'`).join(",")}]`
-            : null,
-        ReqNoFrom: txt_ReqNoFrom || "",
-        ReqNoTo: txt_ReqNoTo || "",
-        DateFrom: DateFrom || "",
-        DateTo: DateTo || "",
-        ReqBy: txt_ReqBy || "",
-        Status:
-          Path == "ManPowerRequest"
-            ? Array.isArray(SL_Status) && SL_Status.length > 0
-              ? SL_Status
-              : ["MR0101", "MR0129", "MR0139", "MR0149"]
-            : Path == "ApproveManPower"
-            ? Array.isArray(SL_Status) && SL_Status.length > 0
-              ? SL_Status
-              : ["MR0102", "MR0103", "MR0103"]
-            : Path == "HrActionManPowerRequest"
-            ? Array.isArray(SL_Status) && SL_Status.length > 0
-              ? SL_Status
-              : ["MR0105", "MR0106"]
-            : Path == "ManPowerMasterList"
-            ? Array.isArray(SL_Status) && SL_Status.length > 0
-              ? SL_Status
-              : [
-                  "MR0101",
-                  "MR0102",
-                  "MR0103",
-                  "MR0104",
-                  "MR0105",
-                  "MR0129",
-                  "MR0139",
-                  "MR0149",
-                  "MR0106",
-                  "MR0107",
-                  "MR0190",
-                  "MR0108",
-                ]
-            : [],
-      })
-      .then((res) => {
-        if (res.data.length == 0) {
-          Swal.fire({ icon: "warning", title: "Not Found Data!" });
-        } else {
-          console.log(res.data, "SearchManPower");
-          setDataSearch(res.data);
-        }
-      });
+        .post("/api/RequestManPower/SearchManPowerApprove", {
+          UserApprove: userlogin || "",
+          Department:
+            SL_Department != null && SL_Department.length > 0
+              ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
+              : null,
+          Factory: SL_Factory != null ? [SL_Factory] : factoryValues,
+          JobGrade:
+            SL_JobGrade != null && SL_JobGrade.length > 0
+              ? `array[${SL_JobGrade.map((dept) => `'${dept}'`).join(",")}]`
+              : null,
+          Position:
+            SL_Position != null && SL_Position.length > 0
+              ? `array[${SL_Position.map((dept) => `'${dept}'`).join(",")}]`
+              : null,
+          ReqNoFrom: txt_ReqNoFrom || "",
+          ReqNoTo: txt_ReqNoTo || "",
+          DateFrom: DateFrom || "",
+          DateTo: DateTo || "",
+          ReqBy: txt_ReqBy || "",
+          Status:
+            Path == "ManPowerRequest"
+              ? Array.isArray(SL_Status) && SL_Status.length > 0
+                ? SL_Status
+                : ["MR0101", "MR0129", "MR0139", "MR0149"]
+              : Path == "ApproveManPower"
+              ? Array.isArray(SL_Status) && SL_Status.length > 0
+                ? SL_Status
+                : ["MR0102", "MR0103", "MR0103"]
+              : Path == "HrActionManPowerRequest"
+              ? Array.isArray(SL_Status) && SL_Status.length > 0
+                ? SL_Status
+                : ["MR0105", "MR0106"]
+              : Path == "ManPowerMasterList"
+              ? Array.isArray(SL_Status) && SL_Status.length > 0
+                ? SL_Status
+                : [
+                    "MR0101",
+                    "MR0102",
+                    "MR0103",
+                    "MR0104",
+                    "MR0105",
+                    "MR0129",
+                    "MR0139",
+                    "MR0149",
+                    "MR0106",
+                    "MR0107",
+                    "MR0190",
+                    "MR0108",
+                  ]
+              : [],
+        })
+        .then((res) => {
+          if (res.data.length == 0) {
+            Swal.fire({ icon: "warning", title: "Not Found Data!" });
+          } else {
+            console.log(res.data, "SearchManPower");
+            setDataSearch(res.data);
+          }
+        });
+    } else {
+      if (
+        DateFrom == "" &&
+        DateTo == "" &&
+        SL_Department == null &&
+        SL_Factory == null &&
+        SL_JobGrade == null &&
+        SL_Position == null &&
+        txt_ReqNoFrom == "" &&
+        txt_ReqNoTo == "" &&
+        SL_Status == null
+      ) {
+        Swal.fire({ icon: "warning", title: "Please fill in the information" });
+      } else {
+        showLoading("กำลังค้นหาข้อมูล...");
+
+        await axios
+          .post("/api/RequestManPower/SearchManPower", {
+            Department:
+              SL_Department != null && SL_Department.length > 0
+                ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
+                : null,
+            Factory: SL_Factory || null,
+            JobGrade:
+              SL_JobGrade != null && SL_JobGrade.length > 0
+                ? `array[${SL_JobGrade.map((dept) => `'${dept}'`).join(",")}]`
+                : null,
+            Position:
+              SL_Position != null && SL_Position.length > 0
+                ? `array[${SL_Position.map((dept) => `'${dept}'`).join(",")}]`
+                : null,
+            ReqNoFrom: txt_ReqNoFrom || "",
+            ReqNoTo: txt_ReqNoTo || "",
+            DateFrom: DateFrom || "",
+            DateTo: DateTo || "",
+            ReqBy: txt_ReqBy || "",
+            Status:
+              Path == "ManPowerRequest"
+                ? Array.isArray(SL_Status) && SL_Status.length > 0
+                  ? SL_Status
+                  : ["MR0101", "MR0129", "MR0139", "MR0149"]
+                : Path == "ApproveManPower"
+                ? Array.isArray(SL_Status) && SL_Status.length > 0
+                  ? SL_Status
+                  : ["MR0102", "MR0103", "MR0103"]
+                : Path == "HrActionManPowerRequest"
+                ? Array.isArray(SL_Status) && SL_Status.length > 0
+                  ? SL_Status
+                  : ["MR0105", "MR0106"]
+                : Path == "ManPowerMasterList"
+                ? Array.isArray(SL_Status) && SL_Status.length > 0
+                  ? SL_Status
+                  : [
+                      "MR0101",
+                      "MR0102",
+                      "MR0103",
+                      "MR0104",
+                      "MR0105",
+                      "MR0129",
+                      "MR0139",
+                      "MR0149",
+                      "MR0106",
+                      "MR0107",
+                      "MR0190",
+                      "MR0108",
+                    ]
+                : [],
+          })
+          .then((res) => {
+            if (res.data.length == 0) {
+              Swal.fire({ icon: "warning", title: "Not Found Data!" });
+            } else {
+              console.log(res.data, "SearchManPower");
+              setDataSearch(res.data);
+            }
+          });
+      }
     }
-else{
-  if (
-    DateFrom == "" &&
-    DateTo == "" &&
-    SL_Department == null &&
-    SL_Factory == null &&
-    SL_JobGrade == null &&
-    SL_Position == null &&
-    txt_ReqNoFrom == "" &&
-    txt_ReqNoTo == "" &&
-    SL_Status == null
-  ) {
-    Swal.fire({ icon: "warning", title: "Please fill in the information" });
-  } else {
-    showLoading("กำลังค้นหาข้อมูล...");
-
-
-      await axios
-      .post("/api/RequestManPower/SearchManPower", {
-        Department:
-          SL_Department != null && SL_Department.length > 0
-            ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
-            : null,
-        Factory: SL_Factory || null,
-        JobGrade:
-          SL_JobGrade != null && SL_JobGrade.length > 0
-            ? `array[${SL_JobGrade.map((dept) => `'${dept}'`).join(",")}]`
-            : null,
-        Position:
-          SL_Position != null && SL_Position.length > 0
-            ? `array[${SL_Position.map((dept) => `'${dept}'`).join(",")}]`
-            : null,
-        ReqNoFrom: txt_ReqNoFrom || "",
-        ReqNoTo: txt_ReqNoTo || "",
-        DateFrom: DateFrom || "",
-        DateTo: DateTo || "",
-        ReqBy: txt_ReqBy || "",
-        Status:
-          Path == "ManPowerRequest"
-            ? Array.isArray(SL_Status) && SL_Status.length > 0
-              ? SL_Status
-              : ["MR0101", "MR0129", "MR0139", "MR0149"]
-            : Path == "ApproveManPower"
-            ? Array.isArray(SL_Status) && SL_Status.length > 0
-              ? SL_Status
-              : ["MR0102", "MR0103", "MR0103"]
-            : Path == "HrActionManPowerRequest"
-            ? Array.isArray(SL_Status) && SL_Status.length > 0
-              ? SL_Status
-              : ["MR0105", "MR0106"]
-            : Path == "ManPowerMasterList"
-            ? Array.isArray(SL_Status) && SL_Status.length > 0
-              ? SL_Status
-              : [
-                  "MR0101",
-                  "MR0102",
-                  "MR0103",
-                  "MR0104",
-                  "MR0105",
-                  "MR0129",
-                  "MR0139",
-                  "MR0149",
-                  "MR0106",
-                  "MR0107",
-                  "MR0190",
-                  "MR0108",
-                ]
-            : [],
-      })
-      .then((res) => {
-        if (res.data.length == 0) {
-          Swal.fire({ icon: "warning", title: "Not Found Data!" });
-        } else {
-          console.log(res.data, "SearchManPower");
-          setDataSearch(res.data);
-        }
-      });
-    
-
-  }
-}
 
     hideLoading();
   };

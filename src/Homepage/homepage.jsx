@@ -8,7 +8,9 @@ import ImgHR5 from "../assets/safety-at-work.png";
 import { fn_home } from "./fn_home";
 import "./HomePage.css";
 const Login = () => {
-  const {} = fn_home();
+
+  const {ManPower} = fn_home();
+  console.log(ManPower, "ManPower11111");
   return (
     <div>
       <div className="Home_Page">
@@ -29,7 +31,7 @@ const Login = () => {
               >
                 Man Power Request
               </span>
-              <span className="Font_Count">Total 10 Request</span>
+              <span className="Font_Count">Total {ManPower[5]?.Total||0} Request</span>
             </div>
           </div>
           <div className="Div_Status">
@@ -55,7 +57,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                5
+                {ManPower[0]?.Create||0} 
               </p>
             </div>
             <div
@@ -80,7 +82,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                5
+               {ManPower[1]?.WaitDeptApprove||0} 
               </p>
             </div>
 
@@ -106,7 +108,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                5
+ {ManPower[2]?.WaitFMGMApprove||0} 
               </p>
             </div>
 
@@ -132,7 +134,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                5
+                {ManPower[3]?.WaitHRManagerApprove||0} 
               </p>
             </div>
 
@@ -158,7 +160,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                5
+                 {ManPower[4]?.WaitHRStaff||0} 
               </p>
             </div>
           </div>

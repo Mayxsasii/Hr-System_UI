@@ -1,300 +1,284 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import {
   Button,
   Input,
-  message,
-  Steps,
   theme,
   Checkbox,
   Select,
   DatePicker,
-  Radio
+  Radio,
 } from "antd";
 import {
   UploadOutlined,
   PlusCircleOutlined,
   LinkOutlined,
-  CaretDownOutlined
+  CaretDownOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 const { TextArea } = Input;
 import moment from "moment";
 import { fn_ManPowerMasterList } from "./fn_ManPowerMasterList";
-// import { fn_NewManPowerRequset } from "../NewManPowerRequset/fn_NewManPowerRequset";
-// import { fn_ReasontoRequest } from "../ReasontoRequest/fn_ReasontoRequest";
-// import { Await, useLocation } from "react-router-dom";
-// import { useLoading } from "../../loading/fn_loading";
 
-const Step1 = ({}) => {
+const ViewManPowerRequest = ({}) => {
   const { token } = theme.useToken();
   const {
-    formData1,Factory,Education,Course,Field,English
-
+    formData1,
+    Factory,
+    Education,
+    Course,
+    Field,
+    English,
+    DownLoadFile,
   } = fn_ManPowerMasterList();
-
-
-  // const { showLoading, hideLoading } = useLoading();
-  // const { Factory } = fn_NewManPowerRequset(formData1);
-  // const { Education,Course,Field,English } = fn_ReasontoRequest();
-
-  // useEffect(async() => {
-  //   if (ReqNo != null) {
-  //     queryParams.delete("ReqNo");
-  //     const newUrl = `${location.pathname}?${queryParams.toString()}`;
-  //     window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
-  //     showLoading("Loading...");
-  //     await GetdataEdit();
-  //     hideLoading();
-  //   }
-  // }, []);
-
   return (
     <>
-    <div
-      style={{
-        padding: "10px",
-        backgroundColor: token.colorFillAlter,
-        borderRadius: token.borderRadiusLG,
-        border: `1px dashed ${token.colorBorder}`,
-        marginTop: 30,
-        marginRight: 10,
-      }}
-    >
-      <p
+      <div
         style={{
-          fontSize: "18px",
-          margin: "0 10px 10px 0",
-          fontWeight: "bold",
+          padding: "10px",
+          backgroundColor: token.colorFillAlter,
+          borderRadius: token.borderRadiusLG,
+          border: `1px dashed ${token.colorBorder}`,
+          marginTop: 30,
+          marginRight: 10,
         }}
       >
-        Man Power Request{" "}
-        {formData1.txt_ReqNo ? (
-          <>
-            {">>"} {formData1.txt_ReqNo}
-          </>
-        ) : (
-          ""
-        )}
-      </p>
-      <table style={{ marginTop: "10px", marginLeft: "10px" }}>
-        <tr>
-          <td style={{ textAlign: "right" }}>Factory :</td>
-          <td>
-            <Select
-              disabled
-              showSearch
-              value={formData1.SL_Factory}
-              style={{
-                width: "200px",
-                marginLeft: "5px",
-              }}
-              placeholder="Select Factory"
-              options={Factory}
-            />
-          </td>
-          <td style={{ textAlign: "right" }}>Request Status :</td>
-          <td>
-            <Input
-              style={{ marginLeft: "5px", width: "200px" }}
-              value={formData1.txt_ReqStatus}
-              disabled
-            />
-          </td>
-          <td style={{ textAlign: "right" }}>Request Date :</td>
-          <td>
-            <Input
-              style={{ marginLeft: "5px", width: "200px" }}
-              value={formData1.txt_ReqDate}
-              disabled
-            />
-          </td>
-        </tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>Request No. :</td>
-          <td>
-            <Input
-              style={{ marginLeft: "5px", width: "200px" }}
-              value={formData1.txt_ReqNo}
-              disabled
-            />
-          </td>
-          <td style={{ textAlign: "right" }}>Request By :</td>
-          <td>
-            <Input
-              style={{ marginLeft: "5px", width: "200px" }}
-              disabled
-              value={formData1.txt_ReqBy}
-            />
-          </td>
-          <td style={{ textAlign: "right" }}>Department:</td>
-          <td>
-            <Select
-              disabled
-              showSearch
-              value={formData1.SL_Department}
-              style={{
-                width: "200px",
-                marginLeft: "5px",
-              }}
+        <p
+          style={{
+            fontSize: "18px",
+            margin: "0 10px 10px 0",
+            fontWeight: "bold",
+          }}
+        >
+          Man Power Request{" "}
+          {formData1.txt_ReqNo ? (
+            <>
+              {">>"} {formData1.txt_ReqNo}
+            </>
+          ) : (
+            ""
+          )}
+        </p>
+        <table style={{ marginTop: "10px", marginLeft: "10px" }}>
+          <tr>
+            <td style={{ textAlign: "right" }}>Factory :</td>
+            <td>
+              <Select
+                disabled
+                showSearch
+                value={formData1.SL_Factory}
+                style={{
+                  width: "200px",
+                  marginLeft: "5px",
+                }}
+                placeholder="Select Factory"
+                options={Factory}
+              />
+            </td>
+            <td style={{ textAlign: "right" }}>Request Status :</td>
+            <td>
+              <Input
+                style={{ marginLeft: "5px", width: "200px" }}
+                value={formData1.txt_ReqStatus}
+                disabled
+              />
+            </td>
+            <td style={{ textAlign: "right" }}>Request Date :</td>
+            <td>
+              <Input
+                style={{ marginLeft: "5px", width: "200px" }}
+                value={formData1.txt_ReqDate}
+                disabled
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>Request No. :</td>
+            <td>
+              <Input
+                style={{ marginLeft: "5px", width: "200px" }}
+                value={formData1.txt_ReqNo}
+                disabled
+              />
+            </td>
+            <td style={{ textAlign: "right" }}>Request By :</td>
+            <td>
+              <Input
+                style={{ marginLeft: "5px", width: "200px" }}
+                disabled
+                value={formData1.txt_ReqBy}
+              />
+            </td>
+            <td style={{ textAlign: "right" }}>Department:</td>
+            <td>
+              <Select
+                disabled
+                showSearch
+                value={formData1.SL_Department}
+                style={{
+                  width: "200px",
+                  marginLeft: "5px",
+                }}
 
-              // options={Department}
-            />
-          </td>
-        </tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>Email :</td>
-          <td colSpan={3}>
-            <Input
-              value={formData1.txt_Email}
-              disabled
-              style={{ marginLeft: "5px", width: "600px" }}
-            />
-          </td>
-          <td style={{ textAlign: "right" }}>Tel :</td>
-          <td>
-            <Input
-              style={{ marginLeft: "5px", width: "200px" }}
-              value={formData1.txt_TelNo}
-              disabled
-            />
-          </td>
-        </tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>Position Requirement :</td>
-          <td>
-            <Select
-              disabled
-              value={formData1.SL_Position}
-              style={{
-                width: "200px",
-                marginLeft: "5px",
-              }}
-              placeholder="Select Position Requirement"
+                // options={Department}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>Email :</td>
+            <td colSpan={3}>
+              <Input
+                value={formData1.txt_Email}
+                disabled
+                style={{ marginLeft: "5px", width: "600px" }}
+              />
+            </td>
+            <td style={{ textAlign: "right" }}>Tel :</td>
+            <td>
+              <Input
+                style={{ marginLeft: "5px", width: "200px" }}
+                value={formData1.txt_TelNo}
+                disabled
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>Position Requirement :</td>
+            <td>
+              <Select
+                disabled
+                value={formData1.SL_Position}
+                style={{
+                  width: "200px",
+                  marginLeft: "5px",
+                }}
+                placeholder="Select Position Requirement"
 
-              // options={Position}
-            />
-          </td>
-          <td style={{ textAlign: "right" }}>Target Date :</td>
-          <td>
-            <DatePicker
-              disabled
-              style={{ marginLeft: "5px", width: "200px" }}
-              value={
-                formData1.Date_Target
-                  ? moment(formData1.Date_Target, "DD/MM/YYYY")
-                  : null
-              }
-              format="DD/MM/YYYY"
-            />
-          </td>
-          <td style={{ textAlign: "right" }}>Total Request :</td>
-          <td>
-            <Input
-              value={
-                formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional
-              }
-              style={{ marginLeft: "5px", width: "60px" }}
-              disabled
-            />
-          </td>
-        </tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>Employee Requirment :</td>
-          <td colSpan={5}>
-            <Checkbox.Group
-              disabled
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-              }}
-              value={formData1.CB_EmpRequirment}
-            >
-              <Checkbox value="MR0201">Internal</Checkbox>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Checkbox value="MR0202">External</Checkbox>
-                <p
-                  style={{
-                    marginLeft: "30px",
-                    marginRight: "10px",
-                    marginTop: "0px",
-                    marginBottom: "0px",
-                    display: formData1.CB_EmpRequirment.includes("MR0202")
-                      ? "block"
-                      : "none",
-                  }}
-                >
-                  Employee Type :
-                </p>
+                // options={Position}
+              />
+            </td>
+            <td style={{ textAlign: "right" }}>Target Date :</td>
+            <td>
+              <DatePicker
+                disabled
+                style={{ marginLeft: "5px", width: "200px" }}
+                value={
+                  formData1.Date_Target
+                    ? moment(formData1.Date_Target, "DD/MM/YYYY")
+                    : null
+                }
+                format="DD/MM/YYYY"
+              />
+            </td>
+            <td style={{ textAlign: "right" }}>Total Request :</td>
+            <td>
+              <Input
+                value={
+                  formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional
+                }
+                style={{ marginLeft: "5px", width: "60px" }}
+                disabled
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>Employee Requirment :</td>
+            <td colSpan={5}>
+              <Checkbox.Group
+                disabled
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "100%",
+                }}
+                value={formData1.CB_EmpRequirment}
+              >
+                <Checkbox value="MR0201">Internal</Checkbox>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Checkbox value="MR0202">External</Checkbox>
+                  <p
+                    style={{
+                      marginLeft: "30px",
+                      marginRight: "10px",
+                      marginTop: "0px",
+                      marginBottom: "0px",
+                      display: formData1.CB_EmpRequirment.includes("MR0202")
+                        ? "block"
+                        : "none",
+                    }}
+                  >
+                    Employee Type :
+                  </p>
 
-                <Select
-                  showSearch
-                  disabled
-                  value={formData1.SL_EmployeeType}
-                  style={{
-                    width: "200px",
-                    marginLeft: "5px",
-                    marginRight: "5px",
-                    display: formData1.CB_EmpRequirment.includes("MR0202")
-                      ? "block"
-                      : "none",
-                  }}
-                  placeholder="Select Empployee Type"
+                  <Select
+                    showSearch
+                    disabled
+                    value={formData1.SL_EmployeeType}
+                    style={{
+                      width: "200px",
+                      marginLeft: "5px",
+                      marginRight: "5px",
+                      display: formData1.CB_EmpRequirment.includes("MR0202")
+                        ? "block"
+                        : "none",
+                    }}
+                    placeholder="Select Empployee Type"
 
-                  // options={EmployeeType}
-                />
-                <Input
-                  disabled
-                  style={{
-                    width: "450px",
-                    display:
-                      formData1.CB_EmpRequirment.includes("MR0202") &&
-                      formData1.SL_EmployeeType &&
-                      formData1.SL_EmployeeType == "MR0390"
+                    // options={EmployeeType}
+                  />
+                  <Input
+                    disabled
+                    style={{
+                      width: "450px",
+                      display:
+                        formData1.CB_EmpRequirment.includes("MR0202") &&
+                        formData1.SL_EmployeeType &&
+                        formData1.SL_EmployeeType == "MR0390"
+                          ? ""
+                          : "none",
+                    }}
+                    value={formData1.txt_EmpType_Other}
+                  />
+                </div>
+                <div style={{ marginTop: "2px" }}>
+                  <Checkbox value="MR0290">Other</Checkbox>
+                  <Input
+                    disabled
+                    style={{
+                      width: "815px",
+                      display: formData1.CB_EmpRequirment.includes("MR0290")
                         ? ""
                         : "none",
-                  }}
-                  value={formData1.txt_EmpType_Other}
-                />
-              </div>
-              <div style={{ marginTop: "2px" }}>
-                <Checkbox value="MR0290">Other</Checkbox>
-                <Input
-                  disabled
-                  style={{
-                    width: "815px",
-                    display: formData1.CB_EmpRequirment.includes("MR0290")
-                      ? ""
-                      : "none",
-                  }}
-                  value={formData1.txt_EmpReq_Other}
-                />
-              </div>
-            </Checkbox.Group>
-          </td>
-        </tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>Remark :</td>
-          <td colSpan={5}>
-            <TextArea
-              disabled
-              value={formData1.txt_Remark}
-              style={{ width: "1000px", height: "50px" }}
-            />
-          </td>
-        </tr>
+                    }}
+                    value={formData1.txt_EmpReq_Other}
+                  />
+                </div>
+              </Checkbox.Group>
+            </td>
+          </tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>Remark :</td>
+            <td colSpan={5}>
+              <TextArea
+                disabled
+                value={formData1.txt_Remark}
+                style={{ width: "1000px", height: "50px" }}
+              />
+            </td>
+          </tr>
         </table>
-        <div style={{borderBottom: "2px dashed #706D54",margin:'5px'}}></div>
+        <div
+          style={{ borderBottom: "2px dashed #706D54", margin: "5px" }}
+        ></div>
         {/* step2 */}
         <p
-        style={{
-          fontSize: "18px",
-          margin: "10px 10px 10px 0",
-          fontWeight: "bold",
-        }}
-      >
-        Reason to request {""}
-      </p>
+          style={{
+            fontSize: "18px",
+            margin: "10px 10px 10px 0",
+            fontWeight: "bold",
+          }}
+        >
+          Reason to request {""}
+        </p>
         <Checkbox
           style={{ marginLeft: "10px" }}
           checked={formData1.CB_Substitube}
@@ -328,57 +312,33 @@ const Step1 = ({}) => {
             <div className="file-upload">
               <label
                 htmlFor="fileInputSUB"
-                className={`custom-file-upload ${
-                  !formData1.CB_Substitube ||
-                  !formData1.CB_FileSubstitube ||
-                  (formData1.StatusType !== "C" && formData1.StatusType !== "R")
-                    ? "disabled"
-                    : ""
-                }`}
+                className={`custom-file-upload ${"disabled"}`}
                 style={{
-                  pointerEvents:
-                    !formData1.CB_Substitube ||
-                    !formData1.CB_FileSubstitube ||
-                    (formData1.StatusType !== "C" &&
-                      formData1.StatusType !== "R")
-                      ? "none"
-                      : "auto",
-                  opacity:
-                    !formData1.CB_Substitube ||
-                    !formData1.CB_FileSubstitube ||
-                    (formData1.StatusType !== "C" &&
-                      formData1.StatusType !== "R")
-                      ? 0.5
-                      : 1,
+                  pointerEvents: "none",
+                  opacity: 0.5,
                 }}
               >
                 <UploadOutlined /> Click to Attach file
               </label>
               <input id="fileInputSUB" type="file" disabled />
-             
             </div>
           </div>
-          <Button
-            
-            disabled
-            type="primary"
-            style={{
-              marginRight: "30px",
-              display:
-                formData1.StatusType == "C" || formData1.StatusType == "R"
-                  ? ""
-                  : "none",
-            }}
-            icon={<PlusCircleOutlined />}
-          >
-            Add
-          </Button>
         </div>
-        <div style={{ marginLeft: "395px" }}>
+        <div style={{ marginLeft: "375px", marginTop: "5px" }}>
           {formData1.FileName_Sub && (
-            <p style={{ color: "black", margin: 0, marginTop: "0px" }}>
-              <LinkOutlined style={{ marginRight: "5px" }} />
-              {formData1.FileName_Sub}
+            // <p className="NameFile">
+            //   <LinkOutlined style={{ marginRight: "5px" }} />
+            //   {formData1.FileName_Sub}
+            // </p>
+            <p className="NameFile">
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  DownLoadFile(formData1.DataFileSub, formData1.FileName_Sub);
+                }}
+              >
+                <LinkOutlined /> <span>{formData1.FileName_Sub}</span>
+              </span>
             </p>
           )}
         </div>
@@ -409,32 +369,32 @@ const Step1 = ({}) => {
                 <Input
                   disabled
                   size="middle"
-                  value={formData1.Person_Sub[index]?.ID_Code||''}
+                  value={formData1.Person_Sub[index]?.ID_Code || ""}
                   style={{ width: "100px", marginLeft: "10px" }}
                 />
                 <Input
                   disabled
                   size="middle"
-                  value={formData1.Person_Sub[index]?.Emp_Name||''}
+                  value={formData1.Person_Sub[index]?.Emp_Name || ""}
                   style={{ width: "200px", marginLeft: "5px" }}
                 />
                 <Input
                   disabled
                   size="middle"
                   style={{ width: "80px", marginLeft: "5px" }}
-                  value={formData1.Person_Sub[index]?.Cost_Center||''}
+                  value={formData1.Person_Sub[index]?.Cost_Center || ""}
                 />
                 <Input
                   size="middle"
                   disabled
-                  value={formData1.Person_Sub[index]?.Job_grade||''}
+                  value={formData1.Person_Sub[index]?.Job_grade || ""}
                   style={{ width: "80px", marginLeft: "5px" }}
                 />
                 <p style={{ marginLeft: "10px" }}>For Dept.:</p>
 
                 <Select
                   disabled
-                  value={formData1.Person_Sub[index]?.Dept||null}
+                  value={formData1.Person_Sub[index]?.Dept || null}
                   style={{ width: "80px", marginLeft: "5px" }}
                   placeholder="Select Dept"
 
@@ -444,7 +404,7 @@ const Step1 = ({}) => {
                 <Select
                   disabled
                   mode="multiple"
-                  value={formData1.Person_Sub[index]?.Req_Jobgrade||null}
+                  value={formData1.Person_Sub[index]?.Req_Jobgrade || null}
                   style={{ width: "150px", marginLeft: "5px" }}
                   placeholder="Select Dept"
 
@@ -462,10 +422,9 @@ const Step1 = ({}) => {
                     <Select
                       disabled
                       mode="multiple"
-                      value={formData1.Person_Sub[index]?.Education||null}
+                      value={formData1.Person_Sub[index]?.Education || null}
                       style={{ width: "400px", marginLeft: "5px" }}
                       placeholder="Select Education"
-
                       options={Education}
                     />
                   </td>
@@ -482,7 +441,7 @@ const Step1 = ({}) => {
                             ? ""
                             : "none",
                       }}
-                      value={formData1.Person_Sub[index]?.EducationOther||''}
+                      value={formData1.Person_Sub[index]?.EducationOther || ""}
                     ></Input>
                   </td>
                 </tr>
@@ -493,10 +452,9 @@ const Step1 = ({}) => {
                       disabled
                       showSearch
                       mode="multiple"
-                      value={formData1.Person_Sub[index]?.Course||null}
+                      value={formData1.Person_Sub[index]?.Course || null}
                       style={{ width: "400px", marginLeft: "5px" }}
                       placeholder="Select Course"
-
                       options={Course}
                     />
                   </td>
@@ -512,7 +470,7 @@ const Step1 = ({}) => {
                             ? ""
                             : "none",
                       }}
-                      value={formData1.Person_Sub[index]?.CourseOther||''}
+                      value={formData1.Person_Sub[index]?.CourseOther || ""}
                     ></Input>
                   </td>
                 </tr>
@@ -523,10 +481,9 @@ const Step1 = ({}) => {
                     <Select
                       disabled
                       mode="multiple"
-                      value={formData1.Person_Sub[index]?.Field||null}
+                      value={formData1.Person_Sub[index]?.Field || null}
                       style={{ width: "400px", marginLeft: "5px" }}
                       placeholder="Select Field"
-
                       options={Field}
                     />
                   </td>
@@ -541,7 +498,7 @@ const Step1 = ({}) => {
                             ? ""
                             : "none",
                       }}
-                      value={formData1.Person_Sub[index]?.FieldOther||''}
+                      value={formData1.Person_Sub[index]?.FieldOther || ""}
                     />
                   </td>
                 </tr>
@@ -550,7 +507,7 @@ const Step1 = ({}) => {
                   <td colSpan={2}>
                     <TextArea
                       disabled
-                      value={formData1.Person_Sub[index]?.Special||''}
+                      value={formData1.Person_Sub[index]?.Special || ""}
                       style={{
                         width: "950px",
                         height: "50px",
@@ -572,7 +529,7 @@ const Step1 = ({}) => {
                         marginLeft: "5px",
                       }}
                       maxLength={2000}
-                      value={formData1.Person_Sub[index]?.Experience||''}
+                      value={formData1.Person_Sub[index]?.Experience || ""}
                     />
                   </td>
                 </tr>
@@ -584,10 +541,9 @@ const Step1 = ({}) => {
                     <Select
                       showSearch
                       disabled
-                      value={formData1.Person_Sub[index]?.StepLanguage||null}
+                      value={formData1.Person_Sub[index]?.StepLanguage || null}
                       style={{ width: "400px", marginLeft: "5px" }}
                       placeholder="Select English Language or other"
-
                       options={English}
                     />
                   </td>
@@ -595,7 +551,9 @@ const Step1 = ({}) => {
                     {" "}
                     <Input
                       disabled
-                      value={formData1.Person_Sub[index]?.StepLanguage_other||''}
+                      value={
+                        formData1.Person_Sub[index]?.StepLanguage_other || ""
+                      }
                       style={{
                         display:
                           formData1.Person_Sub[index]?.StepLanguage &&
@@ -612,43 +570,39 @@ const Step1 = ({}) => {
                     <div className="file-upload" style={{ marginLeft: "5px" }}>
                       <label
                         htmlFor="fileInputFeatureSUB"
-                        className={`custom-file-upload ${
-                          formData1.CB_FileSubstitube ||
-                          (formData1.StatusType !== "C" &&
-                            formData1.StatusType !== "R")
-                            ? "disabled"
-                            : ""
-                        }`}
+                        className={`custom-file-upload ${"disabled"}`}
                         style={{
-                          pointerEvents:
-                            formData1.CB_FileSubstitube ||
-                            (formData1.StatusType !== "C" &&
-                              formData1.StatusType !== "R")
-                              ? "none"
-                              : "auto",
-                          opacity:
-                            formData1.CB_FileSubstitube ||
-                            (formData1.StatusType !== "C" &&
-                              formData1.StatusType !== "R")
-                              ? 0.5
-                              : 1,
+                          pointerEvents: "none",
+                          opacity: 0.5,
                         }}
                       >
                         <UploadOutlined /> Click to Attach file
                       </label>
                       <input id="fileInputFeatureSUB" type="file" disabled />
                       {formData1.Person_Sub[index]?.Filefeature && (
-                        <p
-                          style={{
-                            color: "black",
-                            margin: 0,
-                            marginTop: "0px",
-                            marginLeft: "10px",
+                        // <p
+                        //   style={{
+                        //     color: "black",
+                        //     margin: 0,
+                        //     marginTop: "0px",
+                        //     marginLeft: "10px",
+                        //   }}
+                        // >
+                        //   <LinkOutlined style={{ marginRight: "5px" }} />{" "}
+                        //   {formData1.Person_Sub[index]?.Filefeature}
+                        // </p>
+                        <p  className="NameFile">
+                        <span
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            DownLoadFile(formData1.Person_Sub[index]?.DataFilefeature ,formData1.Person_Sub[index]?.Filefeature);
                           }}
                         >
-                          <LinkOutlined style={{ marginRight: "5px" }} />{" "}
-                          {formData1.Person_Sub[index]?.Filefeature}
-                        </p>
+                          <LinkOutlined />
+                          {formData1.Person_Sub[index]?.Filefeature || ""}
+                        </span>
+                       
+                      </p>
                       )}
                     </div>
                   </td>
@@ -721,43 +675,34 @@ const Step1 = ({}) => {
             <div className="file-upload">
               <label
                 htmlFor="fileInputADD"
-                className={`custom-file-upload ${
-                  !formData1.CB_Additional ||
-                  !formData1.CB_FileAdditional ||
-                  (formData1.StatusType !== "C" && formData1.StatusType !== "R")
-                    ? "disabled"
-                    : ""
-                }`}
+                className={`custom-file-upload ${"disabled"}`}
                 style={{
-                  pointerEvents:
-                    !formData1.CB_Additional ||
-                    !formData1.CB_FileAdditional ||
-                    (formData1.StatusType !== "C" &&
-                      formData1.StatusType !== "R")
-                      ? "none"
-                      : "auto",
-                  opacity:
-                    !formData1.CB_Additional ||
-                    !formData1.CB_FileAdditional ||
-                    (formData1.StatusType !== "C" &&
-                      formData1.StatusType !== "R")
-                      ? 0.5
-                      : 1,
+                  pointerEvents: "none",
+                  opacity: 0.5,
                 }}
               >
                 <UploadOutlined /> Click to Attach file
               </label>
               <input id="fileInputADD" type="file" disabled />
-             
             </div>
           </div>
         </div>
 
-        <div style={{ marginLeft: "395px" }}>
+        <div style={{ marginLeft: "375px", marginTop: "5px" }}>
           {formData1.FileName_Add && (
-            <p style={{ color: "black", margin: 0, marginTop: "0px" }}>
-              <LinkOutlined style={{ marginRight: "5px" }} />{" "}
-              {formData1.FileName_Add}{" "}
+            // <p style={{ color: "black", margin: 0, marginTop: "0px" }}>
+            //   <LinkOutlined style={{ marginRight: "5px" }} />{" "}
+            //   {formData1.FileName_Add}{" "}
+            // </p>
+            <p className="NameFile">
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  DownLoadFile(formData1.DataFileADD, formData1.FileName_Add);
+                }}
+              >
+                <LinkOutlined /> <span>{formData1.FileName_Add}</span>
+              </span>
             </p>
           )}
         </div>
@@ -782,7 +727,7 @@ const Step1 = ({}) => {
                   <Select
                     disabled
                     showSearch
-                    value={formData1.Person_ADD[index]?.Dept||null}
+                    value={formData1.Person_ADD[index]?.Dept || null}
                     style={{
                       width: "80px",
                       marginLeft: "5px",
@@ -796,7 +741,7 @@ const Step1 = ({}) => {
                   <Select
                     disabled
                     mode="multiple"
-                    value={formData1.Person_ADD[index]?.Req_Jobgrade||null}
+                    value={formData1.Person_ADD[index]?.Req_Jobgrade || null}
                     style={{ width: "250px", marginLeft: "5px" }}
                     placeholder="Select Dept"
 
@@ -810,10 +755,9 @@ const Step1 = ({}) => {
                   <Select
                     mode="multiple"
                     disabled
-                    value={formData1.Person_ADD[index]?.Education||null}
+                    value={formData1.Person_ADD[index]?.Education || null}
                     style={{ width: "400px", marginLeft: "5px" }}
                     placeholder="Select Education"
-
                     options={Education}
                   />
                 </td>
@@ -823,11 +767,13 @@ const Step1 = ({}) => {
                     style={{
                       display:
                         formData1.Person_ADD[index]?.Education &&
-                        formData1.Person_ADD[index]?.Education.includes("MR0490")
+                        formData1.Person_ADD[index]?.Education.includes(
+                          "MR0490"
+                        )
                           ? ""
                           : "none",
                     }}
-                    value={formData1.Person_ADD[index]?.EducationOther||''}
+                    value={formData1.Person_ADD[index]?.EducationOther || ""}
                     disabled
                   ></Input>
                 </td>
@@ -839,10 +785,9 @@ const Step1 = ({}) => {
                   <Select
                     mode="multiple"
                     disabled
-                    value={formData1.Person_ADD[index]?.Course||null}
+                    value={formData1.Person_ADD[index]?.Course || null}
                     style={{ width: "400px", marginLeft: "5px" }}
                     placeholder="Select Course"
-
                     options={Course}
                   />
                 </td>
@@ -858,7 +803,7 @@ const Step1 = ({}) => {
                           ? ""
                           : "none",
                     }}
-                    value={formData1.Person_ADD[index]?.CourseOther||''}
+                    value={formData1.Person_ADD[index]?.CourseOther || ""}
                   ></Input>
                 </td>
               </tr>
@@ -869,10 +814,9 @@ const Step1 = ({}) => {
                   <Select
                     disabled
                     mode="multiple"
-                    value={formData1.Person_ADD[index]?.Field||null}
+                    value={formData1.Person_ADD[index]?.Field || null}
                     style={{ width: "400px", marginLeft: "5px" }}
                     placeholder="Select Field"
-
                     options={Field}
                   />
                 </td>
@@ -887,7 +831,7 @@ const Step1 = ({}) => {
                           ? ""
                           : "none",
                     }}
-                    value={formData1.Person_ADD[index]?.FieldOther||''}
+                    value={formData1.Person_ADD[index]?.FieldOther || ""}
                   />
                 </td>
               </tr>
@@ -903,7 +847,7 @@ const Step1 = ({}) => {
                       marginLeft: "5px",
                     }}
                     maxLength={2000}
-                    value={formData1.Person_ADD[index]?.Special||''}
+                    value={formData1.Person_ADD[index]?.Special || ""}
                   />
                 </td>
               </tr>
@@ -919,7 +863,7 @@ const Step1 = ({}) => {
                       marginLeft: "5px",
                     }}
                     maxLength={2000}
-                    value={formData1.Person_ADD[index]?.Experience||''}
+                    value={formData1.Person_ADD[index]?.Experience || ""}
                   />
                 </td>
               </tr>
@@ -930,7 +874,7 @@ const Step1 = ({}) => {
                   {" "}
                   <Select
                     // disabled={Disable.ADD_StepLanguage}
-                    value={formData1.Person_ADD[index]?.StepLanguage||null}
+                    value={formData1.Person_ADD[index]?.StepLanguage || null}
                     style={{ width: "400px", marginLeft: "5px" }}
                     placeholder="Select English Language or other"
                     disabled
@@ -948,7 +892,9 @@ const Step1 = ({}) => {
                           ? ""
                           : "none",
                     }}
-                    value={formData1.Person_ADD[index]?.StepLanguage_other||''}
+                    value={
+                      formData1.Person_ADD[index]?.StepLanguage_other || ""
+                    }
                   ></Input>
                 </td>
               </tr>
@@ -958,43 +904,39 @@ const Step1 = ({}) => {
                   <div className="file-upload" style={{ marginLeft: "5px" }}>
                     <label
                       htmlFor="fileInputFeatureADD"
-                      className={`custom-file-upload ${
-                        formData1.CB_FileAdditional ||
-                        (formData1.StatusType !== "C" &&
-                          formData1.StatusType !== "R")
-                          ? "disabled"
-                          : ""
-                      }`}
-                      style={{
-                        pointerEvents:
-                          formData1.CB_FileAdditional ||
-                          (formData1.StatusType !== "C" &&
-                            formData1.StatusType !== "R")
-                            ? "none"
-                            : "auto",
-                        opacity:
-                          formData1.CB_FileAdditional ||
-                          (formData1.StatusType !== "C" &&
-                            formData1.StatusType !== "R")
-                            ? 0.5
-                            : 1,
+                      className={`custom-file-upload ${"disabled"}`}
+                        style={{
+                          pointerEvents: "none",
+                          opacity: 0.5,
                       }}
                     >
                       <UploadOutlined /> Click to Attach file
                     </label>
                     <input id="fileInputFeatureADD" type="file" disabled />
                     {formData1.Person_ADD[index]?.Filefeature && (
-                      <p
-                        style={{
-                          color: "black",
-                          margin: 0,
-                          marginTop: "0px",
-                          marginLeft: "10px",
+                      // <p
+                      //   style={{
+                      //     color: "black",
+                      //     margin: 0,
+                      //     marginTop: "0px",
+                      //     marginLeft: "10px",
+                      //   }}
+                      // >
+                      //   <LinkOutlined style={{ marginRight: "5px" }} />{" "}
+                      //   {formData1.Person_ADD[index]?.Filefeature || ""}{" "}
+                      // </p>
+                      <p  className="NameFile">
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          DownLoadFile(formData1.Person_ADD[index]?.DataFilefeature ,formData1.Person_ADD[index]?.Filefeature);
                         }}
                       >
-                        <LinkOutlined style={{ marginRight: "5px" }} />{" "}
-                        {formData1.Person_ADD[index]?.Filefeature||''}{" "}
-                      </p>
+                        <LinkOutlined style={{ marginRight: "4px"}} />
+                        {formData1.Person_ADD[index]?.Filefeature || ""}
+                      </span>
+                     
+                    </p>
                     )}
                   </div>
                 </td>
@@ -1002,241 +944,312 @@ const Step1 = ({}) => {
             </table>
           </div>
         ))}
-      {/* step3 */}
-      <div style={{borderBottom: "2px dashed #706D54",margin:'5px'}}></div>
-      <p
-        style={{
-          fontSize: "18px",
-          margin: "10px 10px 10px 0",
-          fontWeight: "bold",
-        }}
-      >
-        For Approve{""}
-       
-      </p>
-      <table className="TB_ForApp">
-        <tr>
-          <td style={{ textAlign: "right" }}>Department Manager:</td>
-          <td style={{ width: "300px" }}>
-            <Select
-              showSearch
-              // Disable={Disable.SL_DepartmentManager}
-              disabled
-              value={formData1.SL_DepartmentManager}
-              style={{ width: "300px" }}
-              placeholder="Select Department Manager"
-             
-              // options={DepartmentManager}
-             
-            />
-          </td>
-          <td style={{ textAlign: "center", width: "500px" }}>
-            {" "}
-            {/* ||formData1.ID_Status!="MR0103"||formData1.ID_Status!="MR0104" */}
-            <Radio.Group
-              disabled
-              style={{ display: formData1.ID_Status == "MR0101" ? "none" : "" }}
-              name="radiogroup"
-              value={formData1.CB_DepartmentApprove}
-             
-              options={[
-                {
-                  value: "A",
-                  label: "Approve",
-                },
-                {
-                  value: "R",
-                  label: "Reject",
-                },
-              ]}
-            />
-          </td>
-          <td style={{ textAlign: "right", width: "80px" }}>
-            <div
-              style={{ display: formData1.ID_Status == "MR0101"  ? "none" : "" }}
-            >
-              Action Date:
-            </div>
-          </td>
-          <td style={{ width: "300px" }}>
-            <Input
-              disabled
-              style={{
-                width: "300px",
-                display: formData1.ID_Status == "MR0101"  ? "none" : "",
-              }}
-              value={formData1.Date_DepartmentManager}
-            />
-          </td>
-        </tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>
-            <div
-              style={{ display: formData1.ID_Status == "MR0101" ? "none" : "" }}
-            >
-              Comment:
-            </div>
-          </td>
-          <td colSpan={4}>
-            <Input
-            disabled
-              style={{
-                width: "1200px",
-                display: formData1.ID_Status == "MR0101"  ? "none" : "",
-              }}
-              value={formData1.txt_CommentDepartmentmanager}
-              
-            />
-          </td>
-        </tr>
-        <tr></tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>FM/GM:</td>
-          <td>
-            <Select
-              disabled
-              value={formData1.SL_FMGM}
-              style={{ width: "300px" }}
-              placeholder="Select FM/DM"
-              
-              // options={FMGM}
-              
-            />
-          </td>
-          <td style={{ textAlign: "center" }}>
-            <Radio.Group
-            disabled
-              style={{  display: ["MR0101", "MR0102","MR0129"].includes(formData1.ID_Status) ? "none" : "",}}
-              name="radiogroup"
-              value={formData1.CB_FMGMApprove}
-              
-              options={[
-                {
-                  value: "A",
-                  label: "Approve",
-                },
-                {
-                  value: "R",
-                  label: "Reject",
-                },
-              ]}
-            />
-          </td>
-          <td style={{ textAlign: "right" }}>
-            <div
-              style={{ display: ["MR0101", "MR0102","MR0129"].includes(formData1.ID_Status) ? "none" : "", }}
-            >
-              Action Date:
-            </div>
-          </td>
-          <td>
-            <Input
-              disabled
-              style={{
-                width: "300px",
-                display: ["MR0101", "MR0102","MR0129"].includes(formData1.ID_Status) ? "none" : "",
-              }}
-              value={formData1.Date_FMGM}
-            />
-          </td>
-        </tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>
-            <div
-              style={{ display: ["MR0101", "MR0102","MR0129"].includes(formData1.ID_Status) ? "none" : "", }}
-            >
-              Comment:
-            </div>
-          </td>
-          <td colSpan={4}>
-            <Input
-            disabled
-              style={{
-                width: "1200px",
-                display: ["MR0101", "MR0102","MR0129"].includes(formData1.ID_Status) ? "none" : "",
-              }}
-              value={formData1.txt_CommentFMGM}
-              
-            />
-          </td>
-        </tr>
-        <tr></tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>HR Manager:</td>
-          <td>
-            <Select
-            disabled
-              
-              value={formData1.SL_HRManager}
-              style={{ width: "300px" }}
-              placeholder="Select HR Manager"
-              
-              // options={HrManager}
-             
-            />
-          </td>
-          <td style={{ textAlign: "center" }}>
-            {" "}
-            <Radio.Group
-            disabled
-              style={{   display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "", }}
-              name="radiogroup"
-              value={formData1.CB_HRManagerApprove}
-              
-              options={[
-                {
-                  value: "A",
-                  label: "Approve",
-                },
-                {
-                  value: "R",
-                  label: "Reject",
-                },
-              ]}
-            />
-          </td>
-          <td style={{ textAlign: "right" }}>
-            <div
-              style={{   display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "", }}
-            >
-              Action Date:
-            </div>
-          </td>
-          <td>
-            <Input
-              disabled
-              style={{
-                width: "300px",
-                display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "",
-              }}
-              value={formData1.Date_HRManager}
-            />
-          </td>
-        </tr>
-        <tr>
-          <td style={{ textAlign: "right" }}>
-            <div
-              style={{   display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "", }}
-            >
-              Comment:
-            </div>
-          </td>
-          <td colSpan={4}>
-            <Input
-            disabled
-              style={{
-                width: "1200px",
-                display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "",
-              }}
-              value={formData1.txt_CommentHRManager}
-              
-            />
-          </td>
-        </tr>
-      </table>
-      {/* step4 */}
-      <div style={{borderBottom: "2px dashed #706D54",margin:'5px'}}></div>
-      <p
+        {/* step3 */}
+        <div
+          style={{ borderBottom: "2px dashed #706D54", margin: "5px" }}
+        ></div>
+        <p
+          style={{
+            fontSize: "18px",
+            margin: "10px 10px 10px 0",
+            fontWeight: "bold",
+          }}
+        >
+          For Approve{""}
+        </p>
+        <table className="TB_ForApp">
+          <tr>
+            <td style={{ textAlign: "right" }}>Department Manager:</td>
+            <td style={{ width: "300px" }}>
+              <Select
+                showSearch
+                // Disable={Disable.SL_DepartmentManager}
+                disabled
+                value={formData1.SL_DepartmentManager}
+                style={{ width: "300px" }}
+                placeholder="Select Department Manager"
+
+                // options={DepartmentManager}
+              />
+            </td>
+            <td style={{ textAlign: "center", width: "500px" }}>
+              {" "}
+              {/* ||formData1.ID_Status!="MR0103"||formData1.ID_Status!="MR0104" */}
+              <Radio.Group
+                disabled
+                style={{
+                  display: formData1.ID_Status == "MR0101" ? "none" : "",
+                }}
+                name="radiogroup"
+                value={formData1.CB_DepartmentApprove}
+                options={[
+                  {
+                    value: "A",
+                    label: "Approve",
+                  },
+                  {
+                    value: "R",
+                    label: "Reject",
+                  },
+                ]}
+              />
+            </td>
+            <td style={{ textAlign: "right", width: "80px" }}>
+              <div
+                style={{
+                  display: formData1.ID_Status == "MR0101" ? "none" : "",
+                }}
+              >
+                Action Date:
+              </div>
+            </td>
+            <td style={{ width: "300px" }}>
+              <Input
+                disabled
+                style={{
+                  width: "300px",
+                  display: formData1.ID_Status == "MR0101" ? "none" : "",
+                }}
+                value={formData1.Date_DepartmentManager}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  display: formData1.ID_Status == "MR0101" ? "none" : "",
+                }}
+              >
+                Comment:
+              </div>
+            </td>
+            <td colSpan={4}>
+              <Input
+                disabled
+                style={{
+                  width: "1200px",
+                  display: formData1.ID_Status == "MR0101" ? "none" : "",
+                }}
+                value={formData1.txt_CommentDepartmentmanager}
+              />
+            </td>
+          </tr>
+          <tr></tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>FM/GM:</td>
+            <td>
+              <Select
+                disabled
+                value={formData1.SL_FMGM}
+                style={{ width: "300px" }}
+                placeholder="Select FM/DM"
+
+                // options={FMGM}
+              />
+            </td>
+            <td style={{ textAlign: "center" }}>
+              <Radio.Group
+                disabled
+                style={{
+                  display: ["MR0101", "MR0102", "MR0129"].includes(
+                    formData1.ID_Status
+                  )
+                    ? "none"
+                    : "",
+                }}
+                name="radiogroup"
+                value={formData1.CB_FMGMApprove}
+                options={[
+                  {
+                    value: "A",
+                    label: "Approve",
+                  },
+                  {
+                    value: "R",
+                    label: "Reject",
+                  },
+                ]}
+              />
+            </td>
+            <td style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  display: ["MR0101", "MR0102", "MR0129"].includes(
+                    formData1.ID_Status
+                  )
+                    ? "none"
+                    : "",
+                }}
+              >
+                Action Date:
+              </div>
+            </td>
+            <td>
+              <Input
+                disabled
+                style={{
+                  width: "300px",
+                  display: ["MR0101", "MR0102", "MR0129"].includes(
+                    formData1.ID_Status
+                  )
+                    ? "none"
+                    : "",
+                }}
+                value={formData1.Date_FMGM}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  display: ["MR0101", "MR0102", "MR0129"].includes(
+                    formData1.ID_Status
+                  )
+                    ? "none"
+                    : "",
+                }}
+              >
+                Comment:
+              </div>
+            </td>
+            <td colSpan={4}>
+              <Input
+                disabled
+                style={{
+                  width: "1200px",
+                  display: ["MR0101", "MR0102", "MR0129"].includes(
+                    formData1.ID_Status
+                  )
+                    ? "none"
+                    : "",
+                }}
+                value={formData1.txt_CommentFMGM}
+              />
+            </td>
+          </tr>
+          <tr></tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>HR Manager:</td>
+            <td>
+              <Select
+                disabled
+                value={formData1.SL_HRManager}
+                style={{ width: "300px" }}
+                placeholder="Select HR Manager"
+
+                // options={HrManager}
+              />
+            </td>
+            <td style={{ textAlign: "center" }}>
+              {" "}
+              <Radio.Group
+                disabled
+                style={{
+                  display: [
+                    "MR0101",
+                    "MR0102",
+                    "MR0103",
+                    "MR0129",
+                    "MR0139",
+                  ].includes(formData1.ID_Status)
+                    ? "none"
+                    : "",
+                }}
+                name="radiogroup"
+                value={formData1.CB_HRManagerApprove}
+                options={[
+                  {
+                    value: "A",
+                    label: "Approve",
+                  },
+                  {
+                    value: "R",
+                    label: "Reject",
+                  },
+                ]}
+              />
+            </td>
+            <td style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  display: [
+                    "MR0101",
+                    "MR0102",
+                    "MR0103",
+                    "MR0129",
+                    "MR0139",
+                  ].includes(formData1.ID_Status)
+                    ? "none"
+                    : "",
+                }}
+              >
+                Action Date:
+              </div>
+            </td>
+            <td>
+              <Input
+                disabled
+                style={{
+                  width: "300px",
+                  display: [
+                    "MR0101",
+                    "MR0102",
+                    "MR0103",
+                    "MR0129",
+                    "MR0139",
+                  ].includes(formData1.ID_Status)
+                    ? "none"
+                    : "",
+                }}
+                value={formData1.Date_HRManager}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  display: [
+                    "MR0101",
+                    "MR0102",
+                    "MR0103",
+                    "MR0129",
+                    "MR0139",
+                  ].includes(formData1.ID_Status)
+                    ? "none"
+                    : "",
+                }}
+              >
+                Comment:
+              </div>
+            </td>
+            <td colSpan={4}>
+              <Input
+                disabled
+                style={{
+                  width: "1200px",
+                  display: [
+                    "MR0101",
+                    "MR0102",
+                    "MR0103",
+                    "MR0129",
+                    "MR0139",
+                  ].includes(formData1.ID_Status)
+                    ? "none"
+                    : "",
+                }}
+                value={formData1.txt_CommentHRManager}
+              />
+            </td>
+          </tr>
+        </table>
+        {/* step4 */}
+        <div
+          style={{ borderBottom: "2px dashed #706D54", margin: "5px" }}
+        ></div>
+        <p
           style={{
             fontSize: "18px",
             margin: "0 10px 0 0",
@@ -1252,7 +1265,7 @@ const Step1 = ({}) => {
             ""
           )} */}
         </p>
-      <div
+        <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -1265,9 +1278,7 @@ const Step1 = ({}) => {
             disabled
             style={{ marginLeft: "10px", marginRight: "10px" }}
             name="radiogroup"
-           
             value={formData1.Radio_HrStatus}
-           
             options={[
               {
                 value: "MR0106",
@@ -1284,7 +1295,6 @@ const Step1 = ({}) => {
             ]}
           />
 
-        
           <Select
             value={formData1.Sl_HrCloseBy}
             style={{
@@ -1292,9 +1302,8 @@ const Step1 = ({}) => {
               display: formData1.Radio_HrStatus == "MR0108" ? "" : "none",
             }}
             placeholder="Please Select Condition"
-            
+
             // options={ConditionClose}
-           
           />
         </div>
         <div
@@ -1307,14 +1316,14 @@ const Step1 = ({}) => {
             value={formData1.txt_HrStaffBy}
           />
           <p style={{ marginRight: "5px", marginLeft: "35px" }}>Action Date:</p>
-         
+
           <Input
             disabled
             style={{
               width: "275px",
               // display: ["MR0101", "MR0102","MR0129"].includes(formData1.ID_Status) ? "none" : "",
             }}
-            value={formData1.Date_HrAction }
+            value={formData1.Date_HrAction}
           />
         </div>
         <div
@@ -1374,7 +1383,6 @@ const Step1 = ({}) => {
               display: !formData1.CB_HrFileAttach ? "none" : "",
             }}
             disabled
-          
           />{" "}
           <p style={{ display: !formData1.CB_HrFileAttach ? "none" : "" }}>
             {" "}
@@ -1390,14 +1398,7 @@ const Step1 = ({}) => {
         </div>
         <div style={{ display: "flex", alignItems: "center", margin: "10px" }}>
           {" "}
-          <Checkbox
-            disabled
-            checked={formData1.CB_HrFileAttach}
-           
-            style={{ marginLeft: "30px" }}
-          >
-            Attach file:
-          </Checkbox>
+          <span style={{ marginLeft: "35px" }}>Other documents :</span>
           <div className="file-upload" style={{ marginLeft: "10px" }}>
             <label
               htmlFor="fileInputHr"
@@ -1420,31 +1421,20 @@ const Step1 = ({}) => {
             >
               <UploadOutlined /> Click to Attach file
             </label>
-            <input
-              id="fileInputHr"
-              type="file"
-              disabled
-            />
-            {formData1.Hr_FileAttach && (
+            <input id="fileInputHr" type="file" disabled />
+            {formData1.Hr_NameFileOther && (
               <p
-                style={{
-                  color: "black",
-                  margin: 0,
-                  marginTop: "0px",
-                  marginLeft: "10px",
+                className="NameFile"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  DownLoadFile(
+                    formData1.Hr_DataFileOther,
+                    formData1.Hr_NameFileOther
+                  );
                 }}
               >
                 <LinkOutlined style={{ marginRight: "5px" }} />{" "}
-                {formData1.Hr_FileAttach}{" "}
-                <CloseOutlined
-                  
-                  style={{
-                    marginLeft: "20px",
-                    cursor: "pointer",
-                    color: "red",
-                 
-                  }}
-                />
+                {formData1.Hr_NameFileOther}{" "}
               </p>
             )}
           </div>
@@ -1523,7 +1513,6 @@ const Step1 = ({}) => {
             <Checkbox
               disabled
               checked={formData1.Hr_Sub[index]?.CB_Complete}
-             
               style={{ marginLeft: "60px" }}
             >
               Completed
@@ -1542,7 +1531,6 @@ const Step1 = ({}) => {
               <Input
                 size="middle"
                 // disabled={!formData1.Hr_Sub[index].CB_Complete}
-                
                 disabled
                 value={formData1.Hr_Sub[index]?.Emp_id}
                 style={{
@@ -1555,7 +1543,6 @@ const Step1 = ({}) => {
               <Input
                 size="middle"
                 disabled
-               
                 value={formData1.Hr_Sub[index]?.Emp_name}
                 style={{
                   width: "200px",
@@ -1568,10 +1555,8 @@ const Step1 = ({}) => {
                 size="middle"
                 value={formData1.Hr_Sub[index]?.Emp_sername}
                 disabled
-                
                 style={{ width: "200px", marginLeft: "5px" }}
               />
-             
               <p style={{ marginLeft: "10px" }}>Join date:</p>
               <Input
                 type="date"
@@ -1584,7 +1569,6 @@ const Step1 = ({}) => {
                         .join("-")
                     : ""
                 }
-               
               />
             </div>
           </div>
@@ -1623,7 +1607,6 @@ const Step1 = ({}) => {
               <Checkbox
                 disabled
                 checked={formData1.Hr_Add[index]?.CB_Complete}
-          
                 style={{ marginLeft: "30px" }}
               >
                 Completed
@@ -1668,7 +1651,6 @@ const Step1 = ({}) => {
               <Input
                 size="middle"
                 disabled
-                
                 value={formData1.Hr_Add[index]?.Emp_id}
                 style={{
                   width: "100px",
@@ -1680,7 +1662,6 @@ const Step1 = ({}) => {
               <Input
                 size="middle"
                 disabled
-                
                 value={formData1.Hr_Add[index]?.Emp_name}
                 style={{
                   width: "200px",
@@ -1693,11 +1674,9 @@ const Step1 = ({}) => {
                 size="middle"
                 disabled
                 value={formData1.Hr_Add[index]?.Emp_sername}
-               
                 style={{ width: "200px", marginLeft: "5px" }}
               />
               <p style={{ marginLeft: "10px" }}>Join date:</p>
-             
               <Input
                 type="date"
                 disabled
@@ -1709,15 +1688,13 @@ const Step1 = ({}) => {
                         .join("-")
                     : ""
                 }
-                
               />
-              
             </div>
           </div>
         ))}
-    </div>
+      </div>
     </>
   );
 };
 
-export default Step1;
+export default ViewManPowerRequest;

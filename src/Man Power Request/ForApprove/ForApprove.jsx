@@ -10,7 +10,8 @@ const Step3 = ({ formData1, setFormData1,Disable,setDisable,setCurrent }) => {
     DateToday,
     SaveDraft,
     SendApprove,
-    Bt_Submit
+    Bt_Submit,
+    GetmailSend
   } = fn_ForApprove(formData1, setFormData1,Disable,setDisable,setCurrent);
   return (
     <div>
@@ -322,6 +323,7 @@ const Step3 = ({ formData1, setFormData1,Disable,setDisable,setCurrent }) => {
             display: formData1.ID_Status == "MR0101" ? "" : "none",
           }}
           onClick={() => SendApprove()}
+          // onClick={() => GetmailSend()}
         >
           Send Approve
         </Button>

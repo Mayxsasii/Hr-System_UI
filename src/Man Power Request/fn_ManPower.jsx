@@ -62,6 +62,7 @@ function fn_ManPower() {
     txt_EmpType_Other: "",
     txt_EmpReq_Other: "",
     txt_Remark: "",
+    txt_SendDate:'',
     //Step2
     txt_FileNameReadData:'',
     DataFileReadData:null,
@@ -131,10 +132,12 @@ function fn_ManPower() {
     CB_DepartmentApprove: "A",
     Date_DepartmentManager: DateToday,
     txt_CommentDepartmentmanager: "",
+
     SL_FMGM: null,
     CB_FMGMApprove: "A",
     Date_FMGM: DateToday,
     txt_CommentFMGM: "",
+
     SL_HRManager: null,
     CB_HRManagerApprove: "A",
     Date_HRManager: DateToday,
@@ -373,6 +376,7 @@ function fn_ManPower() {
         handleChange("SL_Factory", res.data[0].Fac_code || null);
         handleChange("txt_ReqStatus", res.data[0].Status_Desc);
         handleChange("ID_Status", res.data[0].Status_code);
+        handleChange("txt_SendDate", res.data[0].SendDate);
         if (res.data[0].Status_Type == "C" || res.data[0].Status_Type == "R") {
           console.log("vvvvvvv", res.data[0].Cb_Sub);
           DisableChange("SL_Factory", true);

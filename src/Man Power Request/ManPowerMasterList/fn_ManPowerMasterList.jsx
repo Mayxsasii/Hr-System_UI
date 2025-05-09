@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { theme } from "antd";
-// import Step1 from "./NewManPowerRequset/NewManPowerRequest";
-// import Step2 from "./ReasontoRequest/ReasontoRequest";
-// import Step3 from "./ForApprove/ForApprove";
-// import Step4 from "./HRStaffAction/HRStaffAction";
-// import { fn_Header } from "../Header/fn_Header";
-import Swal from "sweetalert2";
 import axios from "axios";
 import { useLoading } from "../../loading/fn_loading";
 import { useLocation } from "react-router-dom";
 
 function fn_ManPowerMasterList() {
-
   const { showLoading, hideLoading } = useLoading();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -128,7 +120,8 @@ function fn_ManPowerMasterList() {
     //step4
     Radio_HrStatus: "MR0106",
     Sl_HrCloseBy: null,
-    Date_HrAction: DateToday,
+    Date_HrAction: '',
+    txt_HrStaffBy:'',
     txt_HrComment: "",
     txt_TotalManual: 0,
     txt_TotalRemain: 0,
@@ -156,7 +149,11 @@ function fn_ManPowerMasterList() {
       },
     ],
   });
-  useEffect(async() => {
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
     GetFactory();
     GetEducation();
     GetCourse();
@@ -165,21 +162,16 @@ function fn_ManPowerMasterList() {
     GetEnglish();
 
     if (ReqNo != null) {
-    //   queryParams.delete("ReqNo");
-    //   const newUrl = `${location.pathname}?${queryParams.toString()}`;
-    //   window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
+      // queryParams.delete("ReqNo");
+      // const newUrl = `${location.pathname}?${queryParams.toString()}`;
+      // window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
       showLoading("Loading...");
       await GetdataEdit();
       await GetFileDetail();
       await GetFile();
       hideLoading();
     }
-  }, []);
-
-
-
-
-
+  };
 
   const GetEducation = async () => {
     await axios.post("/api/RequestManPower/GetEducation", {}).then((res) => {
@@ -212,7 +204,6 @@ function fn_ManPowerMasterList() {
       })
       .then(async (res) => {
         console.log(res.data, "GetDataEdit");
-
         handleChange("txt_ReqNo", res.data[0].Req_No);
         handleChange("SL_Factory", res.data[0].Fac_code || null);
         handleChange("txt_ReqStatus", res.data[0].Status_Desc);
@@ -297,7 +288,9 @@ function fn_ManPowerMasterList() {
         //step4
         handleChange("Radio_HrStatus", res.data[0].HrStaff_Status);
         handleChange("Sl_HrCloseBy", res.data[0].HrStaff_Condition);
-        console.log(res.data[0].HrStaff_Condition, "Sl_HrCloseBy");
+        // console.log(res.data[0].HrStaff_Condition, "Sl_HrCloseBy");
+        handleChange("Date_HrAction", res.data[0].HR_lastDate);
+        handleChange("txt_HrStaffBy", res.data[0].Hr_lastBy);
         handleChange("txt_HrComment", res.data[0].HrStaff_Comment);
         handleChange("txt_TotalManual", res.data[0].HrStaff_Complete);
         handleChange(
@@ -798,17 +791,40 @@ function fn_ManPowerMasterList() {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
 
-  
-//   const handlePersonSubChange = (index, field, value) => {
-//     console.log(index, field, value, "handlePersonSubChange");
-//     console.log(formData1, "handlePersonSubChange");
-//     const newPersonSub = [...formData1.Person_Sub];
-//     newPersonSub[index][field] = value;
-//     setFormData1({ ...formData1, Person_Sub: newPersonSub });
-//   };
+  const DownLoadFile = (File, FileName) => {
+    if (File && FileName) {
+      console.log(File, "Downloaddd");
+      let mimeType = "";
+      if (FileName.endsWith(".pdf")) {
+        mimeType = "application/pdf";
+      } else if (FileName.endsWith(".xls")) {
+        mimeType = "application/vnd.ms-excel";
+      } else if (FileName.endsWith(".xlsx")) {
+        mimeType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      } else {
+        console.error("Unsupported file type");
+        return;
+      }
+
+      const blob = new Blob([File], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = FileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+    } else {
+      console.error("No file data or file name available");
+    }
+  };
 
   return {
-    formData1,Factory,Education,Course,Field,English
+    formData1,Factory,Education,Course,Field,English,DownLoadFile
   };
 }
 

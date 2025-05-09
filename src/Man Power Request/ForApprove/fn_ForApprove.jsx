@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLoading } from "../../loading/fn_loading";
 import { fn_Header } from "../../Header/fn_Header";
+// import { fn_NewManPowerRequset } from "../NewManPowerRequset/fn_NewManPowerRequset";
 import Swal from "sweetalert2";
 import moment from "moment";
 
@@ -14,7 +15,9 @@ function fn_ForApprove(
 ) {
   console.log(formData1, "fn_ForApprove");
   const { datauser } = fn_Header();
+  const userlogin = localStorage.getItem("username");
   const { showLoading, hideLoading } = useLoading();
+  const [Factory, setFactory] = useState([]);
   const [DepartmentManager, setDepartmentManager] = useState([]);
   const [FMGM, setFMGM] = useState([]);
   const [HrManager, setHrManager] = useState([]);
@@ -22,14 +25,28 @@ function fn_ForApprove(
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
   ).padStart(2, "0")}/${today.getFullYear()}`;
+
   useEffect(() => {
     GetDepartmentManager();
     GetFMDM();
     GetHrManager();
+    GetFactory();
+    // SendEmail();
   }, []);
+
+  const GetFactory = async () => {
+    await axios
+      .post("/api/RequestManPower/GetFactory", { User_login: userlogin || "" })
+      .then((res) => {
+        console.log(res.data, "GetFactory");
+        setFactory(res.data);
+      });
+  };
+
   const handleChange = (field, value) => {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
+
   const GetDepartmentManager = async () => {
     await axios
       .post("/api/RequestManPower/GetDepartmentManager", {
@@ -136,261 +153,254 @@ function fn_ForApprove(
       if (CB_Substitube) {
         if (CB_FileSubstitube) {
           await UploadFileSub(formData1.DataFileSub);
-        } 
-        
-        
-          for (let i = 0; i < Person_Sub.length; i++) {
-            // 
-            const Rec_id = `S${String(i + 1).padStart(2, "0")}`;
-            const Emp_Name = Person_Sub[i].Emp_Name || "";
-            await axios
-              .post("/api/RequestManPower/InsPerson", {
-                ReqNo: txt_ReqNo,
-                RecId: Rec_id,
-                Req_flg: "SUBS",
-                Emp_id: Person_Sub[i].ID_Code || "",
-                Emp_name: Emp_Name.split(" ")[0].trim(),
-                Emp_Surname: Emp_Name.split(" ").slice(1).join(" ").trim(),
-                Emp_dept: Person_Sub[i].Cost_Center || "",
-                Emp_Jobgrade: Person_Sub[i].Job_grade || "",
-                For_Dept: Person_Sub[i].Dept || "",
-                Special: Person_Sub[i].Special || "",
-                Expereince: Person_Sub[i].Experience || "",
-                Lang_skill: Person_Sub[i].StepLanguage || "",
-                Lang_other: Person_Sub[i].StepLanguage_other || "",
-                Filename: Person_Sub[i].Filefeature || "",
-                // FilenameServer: Person_Sub[i].FileServerfeature || "",
-                Create_by: datauser.LOGIN,
-              })
-              .then((res) => {
-                console.log(res.data, "InsPersonSUB");
-              });
+        }
 
-            if (
-              formData1.Person_Sub[i].Education != null &&
-              formData1.Person_Sub[i].Education.length > 0
-            ) {
-              for (
-                let j = 0;
-                j < formData1.Person_Sub[i].Education.length;
-                j++
-              ) {
-                console.log("Rec_id,", Rec_id);
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "EDUCATION",
-                    Sl_value: formData1.Person_Sub[i].Education[j] || "",
-                    txt_Other:
-                      formData1.Person_Sub[i].Education[j] == "MR0490"
-                        ? formData1.Person_Sub[i].EducationOther
-                        : "",
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBEducation");
-                  });
-              }
+        for (let i = 0; i < Person_Sub.length; i++) {
+          //
+          const Rec_id = `S${String(i + 1).padStart(2, "0")}`;
+          const Emp_Name = Person_Sub[i].Emp_Name || "";
+          await axios
+            .post("/api/RequestManPower/InsPerson", {
+              ReqNo: txt_ReqNo,
+              RecId: Rec_id,
+              Req_flg: "SUBS",
+              Emp_id: Person_Sub[i].ID_Code || "",
+              Emp_name: Emp_Name.split(" ")[0].trim(),
+              Emp_Surname: Emp_Name.split(" ").slice(1).join(" ").trim(),
+              Emp_dept: Person_Sub[i].Cost_Center || "",
+              Emp_Jobgrade: Person_Sub[i].Job_grade || "",
+              For_Dept: Person_Sub[i].Dept || "",
+              Special: Person_Sub[i].Special || "",
+              Expereince: Person_Sub[i].Experience || "",
+              Lang_skill: Person_Sub[i].StepLanguage || "",
+              Lang_other: Person_Sub[i].StepLanguage_other || "",
+              Filename: Person_Sub[i].Filefeature || "",
+              // FilenameServer: Person_Sub[i].FileServerfeature || "",
+              Create_by: datauser.LOGIN,
+            })
+            .then((res) => {
+              console.log(res.data, "InsPersonSUB");
+            });
+
+          if (
+            formData1.Person_Sub[i].Education != null &&
+            formData1.Person_Sub[i].Education.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_Sub[i].Education.length; j++) {
+              console.log("Rec_id,", Rec_id);
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "EDUCATION",
+                  Sl_value: formData1.Person_Sub[i].Education[j] || "",
+                  txt_Other:
+                    formData1.Person_Sub[i].Education[j] == "MR0490"
+                      ? formData1.Person_Sub[i].EducationOther
+                      : "",
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBEducation");
+                });
             }
-            if (
-              formData1.Person_Sub[i].Course != null &&
-              formData1.Person_Sub[i].Course.length > 0
-            ) {
-              for (let j = 0; j < formData1.Person_Sub[i].Course.length; j++) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "COURSE",
-                    Sl_value: formData1.Person_Sub[i].Course[j] || "",
-                    txt_Other:
-                      formData1.Person_Sub[i].Course[j] == "MR0507"
-                        ? formData1.Person_Sub[i].CourseOther
-                        : "", //formData1.Person_Sub[i].CourseOther,
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBCourse");
-                  });
-              }
-            }
-            if (
-              formData1.Person_Sub[i].Field != null &&
-              formData1.Person_Sub[i].Field.length > 0
-            ) {
-              for (let j = 0; j < formData1.Person_Sub[i].Field.length; j++) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "FIELD",
-                    Sl_value: formData1.Person_Sub[i].Field[j] || "",
-                    txt_Other:
-                      formData1.Person_Sub[i].Field[j] == "MR0699"
-                        ? formData1.Person_Sub[i].FieldOther
-                        : "",
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBFiled");
-                  });
-              }
-            }
-            if (
-              formData1.Person_Sub[i].Req_Jobgrade != null &&
-              formData1.Person_Sub[i].Req_Jobgrade.length > 0
-            ) {
-              for (
-                let j = 0;
-                j < formData1.Person_Sub[i].Req_Jobgrade.length;
-                j++
-              ) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "JOB GRADE",
-                    Sl_value: formData1.Person_Sub[i].Req_Jobgrade[j] || "",
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBJobGrade");
-                  });
-              }
-            }
-            await UploadFileDedailPerson(formData1.Person_Sub[i].DataFilefeature,Rec_id);
           }
-        
+          if (
+            formData1.Person_Sub[i].Course != null &&
+            formData1.Person_Sub[i].Course.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_Sub[i].Course.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "COURSE",
+                  Sl_value: formData1.Person_Sub[i].Course[j] || "",
+                  txt_Other:
+                    formData1.Person_Sub[i].Course[j] == "MR0507"
+                      ? formData1.Person_Sub[i].CourseOther
+                      : "", //formData1.Person_Sub[i].CourseOther,
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBCourse");
+                });
+            }
+          }
+          if (
+            formData1.Person_Sub[i].Field != null &&
+            formData1.Person_Sub[i].Field.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_Sub[i].Field.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "FIELD",
+                  Sl_value: formData1.Person_Sub[i].Field[j] || "",
+                  txt_Other:
+                    formData1.Person_Sub[i].Field[j] == "MR0699"
+                      ? formData1.Person_Sub[i].FieldOther
+                      : "",
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBFiled");
+                });
+            }
+          }
+          if (
+            formData1.Person_Sub[i].Req_Jobgrade != null &&
+            formData1.Person_Sub[i].Req_Jobgrade.length > 0
+          ) {
+            for (
+              let j = 0;
+              j < formData1.Person_Sub[i].Req_Jobgrade.length;
+              j++
+            ) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "JOB GRADE",
+                  Sl_value: formData1.Person_Sub[i].Req_Jobgrade[j] || "",
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBJobGrade");
+                });
+            }
+          }
+          await UploadFileDedailPerson(
+            formData1.Person_Sub[i].DataFilefeature,
+            Rec_id
+          );
+        }
       }
 
       if (CB_Additional) {
         if (CB_FileAdditional) {
           await UploadFileADD(formData1.DataFileADD);
-        } 
-          for (let i = 0; i < Person_ADD.length; i++) {
-            const Rec_id = `A${String(i + 1).padStart(2, "0")}`;
-            await axios
-              .post("/api/RequestManPower/InsPerson", {
-                ReqNo: txt_ReqNo,
-                RecId: Rec_id,
-                Req_flg: "ADD",
-                Emp_id: "",
-                Emp_name: "",
-                Emp_Surname: "",
-                Emp_dept: "",
-                Emp_Jobgrade: "",
-                For_Dept: Person_ADD[i].Dept || "",
-                Special: Person_ADD[i].Special,
-                Expereince: Person_ADD[i].Experience,
-                Lang_skill: Person_ADD[i].StepLanguage || "",
-                Lang_other: Person_ADD[i].StepLanguage_other,
-                Filename: Person_ADD[i].Filefeature||'',
-                // FilenameServer: Person_ADD[i].FileServerfeature||'',
-                Create_by: datauser.LOGIN,
-              })
-              .then((res) => {
-                console.log(res.data, "InsPersonADD");
-              });
-            if (
-              formData1.Person_ADD[i].Education != null &&
-              formData1.Person_ADD[i].Education.length > 0
-            ) {
-              for (
-                let j = 0;
-                j < formData1.Person_ADD[i].Education.length;
-                j++
-              ) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "EDUCATION",
-                    Sl_value: formData1.Person_ADD[i].Education[j],
-                    txt_Other:
-                      formData1.Person_ADD[i].Education[j] == "MR0490"
-                        ? formData1.Person_ADD[i].EducationOther
-                        : "", //formData1.Person_ADD[i].EducationOther,
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBEducation");
-                  });
-              }
+        }
+        for (let i = 0; i < Person_ADD.length; i++) {
+          const Rec_id = `A${String(i + 1).padStart(2, "0")}`;
+          await axios
+            .post("/api/RequestManPower/InsPerson", {
+              ReqNo: txt_ReqNo,
+              RecId: Rec_id,
+              Req_flg: "ADD",
+              Emp_id: "",
+              Emp_name: "",
+              Emp_Surname: "",
+              Emp_dept: "",
+              Emp_Jobgrade: "",
+              For_Dept: Person_ADD[i].Dept || "",
+              Special: Person_ADD[i].Special,
+              Expereince: Person_ADD[i].Experience,
+              Lang_skill: Person_ADD[i].StepLanguage || "",
+              Lang_other: Person_ADD[i].StepLanguage_other,
+              Filename: Person_ADD[i].Filefeature || "",
+              // FilenameServer: Person_ADD[i].FileServerfeature||'',
+              Create_by: datauser.LOGIN,
+            })
+            .then((res) => {
+              console.log(res.data, "InsPersonADD");
+            });
+          if (
+            formData1.Person_ADD[i].Education != null &&
+            formData1.Person_ADD[i].Education.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_ADD[i].Education.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "EDUCATION",
+                  Sl_value: formData1.Person_ADD[i].Education[j],
+                  txt_Other:
+                    formData1.Person_ADD[i].Education[j] == "MR0490"
+                      ? formData1.Person_ADD[i].EducationOther
+                      : "", //formData1.Person_ADD[i].EducationOther,
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBEducation");
+                });
             }
-            if (
-              formData1.Person_ADD[i].Course != null &&
-              formData1.Person_ADD[i].Course.length > 0
-            ) {
-              for (let j = 0; j < formData1.Person_ADD[i].Course.length; j++) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "COURSE",
-                    Sl_value: formData1.Person_ADD[i].Course[j],
-                    txt_Other:
-                      formData1.Person_ADD[i].Course[j] == "MR0507"
-                        ? formData1.Person_ADD[i].CourseOther
-                        : "", //formData1.Person_ADD[i].CourseOther,
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBCourse");
-                  });
-              }
-            }
-            if (
-              formData1.Person_ADD[i].Field != null &&
-              formData1.Person_ADD[i].Field.length > 0
-            ) {
-              for (let j = 0; j < formData1.Person_ADD[i].Field.length; j++) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "FIELD",
-                    Sl_value: formData1.Person_ADD[i].Field[j],
-                    txt_Other:
-                      formData1.Person_ADD[i].Field[j] == "MR0699"
-                        ? formData1.Person_ADD[i].FieldOther
-                        : "", //formData1.Person_ADD[i].FieldOther,
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBFiled");
-                  });
-              }
-            }
-
-            if (
-              formData1.Person_ADD[i].Req_Jobgrade != null &&
-              formData1.Person_ADD[i].Req_Jobgrade.length > 0
-            ) {
-              for (
-                let j = 0;
-                j < formData1.Person_ADD[i].Req_Jobgrade.length;
-                j++
-              ) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "JOB GRADE",
-                    Sl_value: formData1.Person_ADD[i].Req_Jobgrade[j] || "",
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBJobGrade");
-                  });
-              }
-            }
-            await UploadFileDedailPerson(formData1.Person_ADD[i].DataFilefeature,Rec_id);
           }
-        
+          if (
+            formData1.Person_ADD[i].Course != null &&
+            formData1.Person_ADD[i].Course.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_ADD[i].Course.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "COURSE",
+                  Sl_value: formData1.Person_ADD[i].Course[j],
+                  txt_Other:
+                    formData1.Person_ADD[i].Course[j] == "MR0507"
+                      ? formData1.Person_ADD[i].CourseOther
+                      : "", //formData1.Person_ADD[i].CourseOther,
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBCourse");
+                });
+            }
+          }
+          if (
+            formData1.Person_ADD[i].Field != null &&
+            formData1.Person_ADD[i].Field.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_ADD[i].Field.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "FIELD",
+                  Sl_value: formData1.Person_ADD[i].Field[j],
+                  txt_Other:
+                    formData1.Person_ADD[i].Field[j] == "MR0699"
+                      ? formData1.Person_ADD[i].FieldOther
+                      : "", //formData1.Person_ADD[i].FieldOther,
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBFiled");
+                });
+            }
+          }
+
+          if (
+            formData1.Person_ADD[i].Req_Jobgrade != null &&
+            formData1.Person_ADD[i].Req_Jobgrade.length > 0
+          ) {
+            for (
+              let j = 0;
+              j < formData1.Person_ADD[i].Req_Jobgrade.length;
+              j++
+            ) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "JOB GRADE",
+                  Sl_value: formData1.Person_ADD[i].Req_Jobgrade[j] || "",
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBJobGrade");
+                });
+            }
+          }
+          await UploadFileDedailPerson(
+            formData1.Person_ADD[i].DataFilefeature,
+            Rec_id
+          );
+        }
       }
-
-
 
       const TargetDate = moment(Date_Target, "DD/MM/YYYY").format("YYYY-MM-DD");
       console.log(TargetDate, "TargetDate");
@@ -426,8 +436,7 @@ function fn_ForApprove(
       Swal.fire({
         icon: "success",
         title: "Save Success",
-      }).then(() => {
-      });
+      }).then(() => {});
     } catch (error) {
       Swal.fire({ icon: "error", title: "Error", text: error.message });
       console.error(error, "SaveDraft888");
@@ -437,30 +446,20 @@ function fn_ForApprove(
     hideLoading();
   };
 
-  const GetEmail = async (UserLogin) => {
-    await axios
-      .post("/api/Common/GetEmail", {
-        // strSubject:  `Please Apprpve : (${ReqNo}) `,
-      })
-      .then((res) => {
-        //
-      });
-  };
-  
-  const UploadFileDedailPerson = async (file,RecID) => {
+  const UploadFileDedailPerson = async (file, RecID) => {
     if (!file) {
       return;
     } else {
       const reader = new FileReader();
       reader.onload = async () => {
-        const fileData = reader.result; 
-        const byteArray = new Uint8Array(fileData); 
-  
+        const fileData = reader.result;
+        const byteArray = new Uint8Array(fileData);
+
         try {
           const response = await axios.post("/api/Common/UploadFileDetail", {
-            fileData: Array.from(byteArray), 
+            fileData: Array.from(byteArray),
             ReqNo: formData1.txt_ReqNo,
-            RecID:RecID
+            RecID: RecID,
           });
           console.log("File uploaded successfully:", response.data);
         } catch (error) {
@@ -471,25 +470,24 @@ function fn_ForApprove(
           );
         }
       };
-      reader.readAsArrayBuffer(file); 
+      reader.readAsArrayBuffer(file);
     }
   };
 
   const UploadFileSub = async (file) => {
-    console.log('formData1.txt_ReqNo',formData1.txt_ReqNo)
+    console.log("formData1.txt_ReqNo", formData1.txt_ReqNo);
     if (!file) {
       return;
     } else {
       const reader = new FileReader();
       reader.onload = async () => {
-        const fileData = reader.result; 
-        const byteArray = new Uint8Array(fileData); 
-  
+        const fileData = reader.result;
+        const byteArray = new Uint8Array(fileData);
+
         try {
           const response = await axios.post("/api/Common/UploadSub", {
-            fileData: Array.from(byteArray), 
+            fileData: Array.from(byteArray),
             ReqNo: formData1.txt_ReqNo,
-          
           });
           console.log("File uploaded successfully:", response.data);
         } catch (error) {
@@ -500,24 +498,23 @@ function fn_ForApprove(
           );
         }
       };
-      reader.readAsArrayBuffer(file); 
+      reader.readAsArrayBuffer(file);
     }
   };
-  
+
   const UploadFileADD = async (file) => {
     if (!file) {
       return;
     } else {
       const reader = new FileReader();
       reader.onload = async () => {
-        const fileData = reader.result; 
-        const byteArray = new Uint8Array(fileData); 
-  
+        const fileData = reader.result;
+        const byteArray = new Uint8Array(fileData);
+
         try {
           const response = await axios.post("/api/Common/UploadAdd", {
-            fileData: Array.from(byteArray), 
+            fileData: Array.from(byteArray),
             ReqNo: formData1.txt_ReqNo,
-           
           });
           console.log("File uploaded successfully:", response.data);
         } catch (error) {
@@ -528,23 +525,23 @@ function fn_ForApprove(
           );
         }
       };
-      reader.readAsArrayBuffer(file); 
+      reader.readAsArrayBuffer(file);
     }
   };
 
   const UploadFile = async (file, ColumnName) => {
     console.log(file, "UploadFile");
-  
+
     if (!file) {
       console.warn("No file provided for upload.");
       return;
     }
-  
+
     const reader = new FileReader();
     reader.onload = async () => {
       const fileData = reader.result;
       const byteArray = new Uint8Array(fileData);
-  
+
       try {
         let response;
         if (ColumnName === "mrh_subs_fileserver") {
@@ -564,7 +561,7 @@ function fn_ForApprove(
           alert("Invalid ColumnName provided.");
           return;
         }
-  
+
         if (response && response.data) {
           console.log("File uploaded successfully:", response.data);
           alert("File uploaded successfully.");
@@ -580,7 +577,7 @@ function fn_ForApprove(
         );
       }
     };
-  
+
     try {
       reader.readAsArrayBuffer(file);
     } catch (error) {
@@ -701,7 +698,7 @@ function fn_ForApprove(
         return;
       }
       if (formData1.txt_TotalAdditional > 0) {
-        console.log(formData1.Person_ADD,'mmmmay')
+        console.log(formData1.Person_ADD, "mmmmay");
         const isIncomplete = formData1.Person_ADD.some((person) => {
           console.log(person, "person0");
           if (
@@ -827,258 +824,254 @@ function fn_ForApprove(
       if (CB_Substitube) {
         if (CB_FileSubstitube) {
           await UploadFileSub(formData1.DataFileSub);
-        } 
-    
-          for (let i = 0; i < Person_Sub.length; i++) {
-            //
-            const Rec_id = `S${String(i + 1).padStart(2, "0")}`;
-            const Emp_Name = Person_Sub[i].Emp_Name || "";
-            await axios
-              .post("/api/RequestManPower/InsPerson", {
-                ReqNo: txt_ReqNo,
-                RecId: Rec_id,
-                Req_flg: "SUBS",
-                Emp_id: Person_Sub[i].ID_Code || "",
-                Emp_name: Emp_Name.split(" ")[0].trim(),
-                Emp_Surname: Emp_Name.split(" ").slice(1).join(" ").trim(),
-                Emp_dept: Person_Sub[i].Cost_Center || "",
-                Emp_Jobgrade: Person_Sub[i].Job_grade || "",
-                For_Dept: Person_Sub[i].Dept || "",
-                Special: Person_Sub[i].Special || "",
-                Expereince: Person_Sub[i].Experience || "",
-                Lang_skill: Person_Sub[i].StepLanguage || "",
-                Lang_other: Person_Sub[i].StepLanguage_other || "",
-                Filename: Person_Sub[i].Filefeature || "",
-                // FilenameServer: Person_Sub[i].FileServerfeature || "",
-                Create_by: datauser.LOGIN,
-              })
-              .then((res) => {
-                console.log(res.data, "InsPersonSUB");
-              });
+        }
 
-            if (
-              formData1.Person_Sub[i].Education != null &&
-              formData1.Person_Sub[i].Education.length > 0
-            ) {
-              for (
-                let j = 0;
-                j < formData1.Person_Sub[i].Education.length;
-                j++
-              ) {
-                console.log("Rec_id,", Rec_id);
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "EDUCATION",
-                    Sl_value: formData1.Person_Sub[i].Education[j] || "",
-                    txt_Other:
-                      formData1.Person_Sub[i].Education[j] == "MR0490"
-                        ? formData1.Person_Sub[i].EducationOther
-                        : "",
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBEducation");
-                  });
-              }
+        for (let i = 0; i < Person_Sub.length; i++) {
+          //
+          const Rec_id = `S${String(i + 1).padStart(2, "0")}`;
+          const Emp_Name = Person_Sub[i].Emp_Name || "";
+          await axios
+            .post("/api/RequestManPower/InsPerson", {
+              ReqNo: txt_ReqNo,
+              RecId: Rec_id,
+              Req_flg: "SUBS",
+              Emp_id: Person_Sub[i].ID_Code || "",
+              Emp_name: Emp_Name.split(" ")[0].trim(),
+              Emp_Surname: Emp_Name.split(" ").slice(1).join(" ").trim(),
+              Emp_dept: Person_Sub[i].Cost_Center || "",
+              Emp_Jobgrade: Person_Sub[i].Job_grade || "",
+              For_Dept: Person_Sub[i].Dept || "",
+              Special: Person_Sub[i].Special || "",
+              Expereince: Person_Sub[i].Experience || "",
+              Lang_skill: Person_Sub[i].StepLanguage || "",
+              Lang_other: Person_Sub[i].StepLanguage_other || "",
+              Filename: Person_Sub[i].Filefeature || "",
+              // FilenameServer: Person_Sub[i].FileServerfeature || "",
+              Create_by: datauser.LOGIN,
+            })
+            .then((res) => {
+              console.log(res.data, "InsPersonSUB");
+            });
+
+          if (
+            formData1.Person_Sub[i].Education != null &&
+            formData1.Person_Sub[i].Education.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_Sub[i].Education.length; j++) {
+              console.log("Rec_id,", Rec_id);
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "EDUCATION",
+                  Sl_value: formData1.Person_Sub[i].Education[j] || "",
+                  txt_Other:
+                    formData1.Person_Sub[i].Education[j] == "MR0490"
+                      ? formData1.Person_Sub[i].EducationOther
+                      : "",
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBEducation");
+                });
             }
-            if (
-              formData1.Person_Sub[i].Course != null &&
-              formData1.Person_Sub[i].Course.length > 0
-            ) {
-              for (let j = 0; j < formData1.Person_Sub[i].Course.length; j++) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "COURSE",
-                    Sl_value: formData1.Person_Sub[i].Course[j] || "",
-                    txt_Other:
-                      formData1.Person_Sub[i].Course[j] == "MR0507"
-                        ? formData1.Person_Sub[i].CourseOther
-                        : "", //formData1.Person_Sub[i].CourseOther,
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBCourse");
-                  });
-              }
-            }
-            if (
-              formData1.Person_Sub[i].Field != null &&
-              formData1.Person_Sub[i].Field.length > 0
-            ) {
-              for (let j = 0; j < formData1.Person_Sub[i].Field.length; j++) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "FIELD",
-                    Sl_value: formData1.Person_Sub[i].Field[j] || "",
-                    txt_Other:
-                      formData1.Person_Sub[i].Field[j] == "MR0699"
-                        ? formData1.Person_Sub[i].FieldOther
-                        : "",
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBFiled");
-                  });
-              }
-            }
-            if (
-              formData1.Person_Sub[i].Req_Jobgrade != null &&
-              formData1.Person_Sub[i].Req_Jobgrade.length > 0
-            ) {
-              for (
-                let j = 0;
-                j < formData1.Person_Sub[i].Req_Jobgrade.length;
-                j++
-              ) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "JOB GRADE",
-                    Sl_value: formData1.Person_Sub[i].Req_Jobgrade[j] || "",
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBJobGrade");
-                  });
-              }
-            }
-            await UploadFileDedailPerson(formData1.Person_Sub[i].DataFilefeature,Rec_id);
           }
-        
+          if (
+            formData1.Person_Sub[i].Course != null &&
+            formData1.Person_Sub[i].Course.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_Sub[i].Course.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "COURSE",
+                  Sl_value: formData1.Person_Sub[i].Course[j] || "",
+                  txt_Other:
+                    formData1.Person_Sub[i].Course[j] == "MR0507"
+                      ? formData1.Person_Sub[i].CourseOther
+                      : "", //formData1.Person_Sub[i].CourseOther,
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBCourse");
+                });
+            }
+          }
+          if (
+            formData1.Person_Sub[i].Field != null &&
+            formData1.Person_Sub[i].Field.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_Sub[i].Field.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "FIELD",
+                  Sl_value: formData1.Person_Sub[i].Field[j] || "",
+                  txt_Other:
+                    formData1.Person_Sub[i].Field[j] == "MR0699"
+                      ? formData1.Person_Sub[i].FieldOther
+                      : "",
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBFiled");
+                });
+            }
+          }
+          if (
+            formData1.Person_Sub[i].Req_Jobgrade != null &&
+            formData1.Person_Sub[i].Req_Jobgrade.length > 0
+          ) {
+            for (
+              let j = 0;
+              j < formData1.Person_Sub[i].Req_Jobgrade.length;
+              j++
+            ) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "JOB GRADE",
+                  Sl_value: formData1.Person_Sub[i].Req_Jobgrade[j] || "",
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBJobGrade");
+                });
+            }
+          }
+          await UploadFileDedailPerson(
+            formData1.Person_Sub[i].DataFilefeature,
+            Rec_id
+          );
+        }
       }
 
       if (CB_Additional) {
         if (CB_FileAdditional) {
           await UploadFileADD(formData1.DataFileADD);
-        } 
-       
-          for (let i = 0; i < Person_ADD.length; i++) {
-            //
-            const Rec_id = `A${String(i + 1).padStart(2, "0")}`;
-            await axios
-              .post("/api/RequestManPower/InsPerson", {
-                ReqNo: txt_ReqNo,
-                RecId: Rec_id,
-                Req_flg: "ADD",
-                Emp_id: "",
-                Emp_name: "",
-                Emp_Surname: "",
-                Emp_dept: "",
-                Emp_Jobgrade: "",
-                For_Dept: Person_ADD[i].Dept || "",
-                Special: Person_ADD[i].Special,
-                Expereince: Person_ADD[i].Experience,
-                Lang_skill: Person_ADD[i].StepLanguage || "",
-                Lang_other: Person_ADD[i].StepLanguage_other,
-                Filename: Person_ADD[i].Filefeature||'',
-                FilenameServer: Person_ADD[i].FileServerfeature||'',
-                Create_by: datauser.LOGIN,
-              })
-              .then((res) => {
-                console.log(res.data, "InsPersonADD");
-              });
-            if (
-              formData1.Person_ADD[i].Education != null &&
-              formData1.Person_ADD[i].Education.length > 0
-            ) {
-              for (
-                let j = 0;
-                j < formData1.Person_ADD[i].Education.length;
-                j++
-              ) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "EDUCATION",
-                    Sl_value: formData1.Person_ADD[i].Education[j],
-                    txt_Other:
-                      formData1.Person_ADD[i].Education[j] == "MR0490"
-                        ? formData1.Person_ADD[i].EducationOther
-                        : "", //formData1.Person_ADD[i].EducationOther,
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBEducation");
-                  });
-              }
+        }
+
+        for (let i = 0; i < Person_ADD.length; i++) {
+          //
+          const Rec_id = `A${String(i + 1).padStart(2, "0")}`;
+          await axios
+            .post("/api/RequestManPower/InsPerson", {
+              ReqNo: txt_ReqNo,
+              RecId: Rec_id,
+              Req_flg: "ADD",
+              Emp_id: "",
+              Emp_name: "",
+              Emp_Surname: "",
+              Emp_dept: "",
+              Emp_Jobgrade: "",
+              For_Dept: Person_ADD[i].Dept || "",
+              Special: Person_ADD[i].Special,
+              Expereince: Person_ADD[i].Experience,
+              Lang_skill: Person_ADD[i].StepLanguage || "",
+              Lang_other: Person_ADD[i].StepLanguage_other,
+              Filename: Person_ADD[i].Filefeature || "",
+              FilenameServer: Person_ADD[i].FileServerfeature || "",
+              Create_by: datauser.LOGIN,
+            })
+            .then((res) => {
+              console.log(res.data, "InsPersonADD");
+            });
+          if (
+            formData1.Person_ADD[i].Education != null &&
+            formData1.Person_ADD[i].Education.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_ADD[i].Education.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "EDUCATION",
+                  Sl_value: formData1.Person_ADD[i].Education[j],
+                  txt_Other:
+                    formData1.Person_ADD[i].Education[j] == "MR0490"
+                      ? formData1.Person_ADD[i].EducationOther
+                      : "", //formData1.Person_ADD[i].EducationOther,
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBEducation");
+                });
             }
-            if (
-              formData1.Person_ADD[i].Course != null &&
-              formData1.Person_ADD[i].Course.length > 0
-            ) {
-              for (let j = 0; j < formData1.Person_ADD[i].Course.length; j++) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "COURSE",
-                    Sl_value: formData1.Person_ADD[i].Course[j],
-                    txt_Other:
-                      formData1.Person_ADD[i].Course[j] == "MR0507"
-                        ? formData1.Person_ADD[i].CourseOther
-                        : "", //formData1.Person_ADD[i].CourseOther,
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBCourse");
-                  });
-              }
-            }
-            if (
-              formData1.Person_ADD[i].Field != null &&
-              formData1.Person_ADD[i].Field.length > 0
-            ) {
-              for (let j = 0; j < formData1.Person_ADD[i].Field.length; j++) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "FIELD",
-                    Sl_value: formData1.Person_ADD[i].Field[j],
-                    txt_Other:
-                      formData1.Person_ADD[i].Field[j] == "MR0699"
-                        ? formData1.Person_ADD[i].FieldOther
-                        : "", //formData1.Person_ADD[i].FieldOther,
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBFiled");
-                  });
-              }
-            }
-            if (
-              formData1.Person_ADD[i].Req_Jobgrade != null &&
-              formData1.Person_ADD[i].Req_Jobgrade.length > 0
-            ) {
-              for (
-                let j = 0;
-                j < formData1.Person_ADD[i].Req_Jobgrade.length;
-                j++
-              ) {
-                await axios
-                  .post("/api/RequestManPower/InsPersonDetail", {
-                    ReqNo: txt_ReqNo,
-                    Recid: Rec_id,
-                    category: "JOB GRADE",
-                    Sl_value: formData1.Person_ADD[i].Req_Jobgrade[j] || "",
-                    Create_by: datauser.LOGIN,
-                  })
-                  .then((res) => {
-                    console.log(res.data, "InsPersonSUBJobGrade");
-                  });
-              }
-            }
-            await UploadFileDedailPerson(formData1.Person_ADD[i].DataFilefeature,Rec_id);
           }
-       
+          if (
+            formData1.Person_ADD[i].Course != null &&
+            formData1.Person_ADD[i].Course.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_ADD[i].Course.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "COURSE",
+                  Sl_value: formData1.Person_ADD[i].Course[j],
+                  txt_Other:
+                    formData1.Person_ADD[i].Course[j] == "MR0507"
+                      ? formData1.Person_ADD[i].CourseOther
+                      : "", //formData1.Person_ADD[i].CourseOther,
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBCourse");
+                });
+            }
+          }
+          if (
+            formData1.Person_ADD[i].Field != null &&
+            formData1.Person_ADD[i].Field.length > 0
+          ) {
+            for (let j = 0; j < formData1.Person_ADD[i].Field.length; j++) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "FIELD",
+                  Sl_value: formData1.Person_ADD[i].Field[j],
+                  txt_Other:
+                    formData1.Person_ADD[i].Field[j] == "MR0699"
+                      ? formData1.Person_ADD[i].FieldOther
+                      : "", //formData1.Person_ADD[i].FieldOther,
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBFiled");
+                });
+            }
+          }
+          if (
+            formData1.Person_ADD[i].Req_Jobgrade != null &&
+            formData1.Person_ADD[i].Req_Jobgrade.length > 0
+          ) {
+            for (
+              let j = 0;
+              j < formData1.Person_ADD[i].Req_Jobgrade.length;
+              j++
+            ) {
+              await axios
+                .post("/api/RequestManPower/InsPersonDetail", {
+                  ReqNo: txt_ReqNo,
+                  Recid: Rec_id,
+                  category: "JOB GRADE",
+                  Sl_value: formData1.Person_ADD[i].Req_Jobgrade[j] || "",
+                  Create_by: datauser.LOGIN,
+                })
+                .then((res) => {
+                  console.log(res.data, "InsPersonSUBJobGrade");
+                });
+            }
+          }
+          await UploadFileDedailPerson(
+            formData1.Person_ADD[i].DataFilefeature,
+            Rec_id
+          );
+        }
       }
 
       const TargetDate = moment(Date_Target, "DD/MM/YYYY").format("YYYY-MM-DD");
@@ -1128,29 +1121,26 @@ function fn_ForApprove(
       Swal.fire({
         icon: "success",
         title: "Save Success",
-      }).then(() => {
-        if(formData1.StatusType == "R"||formData1.StatusType == "C"){
-          SendEmail();
+      }).then(async() => {
+        await GetmailSend();
+        if (formData1.StatusType == "R" || formData1.StatusType == "C") {
           window.location.href = "/HrSystem/ManPowerRequest";
-      
-        }
-        else{
-          SendEmail();
+        } else {
           Swal.fire({
             icon: "success",
             title: "Save Success",
           }).then(() => {
+
             window.location.href = "/HrSystem/ApproveManPower";
           });
         }
-       
       });
     } catch (error) {
       Swal.fire({ icon: "error", title: "Error", text: error.message });
       console.error(error, "SaveDraft888");
       hideLoading();
     }
-   
+
     hideLoading();
   };
 
@@ -1249,18 +1239,17 @@ function fn_ForApprove(
         });
       Swal.fire({
         icon: "success",
-        title:"Submit Success",
-      }).then(() => {
-        if(formData1.StatusType == "R"||formData1.StatusType == "C"){
+        title: "Submit Success",
+      }).then(async() => {
+        await GetmailSend();
+        if (formData1.StatusType == "R" || formData1.StatusType == "C") {
           window.location.href = "/HrSystem/ManPowerRequest";
-        }
-        else{
+        } else {
           window.location.href = "/HrSystem/ApproveManPower";
           // SendEmail();
         }
       });
       hideLoading();
-    
     } catch (error) {
       Swal.fire({ icon: "error", title: "Error", text: error.message });
       console.error(error, "SaveDraft888");
@@ -1268,27 +1257,397 @@ function fn_ForApprove(
     }
   };
 
-  const SendEmail = async () => {
+  const GetmailSend = async () => {
+    let status = formData1.ID_Status;
+    let Usermail = [];
+
+    if (status === "MR0104") {
+      if (formData1.CB_HRManagerApprove === "A") {
+        await axios
+          .post("/api/Common/GetEmailHrStaff", {
+            Fac: formData1.SL_Factory,
+          })
+          .then((res) => {
+            console.log(res.data, "GetEmailHrStaff");
+            if (res.data.length > 0) {
+          
+              res.data.forEach((user) => {
+                SendEmail(user.User, user.Email); // ส่งอีเมลไปยังแต่ละคน
+              });
+            }
+          });
+      } else {
+        Usermail = [
+          formData1.txt_ReqBy,
+          formData1.SL_DepartmentManager,
+          formData1.SL_FMGM,
+        ];
+        await axios
+          .post("/api/Common/GetEmailUser", {
+            user: Usermail,
+          })
+          .then((res) => {
+            if (res.data.length > 0) {
+              res.data.forEach((user) => {
+                console.log(user.User, "GetEmailSend", user.Email);
+                SendEmail(user.User, user.Email);
+              });
+            }
+          });
+      }
+    } else {
+      if (
+        status === "MR0101" ||
+        status === "MR0129" ||
+        status === "MR0139" ||
+        status === "MR0149"
+      ) {
+        Usermail = [formData1.SL_DepartmentManager];
+      } else if (status === "MR0102") {
+        if (formData1.CB_DepartmentApprove === "A") {
+          Usermail = [formData1.SL_FMGM];
+        } else {
+          Usermail = [formData1.txt_ReqBy];
+        }
+      } else if (status === "MR0103") {
+        if (formData1.CB_FMGMApprove === "A") {
+          Usermail = [formData1.SL_HRManager];
+        } else {
+          Usermail = [formData1.txt_ReqBy, formData1.SL_DepartmentManager];
+        }
+      } else if (status === "MR0105" || status === "MR0106") {
+        Usermail = [formData1.txt_ReqBy];
+      }
+      await axios
+        .post("/api/Common/GetEmailUser", {
+          user: Usermail,
+        })
+        .then((res) => {
+          if (res.data.length > 0) {
+            res.data.forEach((user) => {
+              console.log(user.User, "GetEmailSend", user.Email);
+              SendEmail(user.User, user.Email);
+            });
+          }
+        });
+    }
+  };
+
+  const SendEmail = async (Dear, Email) => {
+    const fomathtml = fomatmail(Dear);
     let ReqNo = formData1.txt_ReqNo;
+    let status = formData1.ID_Status;
+    let strSubject = "";
+    if (
+      status === "MR0101" ||
+      status === "MR0129" ||
+      status === "MR0139" ||
+      status === "MR0149"
+    ) {
+      console.log("เข้า3331");
+      strSubject = `Please Approve : (${ReqNo})`;
+    } else {
+      console.log("เข้า3332");
+      if (
+        formData1.CB_DepartmentApprove == "R" ||
+        formData1.CB_FMGMApprove == "R" ||
+        formData1.CB_HRManagerApprove == "R"
+      ) {
+        strSubject = `Please Revise Man Power request : (${ReqNo})`;
+      }
+      else{
+        console.log("เข้า3333");
+        strSubject = `Please Approve : (${ReqNo})`;
+      }
+    }
     await axios
       .post("/api/Common/EmailSend", {
-        strSubject: `Please Apprpve : (${ReqNo}) `,
-        UserApprove: "test1",
-        Req_By: formData1.txt_ReqBy,
-        FixSystem: "HR Online >> Man Power",
-        Req_No: formData1.txt_ReqNo,
-        Fac_Desc: "TEST FACTORY",
-        Dept: formData1.SL_Department,
-        Position: formData1.SL_Position,
-        Target_Date: formData1.SL_Position,
-        Req_Date: formData1.txt_ReqDate,
-        Send_Date: "Date today",
-        Remark: formData1.txt_Remark,
-        Req_Status: "สเต็ป 1",
+        strSubject: strSubject,
+        strEmailFormat: fomathtml,
+        strEmail: Email,
       })
       .then((res) => {
         console.log(res.data, "EmailSend");
       });
+  };
+
+  const DataSendmail = () => {
+    let status = formData1.ID_Status;
+    let statusDesc = "";
+    let ActionComment = "";
+    if (
+      status === "MR0101" ||
+      status === "MR0129" ||
+      status === "MR0139" ||
+      status === "MR0149"
+    ) {
+      statusDesc = "Wait Dept. Manager Approve";
+    } else if (status === "MR0102") {
+      ActionComment = formData1.txt_CommentDepartmentmanager;
+      if (formData1.CB_DepartmentApprove == "A") {
+        statusDesc = "Wait FM/GM Approve";
+      } else {
+        statusDesc = "Reject by Dept. Manager";
+      }
+    } else if (status === "MR0103") {
+      ActionComment = formData1.txt_CommentFMGM;
+      if (formData1.CB_DepartmentApprove == "A") {
+        statusDesc = "Wait HR Manager Approve";
+      } else {
+        statusDesc = "Reject by FM/GM";
+      }
+    } else if (status === "MR0104") {
+      ActionComment = formData1.txt_CommentFMGM;
+      if (formData1.CB_DepartmentApprove == "A") {
+        statusDesc = "Wait HR Staff Action";
+      } else {
+        statusDesc = "Reject by Dept. Manager";
+      }
+    } else if (status === "MR0105") {
+      ActionComment = formData1.txt_HrComment;
+      statusDesc = "On Process";
+    } else if (status === "MR0106") {
+      ActionComment = formData1.txt_HrComment;
+      if (formData1.Radio_HrStatus == "MR0107") {
+        statusDesc = "Closed";
+      } else if (formData1.Radio_HrStatus == "MR0108") {
+        statusDesc = "Closed by HR condition";
+      }
+    }
+    return {
+      Status: statusDesc,
+      Comment: ActionComment,
+    };
+  };
+
+  const fomatmail = (Dear) => {
+    const Datamail = DataSendmail();
+    console.log(Datamail, "Datamail");
+    let status = formData1.ID_Status;
+    const factory = Factory.find((f) => f.value === formData1.SL_Factory);
+    const formattedRemark = formData1.txt_Remark.replace(/(.{60})/g, "$1<br>");
+    let strEmailFormat = "";
+    let Position = `${formData1.SL_Position} ${
+      formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional
+    } Person`;
+    if (status === "MR0101") {
+      strEmailFormat = `
+        <!DOCTYPE html>
+        <html lang="en">
+                <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f9;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #dddddd; background-color: #ffffff;">
+        <!-- Header -->
+        <tr>
+        <td align="center" bgcolor="#4caf50" style="padding: 20px; color: #ffffff; font-size: 24px; font-weight: bold;">
+                                HR Online System Notification
+        </td>
+        </tr>
+        <!-- Content -->
+        <tr>
+        <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+        <p>Dear Khun ${Dear} ,</p>
+        <p>
+                                  This Request creates as follow ${formData1.txt_ReqBy}
+        </p>
+        <!-- Details -->
+        <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
+        <tr>
+        <td  style="font-size: 20px; color: #555555; font-weight: bold;width:120px " colspan="2" >
+        <p><strong>รายละเอียด :</strong></p>
+        </td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;width:120px ">System :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Man Power</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqNo}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${factory.label}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.SL_Department}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Position :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${Position}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Target Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.Date_Target}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqBy}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqDate}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${userlogin}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${DateToday}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left; ">
+            ${formattedRemark}
+        </td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Status}</td>
+        </tr>
+        </table>
+        <p>
+                                    กรุณาตรวจสอบข้อมูลผ่านระบบของคุณ และดำเนินการต่อให้เรียบร้อย
+        </p>
+        <!-- Button -->
+        <table align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
+        <tr>
+        <td align="center" bgcolor="#4caf50" style="padding: 12px 25px; border-radius: 5px;">
+        <a href="http://10.17.100.183:4006/HrSystem/Home" style="text-decoration: none; color: #ffffff; font-size: 16px; font-weight: bold; display: inline-block;">
+                                ตรวจสอบรายการ
+        </a>
+        </td>
+        </tr>
+        </table>
+        </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+        <td align="center" bgcolor="#e4e4e7" style="padding: 15px; font-size: 12px; color: #777777;">
+                                                    Best Regards,<br/>
+                                © 2025 Fujikura Electronics (Thailand) Ltd. All rights reserved.
+        </td>
+        </tr>
+        </table>
+        </body>
+        </html>`;
+    } else {
+      strEmailFormat = `   <!DOCTYPE html>
+        <html lang="en">
+        
+                <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f9;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #dddddd; background-color: #ffffff;">
+        <!-- Header -->
+        <tr>
+        <td align="center" bgcolor="#4caf50" style="padding: 20px; color: #ffffff; font-size: 24px; font-weight: bold;">
+                                HR Online System Notification
+        </td>
+        </tr>
+        <!-- Content -->
+        <tr>
+        <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+        <p>Dear Khun ${Dear} ,</p>
+        <p>
+                                  This Request creates as follow ${formData1.txt_ReqBy}
+        </p>
+        <!-- Details -->
+        <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
+        <tr>
+        <td  style="font-size: 20px; color: #555555; font-weight: bold;width:120px " colspan="2" >
+        <p><strong>รายละเอียด :</strong></p>
+        </td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;width:120px ">System :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Man Power</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqNo}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${factory.label}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.SL_Department}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Position :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${Position}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Target Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.Date_Target}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqBy}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqDate}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${userlogin}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_SendDate}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left; ">
+            ${formattedRemark}
+        </td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${userlogin}</td>
+        </tr>
+                  <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${DateToday}</td>
+        </tr>
+                            <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Comment}</td>
+        </tr>
+                  <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Status}</td>
+        </tr>
+        </table>
+        <p>
+                                    กรุณาตรวจสอบข้อมูลผ่านระบบของคุณ และดำเนินการต่อให้เรียบร้อย
+        </p>
+        <!-- Button -->
+        <table align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
+        <tr>
+        <td align="center" bgcolor="#4caf50" style="padding: 12px 25px; border-radius: 5px;">
+        <a href="http://10.17.100.183:4006/HrSystem/Home" style="text-decoration: none; color: #ffffff; font-size: 16px; font-weight: bold; display: inline-block;">
+                                ตรวจสอบรายการ
+        </a>
+        </td>
+        </tr>
+        </table>
+        </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+        <td align="center" bgcolor="#e4e4e7" style="padding: 15px; font-size: 12px; color: #777777;">
+                                                    Best Regards,<br/>
+                                © 2025 Fujikura Electronics (Thailand) Ltd. All rights reserved.
+        </td>
+        </tr>
+        </table>
+        </body>
+        </html>`;
+    }
+    return strEmailFormat;
   };
 
   return {
@@ -1300,6 +1659,7 @@ function fn_ForApprove(
     SaveDraft,
     SendApprove,
     Bt_Submit,
+    GetmailSend,
   };
 }
 
