@@ -1,10 +1,11 @@
 // FILE: Login.jsx
-import React from 'react';
-import './Login.css';
-import { fn_login } from './fn_login';
-
+import React from "react";
+import "./Login.css";
+import { fn_login } from "./fn_login";
+import { LoadingOutlined } from "@ant-design/icons";
 const Login = () => {
-  const { username, setUsername, password, setPassword, Login } = fn_login();
+  const { username, setUsername, password, setPassword, Login, isLoading } =
+    fn_login();
 
   return (
     <div className="login-page">
@@ -12,7 +13,9 @@ const Login = () => {
         <div className="login-form">
           <h2 className="login-title">Login</h2>
           <div className="input-group">
-            <label htmlFor="username" className="input-label">User Login</label>
+            <label htmlFor="username" className="input-label">
+              User Login
+            </label>
             <input
               type="text"
               id="username"
@@ -21,15 +24,17 @@ const Login = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               onKeyDown={(e) => {
-                if(e.key === 'Enter'){
-                  document.getElementById('password').focus();
+                if (e.key === "Enter") {
+                  document.getElementById("password").focus();
                 }
               }}
               required
             />
           </div>
           <div className="input-group">
-            <label htmlFor="password" className="input-label">Password</label>
+            <label htmlFor="password" className="input-label">
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -38,14 +43,16 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => {
-                if(e.key === 'Enter'){
-                    Login()
+                if (e.key === "Enter") {
+                  Login();
                 }
               }}
               required
             />
           </div>
-          <button className="login-button" onClick={Login}>Login</button>
+          <button className="login-button" onClick={Login}>
+            {isLoading ? <LoadingOutlined /> : "Login"}
+          </button>
         </div>
       </div>
     </div>

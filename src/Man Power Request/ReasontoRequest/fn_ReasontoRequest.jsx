@@ -1130,6 +1130,67 @@ function fn_ReasontoRequest(formData1, setFormData1, Disable, setDisable) {
     }
   };
 
+  const bt_Reset = async () => {
+      setFormData1({
+      ...formData1,
+      txt_FileNameReadData:'',
+      DataFileReadData:null,
+      CB_Substitube: false,
+      txt_TotalSubstitube: 0,
+      CB_FileSubstitube: "",
+      FileName_Sub: "",
+      FileNameServer_Sub: "",
+      DataFileSub: null,
+      Person_Sub: [
+        {
+          CopyNo: "",
+          ID_Code: "",
+          Emp_Name: "",
+          Cost_Center: "",
+          Job_grade: "",
+          Dept: null,
+          Req_Jobgrade: null,
+          Education: null,
+          Course: null,
+          Field: null,
+          Special: "",
+          Experience: "",
+          StepLanguage: null,
+          StepLanguage_other: "",
+          Filefeature: "",
+        },
+      ],
+      CB_Additional: "",
+      txt_TargetCapacity1: "",
+      txt_TargetCapacity2: "",
+      txt_TotalAdditional: 0,
+      CB_FileAdditional: "",
+      FileName_Add: "",
+      FileNameServer_Add: "",
+      DataFileADD: null,
+      Person_ADD: [
+        {
+          CopyNo: "",
+          ID_Code: "",
+          Emp_Name: "",
+          Cost_Center: "",
+          Job_grade: "",
+          Dept: null,
+          Req_Jobgrade: null,
+          Education: null,
+          Course: null,
+          Field: null,
+          Special: "",
+          Experience: "",
+          StepLanguage: null,
+          StepLanguage_other: "",
+          Filefeature: "",
+        },
+      ],
+    });
+
+  }
+
   return {
     handleChange,
     handlePersonSubChange,
@@ -1157,7 +1218,8 @@ function fn_ReasontoRequest(formData1, setFormData1, Disable, setDisable) {
     DownLoadFile,
     handleFileRead,
     ReadFile,
-    FileFormat
+    FileFormat,
+    bt_Reset
   };
 }
 

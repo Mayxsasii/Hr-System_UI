@@ -7,27 +7,38 @@ function fn_home() {
   const [ManPower, setManPower] = useState([]);
   const User = localStorage.getItem("username");
   const Roll = localStorage.getItem("ROLL");
-  // const location = useLocation();
-  // const queryParams = new URLSearchParams(location.search);
-  // const User = queryParams.get("username");
-  // const Roll = queryParams.get("ROLL");
  
-  useEffect(async () => {
-    console.log(User,'User2222');
-    // if(User) {
+  useEffect( () => {
+    getmenucount();
+   
+  }, []);
+  const getmenucount = async() => {
+    console.log("Roll", Roll);
       await axios
       .post("/api/RequestManPower/HomeStatusCountManPower", {
         UserLogin: User,
-        Roll: Roll
+        Roll: [Roll]
       })
       .then((res) => {
         console.log(res.data, "ManPower2222");
         setManPower(res.data);
       });
-    // }
-   
-  }, []);
-  return {ManPower};
+  }
+  const GoPathManPower = (value,count) => {
+    console.log("GoPathManPower", count,value);
+    if(count > 0) {
+    if( value === "1") {
+      window.location.href = "/HrSystem/ManPowerRequest";
+    }
+    else if( value === "2") {
+      window.location.href = "/HrSystem/ApproveManPower";
+    }
+    else if( value === "3") {
+      window.location.href = "/HrSystem/HrActionManPowerRequest";
+    }
+  }
+  }
+  return {ManPower,GoPathManPower};
 }
 
 export { fn_home };

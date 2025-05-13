@@ -45,7 +45,9 @@ const Step4 = ({
     Submit,
     DownloadFileforUpload,
     ReadFile,
-    handleFileOtherChange
+    handleFileOtherChange,
+    DeleteFile,
+    Bt_Reset
   } = fn_HrStarffAction(formData1, setFormData1);
   return (
     <>
@@ -195,6 +197,7 @@ const Step4 = ({
                   ? "none"
                   : "",
             }}
+            onClick={() => Bt_Reset()}
           >
             Reset
           </Button>
@@ -243,15 +246,15 @@ const Step4 = ({
               style={{ width: "80px", marginLeft: "10px", marginRight: "5px" }}
             />{" "}
             <p style={{ marginLeft: "" }}> Person</p>
-            <p
+            {/* <p
               style={{
                 marginLeft: "50px",
                 display: !formData1.CB_HrFileAttach ? "none" : "",
               }}
             >
               Manual Completed :
-            </p>
-            <Input
+            </p> */}
+            {/* <Input
               value={formData1.txt_TotalManual}
               style={{
                 width: "80px",
@@ -271,8 +274,8 @@ const Step4 = ({
                 }
               }}
             />{" "}
-            <p style={{ display: !formData1.CB_HrFileAttach ? "none" : "" }}> Person</p>
-            <p style={{ marginLeft: "50px" }}>Remain :</p>
+            <p style={{ display: !formData1.CB_HrFileAttach ? "none" : "" }}> Person</p> */}
+            <p style={{ marginLeft: "30px" }}>Remain :</p>
             <Input
               value={formData1.txt_TotalRemain}
               disabled
@@ -414,7 +417,7 @@ const Step4 = ({
               <CloseOutlined
                className="DeleteFile"
                 onClick={() => {
-                  // DeleteFile("ADDFeature", index);
+                  DeleteFile("HrFileOther");
                 }}
                 style={{
                   marginLeft: "20px",
@@ -439,7 +442,7 @@ const Step4 = ({
               <CloseOutlined
                className="DeleteFile"
                 onClick={() => {
-                  // DeleteFile("ADDFeature", index);
+                  DeleteFile("HrFileReadFile");
                 }}
                 style={{
                   marginLeft: "20px",
@@ -551,6 +554,7 @@ const Step4 = ({
               }}
             >
               Emp ID :
+              {/* {console.log('formData1.Hr_Sub[index].CB_Complete',formData1.Hr_Sub[index].CB_Complete)} */}
               <Input
                 size="middle"
                 // disabled={!formData1.Hr_Sub[index].CB_Complete}
@@ -558,7 +562,7 @@ const Step4 = ({
                   handleChangeHr_Sub(index, "Emp_id", e.target.value)
                 }
                 disabled={
-                 
+                  !formData1.Hr_Sub[index].CB_Complete ||
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -573,7 +577,7 @@ const Step4 = ({
               <Input
                 size="middle"
                 disabled={
-                 
+                  !formData1.Hr_Sub[index].CB_Complete ||
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -675,7 +679,7 @@ const Step4 = ({
               >
                 Completed
               </Checkbox>
-
+{console.log('vvvvvvvvvvvvvvvvvvv',formData1.Hr_Add[index].CB_Complete)}
               <p style={{ marginLeft: "25px" }}>For Dept.:</p>
               <Input
                 value={formData1.Person_ADD[index].Dept}
@@ -714,8 +718,9 @@ const Step4 = ({
               Emp ID :
               <Input
                 size="middle"
-                disabled={
                 
+                disabled={
+                  !formData1.Hr_Add[index].CB_Complete||
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -733,7 +738,7 @@ const Step4 = ({
               <Input
                 size="middle"
                 disabled={
-                  
+                  !formData1.Hr_Add[index].CB_Complete||
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -751,7 +756,7 @@ const Step4 = ({
               <Input
                 size="middle"
                 disabled={
-                  
+                  !formData1.Hr_Add[index].CB_Complete||
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }
@@ -766,7 +771,7 @@ const Step4 = ({
               <Input
                 type="date"
                 disabled={
-                  
+                  !formData1.Hr_Add[index].CB_Complete||
                   formData1.ID_Status == "MR0107" ||
                   formData1.ID_Status == "MR0108"
                 }

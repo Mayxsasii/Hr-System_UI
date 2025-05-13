@@ -1,23 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
   AppstoreOutlined,
-  MenuUnfoldOutlined,
-  LogoutOutlined,
   HomeOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
-import { useNavigate,useLocation} from "react-router-dom";
-// import { useLocation } from "react-router-dom";
-import { Layout, Menu } from "antd";
+import { useLocation} from "react-router-dom";
+import { Menu } from "antd";
 const { SubMenu } = Menu;
 
 function fn_Sider() {
-  const navigate = useNavigate();
-  const location = useLocation(); // ใช้ useLocation เพื่อดึง path ปัจจุบัน
+  const location = useLocation(); 
  
   const [collapsed, setCollapsed] = useState(true);
   const [menuData, setMenuData] = useState([]);
@@ -147,6 +140,9 @@ function fn_Sider() {
     else if(selectedMenu.MENU_NAME === "Man Power Master List"){
       window.location.href = "/HrSystem/ManPowerMasterList";
       // navigate(`/HrSystem/HrActionManPowerRequest`);
+    }else if(selectedMenu.MENU_NAME === "Home"){
+      window.location.href = "/HrSystem/Home";
+      // navigate(`/HrSystem/Home`);
     }
   };
   

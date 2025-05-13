@@ -1429,7 +1429,7 @@ function fn_ForApprove(
     let strEmailFormat = "";
     let Position = `${formData1.SL_Position} ${
       formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional
-    } Person`;
+    } PERSON`;
     if (status === "MR0101") {
       strEmailFormat = `
         <!DOCTYPE html>
@@ -1650,6 +1650,26 @@ function fn_ForApprove(
     return strEmailFormat;
   };
 
+  const bt_Reset = async () => {
+    if( ["MR0101", "MR0129","MR0139","MR0149"].includes(formData1.ID_Status)){
+      handleChange("SL_DepartmentManager", null);
+      handleChange("SL_FMGM",null);
+      handleChange("SL_HRManager", null);
+    }
+    if(formData1.ID_Status=='MR0102'){
+      handleChange("txt_CommentDepartmentmanager",'');
+      handleChange("CB_DepartmentApprove", '');
+    }
+    if(formData1.ID_Status=='MR0103'){
+      handleChange("txt_CommentFMGM",'');
+      handleChange("CB_FMGMApprove", '');
+    }
+    if(formData1.ID_Status=='MR0104'){
+      handleChange("txt_CommentHRManager",'');
+      handleChange("CB_HRManagerApprove", '');
+    }
+}
+
   return {
     DepartmentManager,
     FMGM,
@@ -1660,6 +1680,7 @@ function fn_ForApprove(
     SendApprove,
     Bt_Submit,
     GetmailSend,
+    bt_Reset
   };
 }
 

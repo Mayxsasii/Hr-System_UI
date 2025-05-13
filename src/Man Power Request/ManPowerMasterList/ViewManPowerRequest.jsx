@@ -1366,29 +1366,7 @@ const ViewManPowerRequest = ({}) => {
             style={{ width: "80px", marginLeft: "10px", marginRight: "5px" }}
           />{" "}
           <p style={{ marginLeft: "" }}> Person</p>
-          <p
-            style={{
-              marginLeft: "50px",
-              display: !formData1.CB_HrFileAttach ? "none" : "",
-            }}
-          >
-            Manual Completed :
-          </p>
-          <Input
-            value={formData1.txt_TotalManual}
-            style={{
-              width: "80px",
-              marginLeft: "10px",
-              marginRight: "5px",
-              display: !formData1.CB_HrFileAttach ? "none" : "",
-            }}
-            disabled
-          />{" "}
-          <p style={{ display: !formData1.CB_HrFileAttach ? "none" : "" }}>
-            {" "}
-            Person
-          </p>
-          <p style={{ marginLeft: "50px" }}>Remain :</p>
+          <p style={{ marginLeft: "30px" }}>Remain :</p>
           <Input
             value={formData1.txt_TotalRemain}
             disabled

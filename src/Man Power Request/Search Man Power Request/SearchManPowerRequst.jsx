@@ -45,7 +45,8 @@ const SearchManPower = () => {
     settxt_ReqBy,
     txt_ReqBy,
     Path,
-    TitlePage
+    TitlePage,
+    bt_Reset
   } = fn_SearchManPowerRequst();
 
   return (
@@ -274,7 +275,7 @@ const SearchManPower = () => {
                 >
                   New
                 </Button>
-                <Button type="primary" danger icon={<ReloadOutlined />}>
+                <Button type="primary" danger icon={<ReloadOutlined />} onClick={() => bt_Reset()}>
                   Reset
                 </Button>
               </td>

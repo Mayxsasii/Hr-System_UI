@@ -9,7 +9,7 @@ import { fn_home } from "./fn_home";
 import "./HomePage.css";
 const Login = () => {
 
-  const {ManPower} = fn_home();
+  const {ManPower,GoPathManPower} = fn_home();
   console.log(ManPower, "ManPower11111");
   return (
     <div>
@@ -41,6 +41,7 @@ const Login = () => {
                 background: "#E3FCEF",
                 borderLeft: "10px solid #2E7D32",
               }}
+              onClick={() => GoPathManPower('1',ManPower[0]?.Create)}
             >
               <p
                 className="P_Title_Status"
@@ -60,12 +61,14 @@ const Login = () => {
                 {ManPower[0]?.Create||0} 
               </p>
             </div>
+            {console.log(ManPower[0]?.WaitDeptApprove, "howwwww")}
             <div
               className="Home_Status"
               style={{
                 background: "#E3FCEF", 
                 borderLeft: "10px solid #2E7D32",
               }}
+              onClick={() => GoPathManPower('2',ManPower[1]?.WaitDeptApprove)}
             >
               <p
                 className="P_Title_Status"
@@ -92,6 +95,7 @@ const Login = () => {
                 background: "#E3FCEF", 
                 borderLeft: "10px solid #2E7D32",
               }}
+              onClick={() => GoPathManPower('2',ManPower[2]?.WaitFMGMApprove)}
             >
               <p
                 className="P_Title_Status"
@@ -118,6 +122,7 @@ const Login = () => {
                 background: "#E3FCEF",
                 borderLeft: "10px solid #2E7D32"
               }}
+              onClick={() => GoPathManPower('2',ManPower[3]?.WaitHRManagerApprove)}
             >
               <p
                 className="P_Title_Status"
@@ -144,6 +149,7 @@ const Login = () => {
                 background: "#E3FCEF", 
                 borderLeft: "10px solid #2E7D32", 
               }}
+              onClick={() => GoPathManPower('3',ManPower[4]?.WaitHRStaff)}
             >
               <p
                 className="P_Title_Status"

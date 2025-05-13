@@ -11,7 +11,8 @@ const Step3 = ({ formData1, setFormData1,Disable,setDisable,setCurrent }) => {
     SaveDraft,
     SendApprove,
     Bt_Submit,
-    GetmailSend
+    GetmailSend,
+    bt_Reset
   } = fn_ForApprove(formData1, setFormData1,Disable,setDisable,setCurrent);
   return (
     <div>
@@ -311,6 +312,7 @@ const Step3 = ({ formData1, setFormData1,Disable,setDisable,setCurrent }) => {
         <Button
           type="primary"
           danger
+          onClick={() => bt_Reset()}
           style={{ marginLeft: "10px", backgroundColor: "#758694", display: ["A", "R","C"].includes(formData1.StatusType) ? "" : "none"} }
         >
           Reset

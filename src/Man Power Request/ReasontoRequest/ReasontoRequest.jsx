@@ -49,7 +49,8 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
     DownLoadFile,
     handleFileRead,
     ReadFile,
-    FileFormat
+    FileFormat,
+    bt_Reset
   } = fn_ReasontoRequest(formData1, setFormData1, Disable, setDisable);
 
   return (
@@ -1417,6 +1418,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
             backgroundColor: "#758694",
             color: "#FFFFFF",
           }}
+          onClick={() => bt_Reset()}
         >
           Reset
         </Button>

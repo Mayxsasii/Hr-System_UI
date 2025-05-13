@@ -342,9 +342,25 @@ function fn_SearchManPowerRequst() {
           });
       }
     }
-
     hideLoading();
   };
+  
+  const bt_Reset =  () => {
+    setSL_Factory(null);
+    setSL_Department(null);
+    setSL_Position(null);
+    setSL_JobGrade(null);
+    setSL_Status(null);
+    settxt_ReqNoFrom("");
+    settxt_ReqNoTo("");
+    setDateFrom("");
+    setDateTo("");
+    if( Path != "ManPowerRequest") {
+      settxt_ReqBy('');
+    }
+    setDataSearch([]);
+
+  }
 
   const columns = [
     {
@@ -548,6 +564,7 @@ function fn_SearchManPowerRequst() {
     txt_ReqBy,
     Path,
     TitlePage,
+    bt_Reset
   };
 }
 
