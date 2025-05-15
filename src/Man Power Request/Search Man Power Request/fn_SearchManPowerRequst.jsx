@@ -44,8 +44,11 @@ function fn_SearchManPowerRequst() {
   const [dataSearch, setDataSearch] = useState([]);
 
   useEffect(() => {
+    if(Path!='ManPowerMasterList'){
+      GetDepartment();
+    }
     GetFactory();
-    GetDepartment();
+
     GetStatus();
     Title();
     if (Path == "ManPowerRequest") {
@@ -161,9 +164,20 @@ function fn_SearchManPowerRequst() {
       });
   };
 
-  const handleFactory = (value) => {
+  const handleFactory =async (value) => {
     setSL_Factory(value);
     GetPosition(value);
+    if(Path=='ManPowerMasterList'){
+      await axios
+      .post("/api/RequestManPower/GetDepartmentMasterList", {
+        Fac: value || "",
+      })
+      .then((res) => {
+        console.log(res.data, "GetDepartmentMasterList");
+        // setFactory(res.data);
+        setDepartment(res.data);
+      });
+    }
   };
 
   const handlePosition = (value) => {

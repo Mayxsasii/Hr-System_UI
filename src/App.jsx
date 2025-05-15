@@ -6,6 +6,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import Sider from './SideBar/Sider'; 
 import Header from './Header/Header'; 
 import NewManPowerRequest from './Man Power Request/ManPowerRequest';
+import RefferenceLetter from './Refference Letter Request/RefferenceLetter/RefferenceLetter';
 import ManPowerRequest from './Man Power Request/Search Man Power Request/SearchManPowerRequst';
 import Login from './Login/Login';
 import Home from './Homepage/homepage';
@@ -71,6 +72,8 @@ const App = () => {
               element={<ProtectedRoute  element={<NewManPowerRequest/>}/>}/>
             <Route path="/HrSystem/Home"
               element={<ProtectedRoute  element={<Home/>}/>}/>
+            <Route path="/HrSystem/NewRefferenceLetter"
+              element={<ProtectedRoute  element={<RefferenceLetter/>}/>}/>
           </Routes>
         </AppLayout>
       </Router>

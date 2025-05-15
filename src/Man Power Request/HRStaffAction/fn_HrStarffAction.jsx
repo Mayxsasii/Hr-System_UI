@@ -281,7 +281,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
         </tr>
                             <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_HrComment}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_HrComment||''}</td>
         </tr>
                   <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>

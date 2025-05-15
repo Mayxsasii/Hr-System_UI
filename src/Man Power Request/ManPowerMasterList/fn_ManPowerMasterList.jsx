@@ -162,9 +162,9 @@ function fn_ManPowerMasterList() {
     GetEnglish();
 
     if (ReqNo != null) {
-      // queryParams.delete("ReqNo");
-      // const newUrl = `${location.pathname}?${queryParams.toString()}`;
-      // window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
+      queryParams.delete("ReqNo");
+      const newUrl = `${location.pathname}?${queryParams.toString()}`;
+      window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
       showLoading("Loading...");
       await GetdataEdit();
       await GetFileDetail();

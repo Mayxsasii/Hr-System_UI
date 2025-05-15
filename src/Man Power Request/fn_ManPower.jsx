@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { useLoading } from "../loading/fn_loading";
 import { Await, useLocation } from "react-router-dom";
-
+// import { fn_ForApprove } from "./ForApprove/fn_ForApprove";
 function fn_ManPower() {
   const steps = [
     {
@@ -342,14 +342,13 @@ function fn_ManPower() {
 
   const FetchData = async () => {
     if (ReqNo != null) {
-      //กลับมาเปิดด้วย
-      // queryParams.delete("ReqNo");
-      // const newUrl = `${location.pathname}?${queryParams.toString()}`;
-      // window.history.replaceState(
-      //   null,
-      //   "",
-      //   newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl
-      // );
+      queryParams.delete("ReqNo");
+      const newUrl = `${location.pathname}?${queryParams.toString()}`;
+      window.history.replaceState(
+        null,
+        "",
+        newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl
+      );
       showLoading("Loading...");
       await GetdataEdit();
       await GetFile();
@@ -978,13 +977,13 @@ function fn_ManPower() {
   const next = async () => {
     console.log(current, "currentnext");
     if (current === 0 && !validateStep1()) {
-      // return;
+      return
     } else if (current == 2 && !(await validateStep4())) {
-      // console.log("validateStep4");
+      // setCurrent(current);
       return;
     }
-
     setCurrent(current + 1);
+   
   };
 
   const prev = () => {
@@ -1028,14 +1027,175 @@ function fn_ManPower() {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
 
-  
-  const handlePersonSubChange = (index, field, value) => {
-    console.log(index, field, value, "handlePersonSubChange");
-    console.log(formData1, "handlePersonSubChange");
-    const newPersonSub = [...formData1.Person_Sub];
-    newPersonSub[index][field] = value;
-    setFormData1({ ...formData1, Person_Sub: newPersonSub });
+  const GetRunningNo = async () => {
+    // let GenNo = "";
+    // console.log(formData1.CB_EmpRequirment.length, "GetRunningNo");
+
+    // const factory = Factory.find((f) => f.value === formData1.SL_Factory);
+
+    // let status_code = await GetStatusCode();
+
+    // if (!formData1.SL_Factory) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please select a factory.",
+    //   });
+    //   return;
+    // }
+
+    // if (!formData1.SL_Department) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please select a department.",
+    //   });
+    //   return;
+    // }
+
+    // if (!formData1.txt_Email) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please enter an email.",
+    //   });
+    //   return;
+    // }
+    // if (!formData1.txt_TelNo) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please enter a telephone number.",
+    //   });
+    //   return;
+    // }
+
+    // if (!formData1.SL_Position) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please select a position.",
+    //   });
+    //   return;
+    // }
+
+    // if (!formData1.Date_Target) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please select a target date.",
+    //   });
+    //   return;
+    // }
+
+    // if (formData1.CB_EmpRequirment.length === 0) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please select at least one employee requirement.",
+    //   });
+    //   return;
+    // }
+
+    // if (
+    //   formData1.CB_EmpRequirment.includes("MR0202") &&
+    //   !formData1.SL_EmployeeType
+    // ) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please select an employee type.",
+    //   });
+    //   return;
+    // }
+
+    // if (
+    //   formData1.CB_EmpRequirment.includes("MR0202") &&
+    //   formData1.SL_EmployeeType === "MR0390" &&
+    //   !formData1.txt_EmpType_Other
+    // ) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please input employee type other.",
+    //   });
+    //   return;
+    // }
+
+    // if (
+    //   formData1.CB_EmpRequirment.includes("MR0290") &&
+    //   !formData1.txt_EmpReq_Other
+    // ) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     text: "Please input employee requirement other.",
+    //   });
+    //   return;
+    // }
+
+    // showLoading("กำลัง Gen Request No.");
+    // DisableChange("SL_Factory", true);
+    // DisableChange("SL_Department", true);
+    // // DisableChange("SL_Position", true);
+    // await axios
+    //   .post("/api/RequestManPower/GenRunNo", {
+    //     Fac_code: factory.value,
+    //     Fac_Desc: factory.label,
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data, "GenRunNo");
+    //     GenNo = res.data[0].RUNNING;
+    //   });
+
+    // const formattedReqDate = moment(formData1.txt_ReqDate, "DD/MM/YYYY").format(
+    //   "YYYY-MM-DD"
+    // );
+    const formattedTargetDate = moment(
+      formData1.Date_Target,
+      "DD/MM/YYYY"
+    ).format("YYYY-MM-DD");
+
+    await axios
+      .post("/api/RequestManPower/InsGenNoRequest", {
+        ReqNo: formData1.txt_ReqNo,
+        Email: formData1.txt_Email,
+        ReqTel: formData1.txt_TelNo,
+        Position: formData1.SL_Position,
+        TargetDate: formattedTargetDate,
+        totalAmount:
+          formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional,
+        Remark: formData1.txt_Remark,
+      })
+      .then((res) => {
+        console.log(res.data, "InsGenNoRequest");
+      });
+
+    for (let i = 0; i < formData1.CB_EmpRequirment.length; i++) {
+      const requirement = formData1.CB_EmpRequirment[i];
+      let data = {
+        ReqNo: formData1.txt_ReqNo,
+        EmpType: "",
+        txt_Other: "",
+        Create_by: datauser.LOGIN,
+        Emp_Req: requirement,
+      };
+
+      if (requirement === "MR0202") {
+        data.EmpType = formData1.SL_EmployeeType;
+        data.txt_Other = formData1.txt_EmpType_Other;
+      } else if (requirement === "MR0290") {
+        data.txt_Other = formData1.txt_EmpReq_Other;
+      }
+
+      await axios
+        .post("/api/RequestManPower/InsGenNoRequest2", data)
+        .then((res) => {
+          console.log(res.data, "InsGenNoRequest2");
+        });
+    }
+
+    // handleChange("txt_ReqNo", GenNo);
+    // hideLoading();
   };
+  
+  // const handlePersonSubChange = (index, field, value) => {
+  //   console.log(index, field, value, "handlePersonSubChange");
+  //   console.log(formData1, "handlePersonSubChange");
+  //   const newPersonSub = [...formData1.Person_Sub];
+  //   newPersonSub[index][field] = value;
+  //   setFormData1({ ...formData1, Person_Sub: newPersonSub });
+  // };
 
   return {
     current,

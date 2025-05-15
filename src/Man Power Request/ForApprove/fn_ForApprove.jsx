@@ -116,6 +116,7 @@ function fn_ForApprove(
         SL_DepartmentManager,
         SL_FMGM,
         SL_HRManager,
+        SL_Position
       } = formData1;
 
       console.log("กำลัง SaveDraft");
@@ -429,6 +430,7 @@ function fn_ForApprove(
           FMGMBy: SL_FMGM || "",
           HRMBy: SL_HRManager || "",
           UpdateBy: datauser.LOGIN || "",
+          Position: SL_Position || "",
         })
         .then((res) => {
           console.log(res.data, "SaveDraft999");
@@ -787,6 +789,7 @@ function fn_ForApprove(
         SL_DepartmentManager,
         SL_FMGM,
         SL_HRManager,
+        SL_Position
       } = formData1;
 
       console.log("กำลัง SendApprove");
@@ -1103,6 +1106,7 @@ function fn_ForApprove(
           FMGMBy: SL_FMGM || "",
           HRMBy: SL_HRManager || "",
           UpdateBy: datauser.LOGIN || "",
+          Position: SL_Position || "",
         })
         .then((res) => {
           console.log(res.data, "SaveDraft999");

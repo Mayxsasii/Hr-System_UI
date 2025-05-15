@@ -49,7 +49,7 @@ function fn_ReasontoRequest(formData1, setFormData1, Disable, setDisable) {
 
   const GetDataPersonByIDCode = async (Idcode, index) => {
     await axios
-      .post("/api/RequestManPower/GetDataPersonByIDCode", {
+      .post("/api/RequestManPower/  ", {
         Id_Code: Idcode || "",
       })
       .then((res) => {
@@ -839,6 +839,8 @@ function fn_ReasontoRequest(formData1, setFormData1, Disable, setDisable) {
         handleChange("txt_TotalAdditional", adddata.length - 1);
         DisableChange("ButtonADD_ADD", false);
         DisableChange("CB_FileAdditional", false);
+        DisableChange("txt_TargetCapacity1", false);
+        DisableChange("txt_TargetCapacity2", false);
         const updatedPersonAdd = Array.from(
           { length: adddata.length - 1 },
           () => ({
