@@ -12,23 +12,11 @@ const SearchManPower = () => {
   const {
     columns,
     Factory,
-    bt_New,
     Department,
-    Position,
-    JobGrade,
     SL_Factory,
     SL_Department,
-    SL_Position,
-    SL_JobGrade,
-    setSL_Factory,
     setSL_Department,
-    setSL_Position,
-    setSL_JobGrade,
-    GetPosition,
-    GetJobGrade,
     handleFactory,
-    handlePosition,
-    datauser,
     DateFrom,
     DateTo,
     txt_ReqNoFrom,
@@ -47,6 +35,9 @@ const SearchManPower = () => {
     Path,
     TitlePage,
     bt_Reset,
+    LetterType,
+    setSL_Letter,
+    SL_Letter
   } = fn_SearchManPowerRequst();
 
   return (
@@ -152,13 +143,12 @@ const SearchManPower = () => {
             </tr>
 
             <tr>
-              <td style={{ textAlign: "right" }}>Request by :</td>
+              <td style={{ textAlign: "right" }}>Request by ID :</td>
               <td style={{}}>
                 <Input
                   value={txt_ReqBy}
                   onChange={(e) => settxt_ReqBy(e.target.value)}
                   style={{ width: "100%" }}
-                  disabled={Path == "ManPowerRequest" ? true : false}
                 />
               </td>
               <td style={{ textAlign: "right" }}>ประเภท/Letter Type :</td>
@@ -167,11 +157,9 @@ const SearchManPower = () => {
                   showSearch
                   mode="multiple"
                   maxTagCount={"responsive"}
-                  value={SL_Status}
+                  value={SL_Letter}
                   style={{
                     width: "100%",
-                    // display: "block",
-                    // marginTop: "5px",
                   }}
                   placeholder="Select Status"
                   optionFilterProp="children"
@@ -180,8 +168,8 @@ const SearchManPower = () => {
                       .toLowerCase()
                       .includes(input.toLowerCase())
                   }
-                  options={Status}
-                  onChange={setSL_Status}
+                  options={LetterType}
+                  onChange={setSL_Letter}
                 />
               </td>
               <td style={{ textAlign: "right" }}>วันที่ขอ/Request Date :</td>
@@ -206,8 +194,8 @@ const SearchManPower = () => {
               </td>
             </tr>
             <tr>
-            <td style={{ textAlign: "right",display:Path=='ApproveRefferenceLetter'?'':'none' }}>สถานะ/Request Status :</td>
-              <td style={{display:Path=='ApproveRefferenceLetter'?'':'none' }}>
+            <td style={{ textAlign: "right" }}>สถานะ/Request Status :</td>
+              <td style={{}}>
                
               <Select
                   showSearch
@@ -231,27 +219,16 @@ const SearchManPower = () => {
                 />
               </td>
               {/* align={{alignItems:Path=='ApproveRefferenceLetter'?'':'center'}} */}
-              <td colSpan={Path=='ApproveRefferenceLetter'?6:8} align={Path=='ApproveRefferenceLetter'?'':'center'} >
+              <td colSpan={6}  >
                 <Button
                   type="primary"
                   icon={<SearchOutlined />}
-                  style={{ marginRight: "10px",marginLeft:Path=='ApproveRefferenceLetter'?'15px':''}}
+                  style={{ marginRight: "10px",marginLeft:'15px'}}
                   onClick={() => bt_Search()}
                 >
                   Search
                 </Button>
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  style={{
-                    marginRight: "10px",
-                    backgroundColor: "#399918",
-                    // display: Path == "ManPowerRequest" ? "" : "none",
-                  }}
-                  onClick={() => bt_New()}
-                >
-                  New
-                </Button>
+          
                 <Button
                   type="primary"
                   danger

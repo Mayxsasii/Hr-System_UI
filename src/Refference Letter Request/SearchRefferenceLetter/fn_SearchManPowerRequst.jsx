@@ -22,45 +22,37 @@ function fn_SearchManPowerRequst() {
 
   const [Factory, setFactory] = useState([]);
   const [Department, setDepartment] = useState([]);
-  const [Position, setPosition] = useState([]);
-  const [JobGrade, setJobGrade] = useState([]);
   const [Status, setStatus] = useState([]);
   // select
   const [SL_Factory, setSL_Factory] = useState(null);
   const [SL_Department, setSL_Department] = useState(null);
-  const [SL_Position, setSL_Position] = useState(null);
-  const [SL_JobGrade, setSL_JobGrade] = useState(null);
   const [SL_Status, setSL_Status] = useState(null);
+  const [SL_Letter, setSL_Letter] = useState(null);
 
-  //txt
   const [txt_ReqNoFrom, settxt_ReqNoFrom] = useState("");
   const [txt_ReqNoTo, settxt_ReqNoTo] = useState("");
   const [txt_ReqBy, settxt_ReqBy] = useState("");
-  const [DateFrom, setDateFrom] = useState("");
-  const [DateTo, setDateTo] = useState("");
+  const [DateFrom, setDateFrom] = useState(null);
+  const [DateTo, setDateTo] = useState(null);
 
-  const [TitlePage, setTitlePage] = useState('');
+  const [TitlePage, setTitlePage] = useState("");
 
   const [dataSearch, setDataSearch] = useState([]);
+  const [LetterType, setLetterType] = useState([]);
 
   useEffect(() => {
-    if(Path!='ManPowerMasterList'){
+    GetFactory();
+    GetStatus();
+    if (Path == "ApproveRefferenceLetter") {
       GetDepartment();
     }
-    GetFactory();
-
-    GetStatus();
+    GetLetter();
     Title();
-    if (Path == "ManPowerRequest") {
-      settxt_ReqBy(userlogin);
-    }
   }, []);
 
   const Title = async () => {
     if (Path == "ApproveRefferenceLetter") {
       setTitlePage("Approve Refference Letter");
-    } else if (Path == "ApproveManPower") {
-      setTitlePage("Approve Man Power");
     } else if (Path == "HrActionRefferenceLetter") {
       setTitlePage("Refference Letter Request (HR Staff Action)");
     } else if (Path == "RefferenceLetterMasterList") {
@@ -68,47 +60,37 @@ function fn_SearchManPowerRequst() {
     }
   };
 
+  const GetLetter = async () => {
+    await axios
+      .post("/api/RefferenceLetter/GetLetterTypeSearch", {
+        User_login: userlogin || "",
+      })
+      .then((res) => {
+        console.log(res.data, "GetLetterTypeSearch");
+        setLetterType(res.data);
+      });
+  };
+
   const GetFactory = async () => {
-    console.log(userlogin, "userlogin");
-    if (Path == "ManPowerRequest") {
-      await axios
-        .post("/api/RequestManPower/GetFactoryIssue", {
-          User_login: userlogin || "",
-        })
-        .then((res) => {
-          console.log(res.data, "GetFactoryIssue");
-          setFactory(res.data);
-        });
-    } else if (Path == "ManPowerMasterList") {
-      await axios
-        .post("/api/RequestManPower/GetFactoryMasterlist", {})
-        .then((res) => {
-          console.log(res.data, "GetFactoryHrAction");
-          setFactory(res.data);
-        });
-    } else {
-      await axios
-        .post("/api/RequestManPower/GetFactory", {
-          User_login: userlogin || "",
-        })
-        .then((res) => {
-          console.log(res.data, "GetFactory");
-          setFactory(res.data);
-        });
-    }
+    await axios
+      .post("/api/RequestManPower/GetFactory", {
+        User_login: userlogin || "",
+      })
+      .then((res) => {
+        console.log(res.data, "GetFactory");
+        setFactory(res.data);
+      });
   };
 
   const GetStatus = async () => {
     await axios
-      .post("/api/RequestManPower/GetStatusSearch", {
+      .post("/api/RefferenceLetter/GetStatusSearch", {
         type:
-          Path == "ManPowerRequest"
-            ? ["C", "R"]
-            : Path == "ApproveManPower"
+          Path == "ApproveRefferenceLetter"
             ? ["A"]
-            : Path == "HrActionManPowerRequest"
+            : Path == "HrActionRefferenceLetter"
             ? ["H"]
-            : Path == "ManPowerMasterList"
+            : Path == "RefferenceLetterMasterList"
             ? ["C", "R", "H", "A", "D", "F"]
             : [],
       })
@@ -119,280 +101,151 @@ function fn_SearchManPowerRequst() {
   };
 
   const GetDepartment = async () => {
-    if (Path == "ManPowerRequest") {
-      await axios
-        .post("/api/RequestManPower/GetDepartmentIssue", {
-          User_login: userlogin || "",
-        })
-        .then((res) => {
-          console.log(res.data, "GetDepartmentIssue");
-          setDepartment(res.data);
-        });
-    } else {
-      await axios
-        .post("/api/RequestManPower/GetDepartment", {
-          User_login: userlogin || "",
-        })
-        .then((res) => {
-          console.log(res.data, "GetFactGetDepartmentory");
-          setDepartment(res.data);
-        });
-    }
-  };
-
-  const GetPosition = async (Fac) => {
     await axios
-      .post("/api/RequestManPower/GetPosition", {
-        DDLFactory: Fac || "",
+      .post("/api/RefferenceLetter/GetDepartmentApprove", {
+        User_login: userlogin || "",
       })
       .then((res) => {
-        console.log(res.data, "GetPosition");
-        setPosition(res.data);
-      });
-  };
-
-  const GetJobGrade = async (position) => {
-    await axios
-      .post("/api/RequestManPower/GetJobGrade", {
-        DDLFactory: SL_Factory || "",
-        DDLPosition:
-          `${position.map((position) => `'${position}'`).join(",")}` || "",
-      })
-      .then((res) => {
-        console.log(res.data, "GetJobGrade");
-        setJobGrade(res.data);
-      });
-  };
-
-  const handleFactory =async (value) => {
-    setSL_Factory(value);
-    GetPosition(value);
-    if(Path=='ManPowerMasterList'){
-      await axios
-      .post("/api/RequestManPower/GetDepartmentMasterList", {
-        Fac: value || "",
-      })
-      .then((res) => {
-        console.log(res.data, "GetDepartmentMasterList");
-        // setFactory(res.data);
+        console.log(res.data, "GetDepartmentApprove");
         setDepartment(res.data);
       });
-    }
   };
 
-  const handlePosition = (value) => {
-    setSL_Position(value);
-    GetJobGrade(value);
-    console.log("Selected factory:", value);
+  const handleFactory = async (value) => {
+    setSL_Factory(value);
+    if (Path != "ApproveRefferenceLetter") {
+      await axios
+        .post("/api/RefferenceLetter/GetDeptallFac", {
+          Fac: value || "",
+        })
+        .then((res) => {
+          console.log(res.data, "GetDeptallFac");
+          setDepartment(res.data);
+        });
+    }
   };
 
   const handleEdit = (record) => {
     console.log("Edit record:", record.ReqNo);
-    navigate(`/HrSystem/NewManPowerRequest?ReqNo=${record.ReqNo}`);
+    navigate(`/HrSystem/NewRefferenceLetter?ReqNo=${record.ReqNo}`);
   };
 
   const handleViewMasterList = (record) => {
-    console.log("Edit record:", record.ReqNo);
-    navigate(
-      `/HrSystem/ManPowerMasterList/ManPowerRequest?ReqNo=${record.ReqNo}`
-    );
-  };
-
-  const handleDelete = (record) => {
-    console.log("Delete record:", record);
-  };
-
-  const bt_New = async () => {
-    showLoading("");
-    window.location.href = "/HrSystem/NewManPowerRequest";
+    // console.log("Edit record:", record.ReqNo);
+    // navigate(
+    //   `/HrSystem/ManPowerMasterList/ManPowerRequest?ReqNo=${record.ReqNo}`
+    // );
   };
 
   const bt_Search = async () => {
     setDataSearch([]);
-    console.log("Searchhhh", Factory);
-    if (Path == "ApproveManPower") {
-      const factoryValues = Factory.map((item) => item.value);
-      console.log(factoryValues, "factoryValues");
-      console.log(
-        SL_Factory != null ? "ValueFac" : factoryValues,
-        "SL_Factory"
-      );
+    showLoading("กำลังค้นหา...");
+    if (Path == "ApproveRefferenceLetter") {
       await axios
-        .post("/api/RequestManPower/SearchManPowerApprove", {
-          UserApprove: userlogin || "",
-          Department:
+        .post("/api/RefferenceLetter/SearchLetter", {
+          dept:
             SL_Department != null && SL_Department.length > 0
               ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
               : null,
-          Factory: SL_Factory != null ? [SL_Factory] : factoryValues,
-          JobGrade:
-            SL_JobGrade != null && SL_JobGrade.length > 0
-              ? `array[${SL_JobGrade.map((dept) => `'${dept}'`).join(",")}]`
+          Fac: SL_Factory ? `'${SL_Factory}'` : null,
+          reqfrom: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
+          reqto: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
+          datefrom: txt_ReqNoTo ? `'${DateFrom}'` : null,
+          dateto: DateTo ? `'${DateTo}'` : null,
+          reqby: txt_ReqBy ? `'${txt_ReqBy}'` : null,
+          approveby: userlogin ? `'${userlogin}'` : null,
+          type:
+            SL_Letter != null && SL_Letter.length > 0
+              ? `array[${SL_Letter.map((Letter) => `'${Letter}'`).join(",")}]`
               : null,
-          Position:
-            SL_Position != null && SL_Position.length > 0
-              ? `array[${SL_Position.map((dept) => `'${dept}'`).join(",")}]`
+          status: ["LT0102"],
+        })
+        .then((res) => {
+          console.log("SearchApprove", res.data);
+          setDataSearch(res.data);
+        });
+    } else {
+      if (
+        SL_Factory == null &&
+        SL_Department == null &&
+        txt_ReqBy == "" &&
+        txt_ReqNoFrom == "" &&
+        txt_ReqNoTo == "" &&
+        SL_Letter == null &&
+        DateTo == null &&
+        DateFrom == null &&
+        SL_Status == null
+      ) {
+        Swal.fire({ icon: "warning", title: "Please fill in the information" });
+        hideLoading();
+        return;
+      }
+      console.log(DateTo, "ggggg");
+      await axios
+        .post("/api/RefferenceLetter/SearchLetter", {
+          dept:
+            SL_Department != null && SL_Department.length > 0
+              ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
               : null,
-          ReqNoFrom: txt_ReqNoFrom || "",
-          ReqNoTo: txt_ReqNoTo || "",
-          DateFrom: DateFrom || "",
-          DateTo: DateTo || "",
-          ReqBy: txt_ReqBy || "",
-          Status:
-            Path == "ManPowerRequest"
+          Fac: SL_Factory ? `'${SL_Factory}'` : null,
+          reqfrom: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
+          reqto: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
+          datefrom: DateFrom ? `'${DateFrom}'` : null,
+          dateto: DateTo ? `'${DateTo}'` : null,
+          reqby: txt_ReqBy ? `'${txt_ReqBy}'` : null,
+          approveby: null,
+          type:
+            SL_Letter != null && SL_Letter.length > 0
+              ? `array[${SL_Letter.map((Letter) => `'${Letter}'`).join(",")}]`
+              : null,
+          status:
+            Path == "HrActionRefferenceLetter"
               ? Array.isArray(SL_Status) && SL_Status.length > 0
                 ? SL_Status
-                : ["MR0101", "MR0129", "MR0139", "MR0149"]
-              : Path == "ApproveManPower"
-              ? Array.isArray(SL_Status) && SL_Status.length > 0
-                ? SL_Status
-                : ["MR0102", "MR0103", "MR0103"]
-              : Path == "HrActionManPowerRequest"
-              ? Array.isArray(SL_Status) && SL_Status.length > 0
-                ? SL_Status
-                : ["MR0105", "MR0106"]
-              : Path == "ManPowerMasterList"
+                : ["LT0103", "LT0104"]
+              : Path == "RefferenceLetterMasterList"
               ? Array.isArray(SL_Status) && SL_Status.length > 0
                 ? SL_Status
                 : [
-                    "MR0101",
-                    "MR0102",
-                    "MR0103",
-                    "MR0104",
-                    "MR0105",
-                    "MR0129",
-                    "MR0139",
-                    "MR0149",
-                    "MR0106",
-                    "MR0107",
-                    "MR0190",
-                    "MR0108",
+                    "LT0101",
+                    "LT0102",
+                    "LT0103",
+                    "LT0104",
+                    "LT0107",
+                    "LT0109",
+                    "LT0190",
+                    "LT0108",
                   ]
               : [],
         })
         .then((res) => {
-          if (res.data.length == 0) {
-            Swal.fire({ icon: "warning", title: "Not Found Data!" });
-          } else {
-            console.log(res.data, "SearchManPower");
-            setDataSearch(res.data);
-          }
+          console.log("SearchApprove", res.data);
+          setDataSearch(res.data);
         });
-    } else {
-      if (
-        DateFrom == "" &&
-        DateTo == "" &&
-        SL_Department == null &&
-        SL_Factory == null &&
-        SL_JobGrade == null &&
-        SL_Position == null &&
-        txt_ReqNoFrom == "" &&
-        txt_ReqNoTo == "" &&
-        SL_Status == null
-      ) {
-        Swal.fire({ icon: "warning", title: "Please fill in the information" });
-      } else {
-        showLoading("กำลังค้นหาข้อมูล...");
-
-        await axios
-          .post("/api/RequestManPower/SearchManPower", {
-            Department:
-              SL_Department != null && SL_Department.length > 0
-                ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
-                : null,
-            Factory: SL_Factory || null,
-            JobGrade:
-              SL_JobGrade != null && SL_JobGrade.length > 0
-                ? `array[${SL_JobGrade.map((dept) => `'${dept}'`).join(",")}]`
-                : null,
-            Position:
-              SL_Position != null && SL_Position.length > 0
-                ? `array[${SL_Position.map((dept) => `'${dept}'`).join(",")}]`
-                : null,
-            ReqNoFrom: txt_ReqNoFrom || "",
-            ReqNoTo: txt_ReqNoTo || "",
-            DateFrom: DateFrom || "",
-            DateTo: DateTo || "",
-            ReqBy: txt_ReqBy || "",
-            Status:
-              Path == "ManPowerRequest"
-                ? Array.isArray(SL_Status) && SL_Status.length > 0
-                  ? SL_Status
-                  : ["MR0101", "MR0129", "MR0139", "MR0149"]
-                : Path == "ApproveManPower"
-                ? Array.isArray(SL_Status) && SL_Status.length > 0
-                  ? SL_Status
-                  : ["MR0102", "MR0103", "MR0103"]
-                : Path == "HrActionManPowerRequest"
-                ? Array.isArray(SL_Status) && SL_Status.length > 0
-                  ? SL_Status
-                  : ["MR0105", "MR0106"]
-                : Path == "ManPowerMasterList"
-                ? Array.isArray(SL_Status) && SL_Status.length > 0
-                  ? SL_Status
-                  : [
-                      "MR0101",
-                      "MR0102",
-                      "MR0103",
-                      "MR0104",
-                      "MR0105",
-                      "MR0129",
-                      "MR0139",
-                      "MR0149",
-                      "MR0106",
-                      "MR0107",
-                      "MR0190",
-                      "MR0108",
-                    ]
-                : [],
-          })
-          .then((res) => {
-            if (res.data.length == 0) {
-              Swal.fire({ icon: "warning", title: "Not Found Data!" });
-            } else {
-              console.log(res.data, "SearchManPower");
-              setDataSearch(res.data);
-            }
-          });
-      }
     }
     hideLoading();
   };
-  
-  const bt_Reset =  () => {
+
+  const bt_Reset = () => {
+    console.log("reset");
     setSL_Factory(null);
-    setSL_Department(null);
-    setSL_Position(null);
-    setSL_JobGrade(null);
     setSL_Status(null);
     settxt_ReqNoFrom("");
     settxt_ReqNoTo("");
-    setDateFrom("");
-    setDateTo("");
-    if( Path != "ManPowerRequest") {
-      settxt_ReqBy('');
-    }
+    setDateFrom(null);
+    setDateTo(null);
     setDataSearch([]);
-
-  }
+    setSL_Letter(null);
+    settxt_ReqBy("");
+    setSL_Department(null);
+  };
 
   const columns = [
     {
       key: "actions",
-      width: "91px",
+      width: "60px",
       render: (_, record) => (
         <div>
-          {/* <Button
-            onClick={() => handleEdit(record)}
-            style={{ marginRight: 10, fontSize: "18px" }}
-            icon={<EditOutlined style={{ color: "#EF9651" }} />}
-          />
-          <Button
-            onClick={() => handleDelete(record)}
-            style={{ fontSize: "18px" }}
-            icon={<CloseOutlined style={{ color: "red" }} />}
-          /> */}
-          {console.log(record, "record")}
           <img
             src={ImgApprove}
             onClick={() => handleEdit(record)}
@@ -402,37 +255,12 @@ function fn_SearchManPowerRequst() {
               height: "30px",
               cursor: "pointer",
               display:
-                Path == "ApproveManPower" || Path == "HrActionManPowerRequest"
+                Path == "ApproveRefferenceLetter" ||
+                Path == "HrActionRefferenceLetter"
                   ? ""
                   : "none",
             }}
           />
-          <img
-            src={ImgEdit}
-            onClick={() => handleEdit(record)}
-            alt="Edit"
-            style={{
-              width: "30px",
-              height: "30px",
-              cursor: "pointer",
-              display: Path == "ManPowerRequest" ? "" : "none",
-            }}
-          />
-          <img
-            src={ImgDelete}
-            onClick={() => handleDelete(record)}
-            alt="Delete"
-            style={{
-              width: "30px",
-              height: "30px",
-              cursor: "pointer",
-              display:
-                Path == "ManPowerRequest" && record.Status == "Create"
-                  ? ""
-                  : "none",
-            }}
-          />
-
           <img
             src={ImgViewFile}
             onClick={() => handleViewMasterList(record)}
@@ -441,7 +269,7 @@ function fn_SearchManPowerRequst() {
               width: "30px",
               height: "30px",
               cursor: "pointer",
-              display: Path == "ManPowerMasterList" ? "" : "none",
+              display: Path == "RefferenceLetterMasterList" ? "" : "none",
             }}
           />
         </div>
@@ -457,109 +285,96 @@ function fn_SearchManPowerRequst() {
     {
       title: "Dept.",
       width: "20px",
-      dataIndex: "Department",
+      dataIndex: "Dept",
       key: "Department",
     },
     {
       title: "Req No.",
-      width: "160px",
+      width: "130px",
       dataIndex: "ReqNo",
       key: "ReqNo",
     },
     {
-      title: "Position",
-      width: "160px",
-      dataIndex: "Position",
-      key: "Position",
-    },
-    {
-      title: "Job  Grade",
-      dataIndex: "Job_Grade",
-      width: "20px",
-      key: "Job_Grade",
+      title: "Letter Type",
+      width: "100px",
+      dataIndex: "LetterType",
+      key: "Letter Type",
+      // align:'right',
       render: (text, record, index) => {
-        return <div className="scrollable-column">{text}</div>;
+        return <div className="scrollable-columnLetter">{text}</div>;
       },
-      align: "center",
-      width: 150,
     },
     {
       title: "Request By",
-      dataIndex: "CreateBy",
-      key: "CreateBy",
-    },
-    {
-      title: "Request Date",
-      dataIndex: "CreateDate",
-      key: "CreateDate",
+      dataIndex: "ReqBy",
+      width: "100px",
+      key: "Request By",
+      align: "center",
+      render: (text, record, index) => {
+        return <div className="scrollable-columnLetter">{text}</div>;
+      },
     },
     {
       title: "Status",
-      width: "180px",
       dataIndex: "Status",
       key: "Status",
-      align: "center",
-      render: (text, record, index) => {
-        if (
-          record.Status_value == "MR0101" ||
-          record.Status_value == "MR0106"
-        ) {
-          return <Tag color="processing">{text}</Tag>;
-        } else if (
-          record.Status_value == "MR0102" ||
-          record.Status_value == "MR0103" ||
-          record.Status_value == "MR0104" ||
-          record.Status_value == "MR0105"
-        ) {
-          return <Tag color="warning">{text}</Tag>;
-        } else if (
-          record.Status_value == "MR0129" ||
-          record.Status_value == "MR0139" ||
-          record.Status_value == "MR0149" ||
-          record.Status_value == "MR0190"
-        ) {
-          return <Tag color="error">{text}</Tag>;
-        } else if (
-          record.Status_value == "MR0107" ||
-          record.Status_value == "MR0108" ||
-          record.Status_value == "LT0108"
-        ) {
-          return <Tag color="success">{text}</Tag>;
-        }
-      },
     },
     {
       title: "Last Action By",
       dataIndex: "LastBy",
-      key: "LastBy",
+      key: "Last Action By",
     },
+    // {
+    //   title: "Status",
+    //   width: "180px",
+    //   dataIndex: "Status",
+    //   key: "Status",
+    //   align: "center",
+    //   render: (text, record, index) => {
+    //     if (
+    //       record.Status_value == "MR0101" ||
+    //       record.Status_value == "MR0106"
+    //     ) {
+    //       return <Tag color="processing">{text}</Tag>;
+    //     } else if (
+    //       record.Status_value == "MR0102" ||
+    //       record.Status_value == "MR0103" ||
+    //       record.Status_value == "MR0104" ||
+    //       record.Status_value == "MR0105"
+    //     ) {
+    //       return <Tag color="warning">{text}</Tag>;
+    //     } else if (
+    //       record.Status_value == "MR0129" ||
+    //       record.Status_value == "MR0139" ||
+    //       record.Status_value == "MR0149" ||
+    //       record.Status_value == "MR0190"
+    //     ) {
+    //       return <Tag color="error">{text}</Tag>;
+    //     } else if (
+    //       record.Status_value == "MR0107" ||
+    //       record.Status_value == "MR0108" ||
+    //       record.Status_value == "LT0108"
+    //     ) {
+    //       return <Tag color="success">{text}</Tag>;
+    //     }
+    //   },
+    // },
+
     {
       title: "Last Action Date",
-      dataIndex: "Lastdate",
-      key: "Lastdate",
+      dataIndex: "LastDate",
+      key: "Last Action Date",
     },
   ];
 
   return {
     columns,
     Factory,
-    bt_New,
     Department,
-    Position,
-    JobGrade,
     SL_Factory,
     SL_Department,
-    SL_Position,
-    SL_JobGrade,
-    setSL_Factory,
     setSL_Department,
-    setSL_Position,
-    setSL_JobGrade,
-    GetPosition,
-    GetJobGrade,
     handleFactory,
-    handlePosition,
-    datauser,
     DateFrom,
     DateTo,
     txt_ReqNoFrom,
@@ -568,7 +383,6 @@ function fn_SearchManPowerRequst() {
     setDateTo,
     settxt_ReqNoFrom,
     settxt_ReqNoTo,
-    GetFactory,
     bt_Search,
     dataSearch,
     SL_Status,
@@ -578,7 +392,10 @@ function fn_SearchManPowerRequst() {
     txt_ReqBy,
     Path,
     TitlePage,
-    bt_Reset
+    bt_Reset,
+    LetterType,
+    setSL_Letter,
+    SL_Letter,
   };
 }
 

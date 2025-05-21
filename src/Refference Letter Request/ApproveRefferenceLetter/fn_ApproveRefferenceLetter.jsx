@@ -204,7 +204,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
     }
     if (formData1.txt_ReqStatusValue == "LT0102") {
       console.log("เข้านี้่2222");
-      handleChange("Rd_SupervisorApprove", "");
+      handleChange("Rd_SupervisorApprove", null);
       handleChange("txt_SupervisorCooment", "");
     }
 

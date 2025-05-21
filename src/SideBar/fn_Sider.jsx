@@ -143,6 +143,14 @@ function fn_Sider() {
     } else if (selectedMenu.MENU_NAME === "Refference Letter Request") {
       window.location.href = "/HrSystem/NewRefferenceLetter";
     }
+    else if (selectedMenu.MENU_NAME === "Approve Refference Letter") {
+      window.location.href = "/HrSystem/ApproveRefferenceLetter";
+    }
+    else if (selectedMenu.MENU_NAME === "Refference Letter Request (HR Staff Action)") {
+      window.location.href = "/HrSystem/HrActionRefferenceLetter";
+    } else if (selectedMenu.MENU_NAME === "Refference Letter Master List") {
+      window.location.href = "/HrSystem/RefferenceLetterMasterList";
+    }
   };
 
   const handleMouseLeave = () => {

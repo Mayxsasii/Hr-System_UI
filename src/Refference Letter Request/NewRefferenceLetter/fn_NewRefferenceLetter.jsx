@@ -5,6 +5,7 @@ import { useLoading } from "../../loading/fn_loading";
 
 function fn_NewRefferenceLetter(formData1, setFormData1, Disable, setDisable) {
   const { showLoading, hideLoading } = useLoading();
+
   const GetDataPerson = async (ID_Code) => {
     showLoading('')
     await axios
@@ -48,7 +49,6 @@ function fn_NewRefferenceLetter(formData1, setFormData1, Disable, setDisable) {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
 
-  
   const GenReqNo = async () => {
     if (formData1.txt_ReqbyID == "") {
       Swal.fire({

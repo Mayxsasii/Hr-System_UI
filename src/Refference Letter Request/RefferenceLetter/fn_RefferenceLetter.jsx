@@ -103,8 +103,13 @@ function fn_RefferenceLetter() {
     }
   };
   const fomatdate =  (date) => {
-    const [day, month, year] =date.split("/");
-    const formattedDate = `${year}-${month}-${day}`;
+    console.log(date,'datedate')
+    let  formattedDate
+    if(date){
+      const [day, month, year] =date.split("/");
+      formattedDate = `${year}-${month}-${day}`;
+    }
+
     return formattedDate
   }
   const GetdataEdit = async () => {

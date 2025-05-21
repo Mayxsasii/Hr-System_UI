@@ -96,3 +96,10 @@
   .SearchLetter td {
     padding-top: 7px;
   }
+
+  .scrollable-columnLetter {
+    max-width: 300px;
+    overflow-x: auto;
+    white-space: nowrap;
+    text-align: left;
+  }
