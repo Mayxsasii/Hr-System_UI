@@ -7,6 +7,7 @@ import Sider from './SideBar/Sider';
 import Header from './Header/Header'; 
 import NewManPowerRequest from './Man Power Request/ManPowerRequest';
 import RefferenceLetter from './Refference Letter Request/RefferenceLetter/RefferenceLetter';
+import SearchRefferenceLetter from './Refference Letter Request/SearchRefferenceLetter/SearchManPowerRequst';
 import ManPowerRequest from './Man Power Request/Search Man Power Request/SearchManPowerRequst';
 import Login from './Login/Login';
 import Home from './Homepage/homepage';
@@ -56,7 +57,7 @@ const App = () => {
             {/* <Route path="/HrSystem/ApproveManPower" element={<ManPowerRequest />} /> */}
             {/* <Route path="/HrSystem/HrActionManPowerRequest" element={<ManPowerRequest />} /> */}
             {/* <Route path="/HrSystem/ManPowerMasterList" element={<ManPowerRequest />} /> */}
-            {/* <Route path="/HrSystem/ManPowerMasterList/ManPowerRequest" element={<ReqManPowerList />} /> */}
+            <Route path="/HrSystem/NewRefferenceLetter" element={<RefferenceLetter />} />
             {/* -------------------------------------------login----------------------------------------- */}
             <Route path="/HrSystem/ManPowerMasterList/ManPowerRequest"
               element={<ProtectedRoute  element={<ReqManPowerList/>}/>}/>
@@ -72,8 +73,12 @@ const App = () => {
               element={<ProtectedRoute  element={<NewManPowerRequest/>}/>}/>
             <Route path="/HrSystem/Home"
               element={<ProtectedRoute  element={<Home/>}/>}/>
-            <Route path="/HrSystem/NewRefferenceLetter"
-              element={<ProtectedRoute  element={<RefferenceLetter/>}/>}/>
+            <Route path="/HrSystem/ApproveRefferenceLetter"
+              element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/>
+              <Route path="/HrSystem/HrActionRefferenceLetter"
+              element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/>
+              <Route path="/HrSystem/RefferenceLetterMasterList"
+              element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/>
           </Routes>
         </AppLayout>
       </Router>

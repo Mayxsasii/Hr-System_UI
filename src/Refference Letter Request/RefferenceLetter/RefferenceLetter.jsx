@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Steps, Card } from "antd";
 import { fn_RefferenceLetter } from "./fn_RefferenceLetter";
-
 const App = () => {
   const {
     current,
@@ -22,7 +21,7 @@ const App = () => {
     <div style={{ padding: "20px", backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
       <Card
         style={{
-          maxWidth: "1300px",
+          // maxWidth: "1300px",
           margin: "0 auto",
           // padding: "20px",
           borderRadius: "10px",

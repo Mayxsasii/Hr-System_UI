@@ -5,13 +5,13 @@ import {
   HomeOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
-import { useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Menu } from "antd";
 const { SubMenu } = Menu;
 
 function fn_Sider() {
-  const location = useLocation(); 
- 
+  const location = useLocation();
+
   const [collapsed, setCollapsed] = useState(true);
   const [menuData, setMenuData] = useState([]);
   const [selectedKey, setSelectedKey] = useState("2604");
@@ -23,15 +23,13 @@ function fn_Sider() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-
-
   }, []);
   useEffect(() => {
     const currentPath = location.pathname;
-    console.log(currentPath, "currentPath",menuData);
+    console.log(currentPath, "currentPath", menuData);
     const matchedMenu = menuData.find((item) => item.MENU_URL === currentPath);
     if (matchedMenu) {
-      console.log(matchedMenu.MENU_URL, "matchedMenu",matchedMenu.MENU_ID);
+      console.log(matchedMenu.MENU_URL, "matchedMenu", matchedMenu.MENU_ID);
       setSelectedKey(matchedMenu.MENU_ID);
     }
   }, [location.pathname, menuData]);
@@ -42,11 +40,13 @@ function fn_Sider() {
 
   const GetMenu = async () => {
     console.log(ROLL, "roll");
-    await axios.post("/api/common/GetMenu", {
-      Roll: ROLL,
-    }).then((res) => {
-      setMenuData(res.data);
-    });
+    await axios
+      .post("/api/common/GetMenu", {
+        Roll: ROLL || "",
+      })
+      .then((res) => {
+        setMenuData(res.data);
+      });
   };
 
   const GetIconMenu = (item) => {
@@ -83,42 +83,45 @@ function fn_Sider() {
   };
 
   const renderMenu = (menuItems, parentId = null) => {
-      return menuItems
-        .filter((item) => item.MENU_PARENT_ID === parentId)
-        .map((item) => {
-          const children = menuItems.filter(
-            (child) => child.MENU_PARENT_ID === item.MENU_ID
-          );
-          const styles =
-            collapsed == false
-              ? {
-                  whiteSpace: "normal",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  wordBreak: "break-word",
-                  lineHeight: "1.5",
-                  color: "#FFFFFF"
-                }
-              : { color: "#FFFFFF" };
-          const icon = <span style={{ color: "#FFFFFF" }}>{GetIconMenu(item)}</span>; // กำหนดสีไอคอนเป็นสีขาว
-          if (children.length > 0) {
-            return (
-              <SubMenu
-                key={item.MENU_ID}
-                icon={icon}
-                title={<span style={styles}>{item.MENU_NAME}</span>} // ฟอนต์สีขาวใน SubMenu
-              >
-                {renderMenu(menuItems, item.MENU_ID)}
-              </SubMenu>
-            );
-          }
+    return menuItems
+      .filter((item) => item.MENU_PARENT_ID === parentId)
+      .map((item) => {
+        const children = menuItems.filter(
+          (child) => child.MENU_PARENT_ID === item.MENU_ID
+        );
+        const styles =
+          collapsed == false
+            ? {
+                whiteSpace: "normal",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                wordBreak: "break-word",
+                lineHeight: "1.5",
+                color: "#FFFFFF",
+              }
+            : { color: "#FFFFFF" };
+        const icon = (
+          <span style={{ color: "#FFFFFF" }}>{GetIconMenu(item)}</span>
+        ); // กำหนดสีไอคอนเป็นสีขาว
+        if (children.length > 0) {
           return (
-            <Menu.Item key={item.MENU_ID} icon={icon} style={styles}>
-              <span style={{ color: "#FFFFFF" }}>{item.MENU_NAME}</span> {/* ฟอนต์สีขาว */}
-            </Menu.Item>
+            <SubMenu
+              key={item.MENU_ID}
+              icon={icon}
+              title={<span style={styles}>{item.MENU_NAME}</span>} // ฟอนต์สีขาวใน SubMenu
+            >
+              {renderMenu(menuItems, item.MENU_ID)}
+            </SubMenu>
           );
-        });
-    };
+        }
+        return (
+          <Menu.Item key={item.MENU_ID} icon={icon} style={styles}>
+            <span style={{ color: "#FFFFFF" }}>{item.MENU_NAME}</span>{" "}
+            {/* ฟอนต์สีขาว */}
+          </Menu.Item>
+        );
+      });
+  };
 
   const handleMenuClick = (e) => {
     console.log(e.key, "e.key1111");
@@ -127,25 +130,21 @@ function fn_Sider() {
     console.log(e.key, selectedMenu.MENU_NAME, "e.key and menu name");
     if (selectedMenu.MENU_NAME === "Man Power Request") {
       window.location.href = "/HrSystem/ManPowerRequest";
-      // navigate(`/HrSystem/ManPowerRequest`);
-    }
-    else if (selectedMenu.MENU_NAME === "Approve Man Power"){
+    } else if (selectedMenu.MENU_NAME === "Approve Man Power") {
       window.location.href = "/HrSystem/ApproveManPower";
-      // navigate(`/HrSystem/ApproveManPower`);
-    }
-    else if (selectedMenu.MENU_NAME === "Man Power Request (HR Staff Action)"){
+    } else if (
+      selectedMenu.MENU_NAME === "Man Power Request (HR Staff Action)"
+    ) {
       window.location.href = "/HrSystem/HrActionManPowerRequest";
-      // navigate(`/HrSystem/HrActionManPowerRequest`);
-    }
-    else if(selectedMenu.MENU_NAME === "Man Power Master List"){
+    } else if (selectedMenu.MENU_NAME === "Man Power Master List") {
       window.location.href = "/HrSystem/ManPowerMasterList";
-      // navigate(`/HrSystem/HrActionManPowerRequest`);
-    }else if(selectedMenu.MENU_NAME === "Home"){
+    } else if (selectedMenu.MENU_NAME === "Home") {
       window.location.href = "/HrSystem/Home";
-      // navigate(`/HrSystem/Home`);
+    } else if (selectedMenu.MENU_NAME === "Refference Letter Request") {
+      window.location.href = "/HrSystem/NewRefferenceLetter";
     }
   };
-  
+
   const handleMouseLeave = () => {
     setCollapsed(true);
   };
@@ -156,7 +155,16 @@ function fn_Sider() {
     }
   };
 
-  return { menuData,handleMenuClick,siderRef,collapsed,selectedKey ,renderMenu ,Menu ,setCollapsed,    };
+  return {
+    menuData,
+    handleMenuClick,
+    siderRef,
+    collapsed,
+    selectedKey,
+    renderMenu,
+    Menu,
+    setCollapsed,
+  };
 }
 
 export { fn_Sider };

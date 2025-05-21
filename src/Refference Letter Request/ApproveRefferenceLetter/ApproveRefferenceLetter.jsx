@@ -1,24 +1,10 @@
 import React from "react";
-import { Checkbox } from "antd";
-import {
-  FileDoneOutlined 
-} from "@ant-design/icons";
-const Step2 = ({ formData1, setFormData1, Disable }) => {
-
-  const handleGroupChange = (checkedValues) => {
-    const updatedFormData = options.reduce((acc, option) => {
-      acc[option.value] = checkedValues.includes(option.value);
-      return acc;
-    }, {});
-    setFormData1({ ...formData1, ...updatedFormData });
-  };
-  const options = [
-    { label: "Checkbox 1", value: "checkbox1" },
-    { label: "Checkbox 2", value: "checkbox2" },
-    { label: "Checkbox 3", value: "checkbox3" },
-    { label: "Checkbox 4", value: "checkbox4" },
-    { label: "Checkbox 5", value: "checkbox5" },
-  ];
+import { Checkbox, Input, Button, Select, Radio } from "antd";
+const { TextArea } = Input;
+import { fn_ApproveRefferenceLetter } from "../ApproveRefferenceLetter/fn_ApproveRefferenceLetter";
+const Step2 = ({ formData1, setFormData1 }) => {
+  const { handleChange, options, Supervisor, SendApprove, Bt_Submit,Bt_Reset } =
+    fn_ApproveRefferenceLetter(formData1, setFormData1);
 
   return (
     <div>
@@ -29,34 +15,253 @@ const Step2 = ({ formData1, setFormData1, Disable }) => {
           fontWeight: "bold",
         }}
       >
-        Letter Type/For Approve
-        {/* {formData1.txt_ReqNo ? (
+        Letter Type/For Approve{" "}
+        {formData1.txt_ReqNo ? (
           <>
-            {">>"} {formData1.txt_ReqNo}
+            {" >>"} {formData1.txt_ReqNo}
           </>
         ) : (
           ""
-        )} */}
+        )}
       </p>
-      <fieldset style={{ border: "1px solid #ccc", padding: "16px", borderRadius: "8px" }}>
-  <legend style={{ fontSize: "16px", fontWeight: "bold", color: "#4CAF50" }}>
-    Letter Options
-  </legend>
-  <Checkbox.Group
-    style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-    value={Object.keys(formData1).filter((key) => formData1[key])}
-    onChange={handleGroupChange}
-    disabled={Disable}
-  >
-    {options.map((option) => (
-      <Checkbox key={option.value} value={option.value}>
-        {option.label}
-      </Checkbox>
-    ))}
-  </Checkbox.Group>
-</fieldset>
-      
-    
+      <fieldset
+        style={{
+          border: "1px solid #ccc",
+          padding: "16px",
+          borderRadius: "8px",
+        }}
+      >
+        <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
+          Letter Type
+        </legend>
+        <Checkbox.Group
+          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+          value={formData1.CB_letterType || []}
+          disabled={formData1.txt_ReqStatusValue != "LT0101"}
+          onChange={(checkedValues) => {
+            console.log("CB", checkedValues);
+            handleChange("CB_letterType", checkedValues);
+          }}
+        >
+          {options.map((option) => (
+            <div
+              key={option.value}
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <Checkbox value={option.value}>{option.label}</Checkbox>
+              {formData1.CB_letterType?.includes(option.value) && (
+                <>
+                  {option.value === "LT0203" && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      <label style={{ marginRight: "10px" }}>
+                        วันที่ลาออกจากบริษัท:
+                      </label>
+                      <Input
+                        type="date"
+                        disabled={formData1.txt_ReqStatusValue != "LT0101"}
+                        style={{ width: "300px" }}
+                        placeholder="กรุณาเลือกวันที่"
+                        value={formData1.Date__Resignation}
+                        onChange={(e) =>
+                          handleChange("Date__Resignation", e.target.value)
+                        }
+                      />
+                    </div>
+                  )}
+                  {option.value === "LT0205" && (
+                    <Input
+                      type="text"
+                      disabled={formData1.txt_ReqStatusValue != "LT0101"}
+                      style={{ marginLeft: "10px", width: "500px" }}
+                      placeholder="กรุณากรอกชื่อเอกสารที่ต้องการ"
+                      value={formData1.txt_LetterOther}
+                      onChange={(e) =>
+                        handleChange("txt_LetterOther", e.target.value)
+                      }
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          ))}
+        </Checkbox.Group>
+        <br />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <label style={{ marginRight: "10px" }}>หมายเหตุ/Remark:</label>
+          <TextArea
+            disabled={formData1.txt_ReqStatusValue != "LT0101"}
+            value={formData1.txt_Remark}
+            onChange={(e) => handleChange("txt_Remark", e.target.value)}
+            style={{ height: "50px" }}
+            maxLength={2000}
+          />
+        </div>
+      </fieldset>
+      <br />
+      <fieldset
+        style={{
+          border: "1px solid #ccc",
+          padding: "16px",
+          borderRadius: "8px",
+        }}
+      >
+        <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
+          For Approve
+        </legend>
+        <table style={{ width: "100%" }}>
+          <tr>
+            <td style={{ textAlign: "right", width: "100px" }}>
+              Supervisor Up :
+            </td>
+            <td style={{ width: "300px" }}>
+              <Select
+                disabled={formData1.txt_ReqStatusValue != "LT0101"}
+                showSearch
+                value={formData1.Sl_Supervisor}
+                style={{ width: "300px" }}
+                placeholder="Select Department Manager"
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={Supervisor}
+                onChange={(value) => {
+                  handleChange("Sl_Supervisor", value);
+                }}
+              />
+            </td>
+            <td style={{ textAlign: "center" }}>
+              {" "}
+              <Radio.Group
+                disabled={formData1.txt_ReqStatusValue != "LT0102"}
+                style={{
+                  display:
+                    formData1.txt_ReqStatusValue === "LT0101" ? "none" : "",
+                }}
+                name="radiogroup"
+                value={formData1.Rd_SupervisorApprove}
+                onChange={(e) => {
+                  handleChange("Rd_SupervisorApprove", e.target.value);
+                }}
+                options={[
+                  {
+                    value: "A",
+                    label: "Approve",
+                  },
+                  {
+                    value: "R",
+                    label: "Reject",
+                  },
+                ]}
+              />
+            </td>
+            <td style={{ width: "90px", textAlign: "right" }}>
+              <div>
+                <label
+                  style={{
+                    display:
+                      formData1.txt_ReqStatusValue === "LT0101" ? "none" : "",
+                  }}
+                >
+                  Action Date:
+                </label>
+              </div>
+            </td>
+            <td style={{ width: "300px" }}>
+              <Input
+                style={{
+                  display:
+                    formData1.txt_ReqStatusValue === "LT0101" ? "none" : "",
+                }}
+                disabled
+                value={formData1.Date_SupervisorActionDate}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ textAlign: "right" }}>
+              <div>
+                {" "}
+                <label
+                  style={{
+                    display:
+                      formData1.txt_ReqStatusValue === "LT0101" ? "none" : "",
+                  }}
+                >
+                  Comment :
+                </label>
+              </div>
+            </td>
+            <td colSpan={4}>
+              <Input
+                disabled={formData1.txt_ReqStatusValue != "LT0102"}
+                style={{
+                  display:
+                    formData1.txt_ReqStatusValue === "LT0101" ? "none" : "",
+                }}
+                value={formData1.txt_SupervisorCooment}
+                onChange={(e) => {
+                  handleChange("txt_SupervisorCooment", e.target.value);
+                }}
+              />
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+      <div
+        style={{
+          textAlign: "center",
+          marginTop: "15px",
+        }}
+      >
+        {" "}
+        {console.log(formData1, "formmmm")}
+        <Button
+          type="primary"
+          style={{
+            display: formData1.txt_ReqStatusValue === "LT0102" ? "" : "none",
+          }}
+          onClick={() => Bt_Submit()}
+        >
+          Submit
+        </Button>{" "}
+        <Button
+          type="primary"
+          onClick={() => SendApprove()}
+          style={{
+            display: formData1.txt_ReqStatusValue === "LT0101" ? "" : "none",
+          }}
+        >
+          Send Approve
+        </Button>{" "}
+        <Button
+          type="primary"
+          onClick={() => Bt_Reset()}
+          style={{
+            display:
+              formData1.txt_ReqStatusValue === "LT0101" ||
+              formData1.txt_ReqStatusValue === "LT0102"
+                ? ""
+                : "none",
+          }}
+        >
+          Reset
+        </Button>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { Input, Button, DatePicker, Card, Row, Col } from "antd";
 import "../RefferenceLetter.css";
+import { fn_NewRefferenceLetter } from "../NewRefferenceLetter/fn_NewRefferenceLetter";
 const Step1 = ({
   formData1,
   setFormData1,
@@ -8,40 +9,35 @@ const Step1 = ({
   setDisable,
   setCurrent,
 }) => {
+  const { GetDataPerson, GenReqNo } = fn_NewRefferenceLetter(
+    formData1,
+    setFormData1,
+    Disable,
+    setDisable,
+    setCurrent
+  );
+
   const handleChange = (field, value) => {
     setFormData1({ ...formData1, [field]: value });
   };
 
   return (
     <div>
-      {/* <label
-        style={
-          {
-            // textAlign: "center",
-            // marginBottom: "30px",
-            // fontSize: "24px",
-            // fontWeight: "bold",
-            // color: "#1890ff",
-          }
-        }
-      >
-        New Refference Letter Request
-      </label> */}
-        <p
+      <p
         style={{
           fontSize: "18px",
           margin: "0 10px 10px 0",
           fontWeight: "bold",
         }}
       >
-         New Refference Letter Request
-        {/* {formData1.txt_ReqNo ? (
+        New Refference Letter Request
+        {formData1.txt_ReqNo ? (
           <>
-            {">>"} {formData1.txt_ReqNo}
+            {" >>"} {formData1.txt_ReqNo}
           </>
         ) : (
           ""
-        )} */}
+        )}
       </p>
       {/* <div style={{ display: "flex", alignItems: "center", gap: "10px" }}> */}
       <table className="reference-table">
@@ -54,6 +50,7 @@ const Step1 = ({
             {" "}
             <Input
               value={formData1.txt_ReqNo}
+              disabled
               onChange={(e) => handleChange("txt_ReqNo", e.target.value)}
             />
           </td>
@@ -61,20 +58,23 @@ const Step1 = ({
             <label>Request Date:</label>
           </td>
           <td>
-          <Input
-              value={formData1.txt_ReqNo}
-              onChange={(e) => handleChange("txt_ReqNo", e.target.value)}
+            <Input
+              value={formData1.txt_ReqDate }
+              disabled
+              // value={formData1.txt_ReqNo}
+              // onChange={(e) => handleChange("txt_ReqDate", e.target.value)}
             />
-           
           </td>
           <td align="right">
             <label>Request Status:</label>
           </td>
           <td colSpan={3}>
             <Input
-              value={formData1.txt_ReqStatusValue}
+              value={formData1.txt_ReqStatusDesc}
+              // style={{ width: "300px" }}
+              disabled
               onChange={(e) =>
-                handleChange("txt_ReqStatusValue", e.target.value)
+                handleChange("txt_ReqStatusDesc", e.target.value)
               }
             />
           </td>
@@ -85,59 +85,72 @@ const Step1 = ({
           </td>
           <td>
             <Input
-              value={formData1.txt_Reqby}
-              onChange={(e) => handleChange("txt_Reqby", e.target.value)}
+              value={formData1.txt_ReqbyID}
+              disabled={formData1.txt_ReqStatusValue!='LT0101'}
+              placeholder="กรุณากรอก ID Code"
+              onChange={(e) => handleChange("txt_ReqbyID", e.target.value)}
+              onBlur={(e) => GetDataPerson(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.target.blur();
+                  GetDataPerson(formData1.txt_ReqbyID);
+                }
+              }}
             />
           </td>
           <td colSpan={2}>
             <Input
               value={formData1.txt_ReqbyName}
-              onChange={(e) => handleChange("txt_ReqbyName", e.target.value)}
-              disabled={Disable}
+              // onChange={(e) => handleChange("txt_ReqbyName", e.target.value)}
+              // disabled={Disable}
+              disabled
             />
           </td>
           <td align="right">
             <label>Factory :</label>
           </td>
-            <td>
+          <td>
             <Input
               value={formData1.txt_Factory}
               style={{ width: "80px" }}
-              onChange={(e) => handleChange("txt_Factory", e.target.value)}
+              // onChange={(e) => handleChange("txt_Factory", e.target.value)}
+              disabled
             />
-            </td>
-            <td align="right">
-            <label >Department:</label>
-            </td>
-            <td>
+          </td>
+          <td align="right">
+            <label>Department:</label>
+          </td>
+          <td>
             <Input
-              value={formData1.txt_Dept}
+              value={formData1.txt_Department}
               style={{ width: "80px" }}
-              onChange={(e) => handleChange("txt_Dept", e.target.value)}
+              disabled
+              // onChange={(e) => handleChange("txt_Dept", e.target.value)}
             />
           </td>
         </tr>
         <tr>
-          <td align="right"> 
-           
+          <td align="right">
             <label>Employee type :</label>
           </td>
-          <td>
+          <td colSpan={3}>
             {" "}
             <Input
-              value={formData1.txt_ReqNo}
-              onChange={(e) => handleChange("txt_ReqNo", e.target.value)}
-              disabled={Disable}
+              value={formData1.txt_EmpType}
+              // onChange={(e) => handleChange("txt_ReqNo", e.target.value)}
+              // disabled={Disable}
+              disabled
             />
           </td>
           <td align="right">
             <label>Join Date :</label>
           </td>
           <td>
-          <Input
-              value={formData1.txt_ReqNo}
-              onChange={(e) => handleChange("txt_ReqNo", e.target.value)}
-              disabled={Disable}
+            <Input
+              value={formData1.txt_JoinDate}
+              // onChange={(e) => handleChange("txt_ReqNo", e.target.value)}
+              // disabled={Disable}
+              disabled
             />
           </td>
           <td align="right">
@@ -145,11 +158,12 @@ const Step1 = ({
           </td>
           <td>
             <Input
-              value={formData1.txt_ReqStatusValue}
+              value={formData1.txt_JobGrade}
               style={{ width: "80px" }}
-              onChange={(e) =>
-                handleChange("txt_ReqStatusValue", e.target.value)
-              }
+              // onChange={(e) =>
+              //   handleChange("txt_ReqStatusValue", e.target.value)
+              // }
+              disabled
             />
           </td>
         </tr>
@@ -159,37 +173,49 @@ const Step1 = ({
           </td>
           <td colSpan={3}>
             <Input
-              value={formData1.txt_Reqby}
-              onChange={(e) => handleChange("txt_Reqby", e.target.value)}
+            disabled={formData1.txt_ReqStatusValue!='LT0101'}
+              value={formData1.txt_Email}
+              onChange={(e) => handleChange("txt_Email", e.target.value)}
             />
           </td>
-          <td align="right">
+          <td align="right" style={{ width: "170px" }}>
             <label>วันที่ต้องการ/Target Date :</label>
           </td>
           <td>
-          <DatePicker
+            <Input
+            disabled={formData1.txt_ReqStatusValue!='LT0101'}
+              type="date"
               style={{ width: "100%" }}
-              value={formData1.txt_ReqDate}
-              onChange={(date, dateString) =>
-                handleChange("txt_ReqDate", dateString)
-              }
+              value={formData1.Date_Target || ""}
+              onChange={(e) => handleChange("Date_Target", e.target.value)}
+              placeholder="กรุณาเลือกวันที่"
+              min={new Date().toISOString().split("T")[0]} // กำหนดวันที่ขั้นต่ำเป็นวันนี้
             />
           </td>
           <td align="right">
             <label>เบอร์ภายใน/Tel :</label>
           </td>
           <td>
-          <Input
-              placeholder="Requested By"
-              value={formData1.txt_Reqby}
+            <Input
+            disabled={formData1.txt_ReqStatusValue!='LT0101'}
+              placeholder="เบอร์ภายใน/Tel :"
+              value={formData1.txt_Tel}
               style={{ width: "80px" }}
-              onChange={(e) => handleChange("txt_Reqby", e.target.value)}
-              disabled={Disable}
+              onChange={(e) => handleChange("txt_Tel", e.target.value)}
             />
           </td>
-
         </tr>
       </table>
+      {/* <div
+        style={{
+          textAlign: "center",
+          display: formData1.txt_ReqNo == "" ? "" : "none",
+        }}
+      >
+        <Button type="primary" onClick={() => GenReqNo()}>
+          Gen Request No.
+        </Button>
+      </div> */}
 
       {/* </div> */}
     </div>

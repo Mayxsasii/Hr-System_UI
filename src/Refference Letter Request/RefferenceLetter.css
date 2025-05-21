@@ -63,3 +63,36 @@
     display: block;
     margin-bottom: 8px;
   }
+
+  .tb_letter .ant-table-thead > tr > th {
+    background-color: #BDB395; /* Green header */
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+  }
+  
+  .tb_letter .ant-table-tbody > tr > td {
+    font-family: "Varela Round", sans-serif;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd; /* Row separator */
+  }
+  
+  .tb_letter .ant-table-tbody > tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+  }
+  
+  .tb_letter .ant-table-pagination {
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  .tb_letter .ant-table-tbody > tr > td:first-child {
+    font-weight: bold; /* Highlight first column */
+  }
+  
+  .SearchLetter td {
+    padding-top: 7px;
+  }
