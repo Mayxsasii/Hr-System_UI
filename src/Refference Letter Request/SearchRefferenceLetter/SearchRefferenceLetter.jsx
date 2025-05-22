@@ -6,7 +6,7 @@ import {
   ReloadOutlined,
 } from "@ant-design/icons";
 import ImgExcel from "../../assets/excel.png";
-import { fn_SearchManPowerRequst } from "./fn_SearchManPowerRequst.jsx";
+import { fn_SearchRefferenceLetter } from "./fn_SearchRefferenceLetter.jsx";
 
 const SearchManPower = () => {
   const {
@@ -38,7 +38,7 @@ const SearchManPower = () => {
     LetterType,
     setSL_Letter,
     SL_Letter
-  } = fn_SearchManPowerRequst();
+  } = fn_SearchRefferenceLetter();
 
   return (
     <div

@@ -12,11 +12,12 @@ import ImgDelete from "../../assets/trash.png";
 import { fn_Header } from "../../Header/fn_Header";
 import Swal from "sweetalert2";
 
-function fn_SearchManPowerRequst() {
+function fn_SearchRefferenceLetter() {
   const navigate = useNavigate();
   const url = window.location.href;
   const Path = url.split("/").pop();
   const userlogin = localStorage.getItem("username");
+  const ROLL = localStorage.getItem("ROLL");
   const { showLoading, hideLoading } = useLoading();
   const { datauser } = fn_Header();
 
@@ -73,8 +74,9 @@ function fn_SearchManPowerRequst() {
 
   const GetFactory = async () => {
     await axios
-      .post("/api/RequestManPower/GetFactory", {
+      .post("/api/RefferenceLetter/GetFactoryLetter", {
         User_login: userlogin || "",
+        Roll:ROLL||''
       })
       .then((res) => {
         console.log(res.data, "GetFactory");
@@ -399,4 +401,4 @@ function fn_SearchManPowerRequst() {
   };
 }
 
-export { fn_SearchManPowerRequst };
+export { fn_SearchRefferenceLetter };

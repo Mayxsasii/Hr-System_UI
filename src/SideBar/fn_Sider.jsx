@@ -42,7 +42,7 @@ function fn_Sider() {
     console.log(ROLL, "roll");
     await axios
       .post("/api/common/GetMenu", {
-        Roll: ROLL || "",
+        Roll: ROLL==null ? "":ROLL,
       })
       .then((res) => {
         setMenuData(res.data);

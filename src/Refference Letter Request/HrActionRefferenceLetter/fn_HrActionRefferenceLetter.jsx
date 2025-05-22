@@ -107,6 +107,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
     let date_submit = null;
     let HrBy = datauser.LOGIN;
     if (save == "Submit") {
+      console.log(formData1,'mmmmmmmmmmmmmm')
       status = formData1.Rd_HRStatus;
       date_submit = DateToday;
       if (formData1.Date_HrConfirmAcDate == null) {
@@ -114,13 +115,16 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           icon: "warning",
           title: "Please Select confim action date",
         });
+        hideLoading()
         return;
       }
+    
       if (formData1.txt_RecriveById == "") {
         Swal.fire({
           icon: "warning",
           title: "Please Input Receive By",
         });
+        hideLoading()
         return;
       }
       if (formData1.txt_RecriveByTel == "") {
@@ -128,6 +132,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           icon: "warning",
           title: "Please Input Tel",
         });
+        hideLoading()
         return;
       }
       if (formData1.Date_RecriveDate == null) {
@@ -135,6 +140,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           icon: "warning",
           title: "Please Select Recrive Date",
         });
+        hideLoading()
         return;
       }
     } else if ((save = "SaveDarft")) {
@@ -146,6 +152,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           icon: "warning",
           title: "Please Select Condition Close",
         });
+        hideLoading()
         return;
       } else {
         Condition = formData1.Sl_HrCondion;
@@ -158,6 +165,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
 
     await axios
       .post("/api/RefferenceLetter/UpdateHrStaff", {
+        ReqNo:formData1.txt_ReqNo,
         status: status,
         rd_status: formData1.Rd_HRStatus,
         sl_condition: Condition,
@@ -183,6 +191,9 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       setTimeout(() => {
         hideLoading();
       }, 1000);
+      if(save='Submit'){
+        window.location.href = "/HrSystem/HrActionRefferenceLetter";
+      }
 
   };
 

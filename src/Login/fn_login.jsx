@@ -36,7 +36,7 @@ function fn_login() {
             localStorage.setItem("username", res.data[0].LOGIN);
             localStorage.setItem("FAC_CODE", res.data[0].FAC_CODE);
             localStorage.setItem("Email", res.data[0].EMAIL);
-            localStorage.setItem("ROLL", res.data[0].ROLL_ID);
+            localStorage.setItem("ROLL", res.data[0].ROLL_ID||'');
 
             Swal.fire({
               icon: "success",

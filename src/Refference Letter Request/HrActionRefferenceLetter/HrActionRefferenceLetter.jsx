@@ -117,6 +117,7 @@ const Step3 = ({
               style={{
                 width: "300px",
               }}
+              min={new Date().toISOString().split("T")[0]} // กำหนดวันที่ขั้นต่ำเป็น
               value={formData1.Date_HrConfirmAcDate}
               onChange={(e) =>
                 handleChange("Date_HrConfirmAcDate", e.target.value)
@@ -210,6 +211,7 @@ const Step3 = ({
               }}
               onChange={(e) => handleChange("Date_RecriveDate", e.target.value)}
               value={formData1.Date_RecriveDate}
+              min={new Date().toISOString().split("T")[0]} // กำหนดวันที่ขั้นต่ำเป็น
             />
           </td>
         </tr>

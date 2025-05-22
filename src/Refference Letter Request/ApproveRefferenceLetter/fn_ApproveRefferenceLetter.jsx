@@ -186,7 +186,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
         title: "Submit Success",
       }).then(() => {
   
-        // window.location.href = "/HrSystem/ApproveManPower";
+        window.location.href = "/HrSystem/ApproveRefferenceLetter";
       });
       hideLoading()
 

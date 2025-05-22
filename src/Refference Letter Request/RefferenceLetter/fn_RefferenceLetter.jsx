@@ -30,7 +30,7 @@ function fn_RefferenceLetter() {
   const queryParams = new URLSearchParams(location.search);
   const ReqNo = queryParams.get("ReqNo");
   // const Email = localStorage.getItem("Email");
-  // const UserLogin = localStorage.getItem("username");
+  const UserLogin = localStorage.getItem("username");
 
   const { token } = theme.useToken();
   const today = new Date();
@@ -72,15 +72,15 @@ function fn_RefferenceLetter() {
     Sl_HrCondion: null,
     txt_HrStaff: "",
     txt_HrActionDate: DateToday,
-    Date_HrConfirmAcDate: null,
+    Date_HrConfirmAcDate: DateToday,
     txt_HrComment: "",
-    txt_RecriveById: '',
+    txt_RecriveById: "",
     txt_RecriveByName: "",
     txt_RecriveByJobGrade: "",
     txt_RecriveByDepartment: "",
     txt_RecriveByEmail: "",
     txt_RecriveByTel: "",
-    Date_RecriveDate: null,
+    Date_RecriveDate: DateToday,
   });
 
   useEffect(() => {
@@ -102,16 +102,16 @@ function fn_RefferenceLetter() {
       hideLoading();
     }
   };
-  const fomatdate =  (date) => {
-    console.log(date,'datedate')
-    let  formattedDate
-    if(date){
-      const [day, month, year] =date.split("/");
+  const fomatdate = (date) => {
+    console.log(date, "datedate");
+    let formattedDate;
+    if (date) {
+      const [day, month, year] = date.split("/");
       formattedDate = `${year}-${month}-${day}`;
     }
 
-    return formattedDate
-  }
+    return formattedDate;
+  };
   const GetdataEdit = async () => {
     handleChange("txt_ReqNo", ReqNo);
     await axios
@@ -137,25 +137,39 @@ function fn_RefferenceLetter() {
         handleChange("txt_Remark", data.Remark);
         handleChange("Sl_Supervisor", data.Sv_by);
         handleChange("Rd_SupervisorApprove", data.Sv_flg);
-        console.log('dataaaaaa',)
-        if (data.Status_value == "LT0102"||data.Status_value == "LT0101") {
-          
+        console.log("dataaaaaa");
+        if (data.Status_value == "LT0102" || data.Status_value == "LT0101") {
           handleChange("Date_SupervisorActionDate", DateToday);
         } else {
           handleChange("Date_SupervisorActionDate", data.Sv_date);
         }
         handleChange("txt_SupervisorCooment", data.Sv_Comment);
-      //step3
-      handleChange("Rd_HRStatus", data.Hr_Status);
-      handleChange("Sl_HrCondion", data.Hr_Condition);
-      handleChange("Date_HrConfirmAcDate", fomatdate(data.Hr_ConfirmAcDate));
-      handleChange("txt_HrComment", data.Hr_comment);
-      handleChange("txt_RecriveById", data.Hr_ResiveBy);
-      await GetPersonHr(data.Hr_ResiveBy)
-      // handleChange("Sl_HrCondion", data.Hr_Condition);
-      handleChange("txt_RecriveByEmail", data.Hr_ResiveEmail);
-      handleChange("txt_RecriveByTel", data.Hr_ResiveTel);
-      handleChange("Date_RecriveDate", fomatdate(data.Hr_ResiveDate));
+        //step3
+        handleChange("Rd_HRStatus", data.Hr_Status);
+        handleChange("Sl_HrCondion", data.Hr_Condition);
+        console.log("data.Hr_ConfirmAcDate", data.Hr_ConfirmAcDate);
+        if (data.Hr_ConfirmAcDate != null) {
+          handleChange(
+            "Date_HrConfirmAcDate",
+            fomatdate(data.Hr_ConfirmAcDate)
+          );
+        } else {
+          
+          handleChange("Date_HrConfirmAcDate", fomatdate(DateToday));
+        }
+
+        handleChange("txt_HrComment", data.Hr_comment);
+        handleChange("txt_RecriveById", data.Hr_ResiveBy || "");
+        await GetPersonHr(data.Hr_ResiveBy);
+        // handleChange("Sl_HrCondion", data.Hr_Condition);
+        handleChange("txt_RecriveByEmail", data.Hr_ResiveEmail || "");
+        handleChange("txt_RecriveByTel", data.Hr_ResiveTel || "");
+      
+        if (data.Hr_ResiveDate != null) {
+          handleChange("Date_RecriveDate", fomatdate(data.Hr_ResiveDate));
+        } else {
+          handleChange("Date_RecriveDate", fomatdate(DateToday));
+        }
       });
     await axios
       .post("/api/RefferenceLetter/GetLetterType", {
@@ -211,7 +225,6 @@ function fn_RefferenceLetter() {
       });
   };
 
-  
   const handleChange = (field, value) => {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
@@ -247,10 +260,10 @@ function fn_RefferenceLetter() {
     return true;
   };
 
-  const validateStep4 = async () => {
+  const validateStep3 = async () => {
     let check = true;
     await axios
-      .post("/api/RequestManPower/GetHrStarff", {
+      .post("/api/RefferenceLetter/GetHrStarffLetter", {
         User: UserLogin,
       })
       .then(async (res) => {
@@ -270,8 +283,8 @@ function fn_RefferenceLetter() {
     console.log(current, "currentnext");
     if (current === 0 && !validateStep1()) {
       return; //กลับมาเปิดด้วย
-    } else if (current == 2 && !(await validateStep4())) {
-      // return;
+    } else if (current == 1 && !(await validateStep3())) {
+      return;
     }
 
     setCurrent(current + 1);
@@ -294,7 +307,7 @@ function fn_RefferenceLetter() {
     if (current > 0 && !validateStep1()) {
       return;
     }
-    if (current == 3 && !(await validateStep4())) {
+    if (current == 2 && !(await validateStep3())) {
       return;
     }
     setCurrent(current);
