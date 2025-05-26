@@ -352,6 +352,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               onBlur={(e) => GetDataPersonByIDCode(e.target.value, index)}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
+                  e.target.blur();
                   GetDataPersonByIDCode(
                     formData1.Person_Sub[index].ID_Code,
                     index
@@ -363,7 +364,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               disabled
               size="middle"
               value={formData1.Person_Sub[index]?.Emp_Name}
-              style={{ width: "200px", marginLeft: "5px" }}
+              style={{ width: "300px", marginLeft: "5px" }}
               onChange={(e) =>
                 handlePersonSubChange(index, "Emp_Name", e.target.value)
               }
@@ -392,7 +393,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               disabled={Disable.Sub_Dept}
               showSearch
               value={formData1.Person_Sub[index]?.Dept}
-              style={{ width: "80px", marginLeft: "5px" }}
+              style={{ width: "120px", marginLeft: "5px" }}
               placeholder="Select Dept"
               optionFilterProp="children"
               filterOption={(input, option) =>

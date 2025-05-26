@@ -531,63 +531,6 @@ function fn_ForApprove(
     }
   };
 
-  const UploadFile = async (file, ColumnName) => {
-    console.log(file, "UploadFile");
-
-    if (!file) {
-      console.warn("No file provided for upload.");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const fileData = reader.result;
-      const byteArray = new Uint8Array(fileData);
-
-      try {
-        let response;
-        if (ColumnName === "mrh_subs_fileserver") {
-          console.log("FileSSS SubS");
-          response = await axios.post("/api/Common/UploadSub", {
-            fileData: Array.from(byteArray),
-            ReqNo: formData1.txt_ReqNo,
-          });
-        } else if (ColumnName === "mrh_add_fileserver") {
-          console.log("FileSSS aDD");
-          response = await axios.post("/api/Common/UploadAdd", {
-            fileData: Array.from(byteArray),
-            ReqNo: formData1.txt_ReqNo,
-          });
-        } else {
-          console.error("Invalid ColumnName provided:", ColumnName);
-          alert("Invalid ColumnName provided.");
-          return;
-        }
-
-        if (response && response.data) {
-          console.log("File uploaded successfully:", response.data);
-          alert("File uploaded successfully.");
-        } else {
-          console.warn("No response data received from the server.");
-          alert("File upload completed, but no response data received.");
-        }
-      } catch (error) {
-        console.error("Error uploading file:", error);
-        alert(
-          "Error uploading file: " +
-            (error.response?.data?.message || error.message)
-        );
-      }
-    };
-
-    try {
-      reader.readAsArrayBuffer(file);
-    } catch (error) {
-      console.error("Error reading file:", error);
-      alert("Error reading file: " + error.message);
-    }
-  };
-
   const NextStatus = async () => {
     let status = formData1.ID_Status;
     let StatusType = formData1.StatusType;

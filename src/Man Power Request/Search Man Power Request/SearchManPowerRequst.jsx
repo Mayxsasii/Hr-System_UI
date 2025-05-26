@@ -93,6 +93,7 @@ const SearchManPower = () => {
               <td style={{ textAlign: "right", padding: "4px" }}>Factory :</td>
               <td style={{ padding: "4px" }}>
                 <Select
+                disabled={Path=='HrActionManPowerRequest'}
                   showSearch
                   value={SL_Factory}
                   style={{

@@ -7,7 +7,6 @@ import * as XLSX from "xlsx";
 import ExcelJS from "exceljs";
 function fn_HrStarffAction(formData1, setFormData1) {
   const { datauser } = fn_Header();
-
   const today = new Date();
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
@@ -16,6 +15,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
   const [ConditionClose, setConditionClose] = useState([]);
   const [Factory, setFactory] = useState([]);
   const userlogin = localStorage.getItem("username");
+
   useEffect(() => {
     GetCondition();
     GetFactory();
@@ -36,7 +36,6 @@ function fn_HrStarffAction(formData1, setFormData1) {
       .post("/api/RequestManPower/GetConditionForClose", {})
       .then((res) => {
         console.log(res.data, "GetConditionForClose");
-        // setConditionClose(res.data);/
         setConditionClose(res.data);
       });
   };
@@ -49,6 +48,44 @@ function fn_HrStarffAction(formData1, setFormData1) {
         setFactory(res.data);
       });
   };
+
+  const GetUserJoin = async (IdCode, index, Reason) => {
+    await axios
+      .post("/api/RequestManPower/GetUserJoinHr", { IdCode: IdCode || "" })
+      .then((res) => {
+        console.log(res.data, "GetUserJoinHr");
+        if (res.data.length > 0) {
+          if ((Reason = "Sub")) {
+            handleChangeHr_Sub(index, "Emp_name", res.data[0].Name);
+            handleChangeHr_Sub(index, "Emp_sername", res.data[0].Sername);
+            handleChangeHr_Sub(index, "Emp_JoinDate", res.data[0].JoinDate);
+          } else if (Reason == "Add") {
+            handleChangeHr_Add(index, "Emp_name", res.data[0].Name);
+            handleChangeHr_Add(index, "Emp_sername", res.data[0].Sername);
+            handleChangeHr_Add(index, "Emp_JoinDate", res.data[0].JoinDate);
+          }
+        } else {
+          if ((Reason = "Sub")) {
+            handleChangeHr_Sub(index, "Emp_id", "");
+            handleChangeHr_Sub(index, "Emp_name", "");
+            handleChangeHr_Sub(index, "Emp_sername", "");
+            handleChangeHr_Sub(index, "Emp_JoinDate", "");
+          } else if (Reason == "Add") {
+            handleChangeHr_Add(index, "Emp_id", "");
+            handleChangeHr_Add(index, "Emp_name", "");
+            handleChangeHr_Add(index, "Emp_sername", "");
+            handleChangeHr_Add(index, "Emp_JoinDate", "");
+          }
+
+          Swal.fire({
+            icon: "warning",
+            title: "Not Found User!",
+          });
+          return;
+        }
+      });
+  };
+
   const CheckRemain = async () => {
     const totalCompletedSub = formData1.Hr_Sub.filter(
       (person) => person.CB_Complete
@@ -184,7 +221,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
     let ReqNo = formData1.txt_ReqNo;
     await axios
       .post("/api/Common/EmailSend", {
-        strSubject: `Man Power request : ${ReqNo} ${StatusDesc}`,
+        strSubject: `HR Man Power request : ${ReqNo} ${StatusDesc}`,
         strEmailFormat: fomathtml,
         strEmail: Email,
       })
@@ -216,7 +253,9 @@ function fn_HrStarffAction(formData1, setFormData1) {
         <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
         <p>Dear Khun ${Dear} ,</p>
         <p>
-                                  This Request creates as follow ${formData1.txt_ReqBy}
+                                  This Request creates as follow ${
+                                    formData1.txt_ReqBy
+                                  }
         </p>
         <!-- Details -->
         <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
@@ -231,15 +270,21 @@ function fn_HrStarffAction(formData1, setFormData1) {
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqNo}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqNo
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${factory.label}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          factory.label
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.SL_Department}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.SL_Department
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Position :</td>
@@ -247,15 +292,21 @@ function fn_HrStarffAction(formData1, setFormData1) {
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Target Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.Date_Target}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.Date_Target
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqBy}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqBy
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqDate}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqDate
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
@@ -263,7 +314,9 @@ function fn_HrStarffAction(formData1, setFormData1) {
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_SendDate}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_SendDate
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
@@ -281,7 +334,9 @@ function fn_HrStarffAction(formData1, setFormData1) {
         </tr>
                             <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_HrComment||''}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_HrComment || ""
+        }</td>
         </tr>
                   <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
@@ -322,10 +377,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
       formData1.Radio_HrStatus == "MR0107" ||
       formData1.Radio_HrStatus == "MR0108"
     ) {
-      if (
-        formData1.Radio_HrStatus == "MR0108" &&
-        !formData1.Sl_HrCloseBy
-      ) {
+      if (formData1.Radio_HrStatus == "MR0108" && !formData1.Sl_HrCloseBy) {
         Swal.fire({
           icon: "warning",
           title: "Cannot be submit",
@@ -338,19 +390,17 @@ function fn_HrStarffAction(formData1, setFormData1) {
       ) {
         //close by condition
         Save("");
-      } else if(formData1.Radio_HrStatus == "MR0107" ) {
-        console.log( "กงนี้0001");
+      } else if (formData1.Radio_HrStatus == "MR0107") {
+        console.log("กงนี้0001");
         //close
-        if (
-          formData1.txt_TotalRemain==0
-        ) {
-          //Remain 0 
+        if (formData1.txt_TotalRemain == 0) {
+          //Remain 0
           let isValid = true;
-         
+
           if (formData1.txt_TotalSubstitube > 0) {
             formData1.Hr_Sub.some((person) => {
               console.log(person, "person0");
-              if (person.Emp_name === "") {
+              if (!person.Emp_id) {
                 Swal.fire({
                   icon: "warning",
                   title: "Cannot be submit",
@@ -358,7 +408,23 @@ function fn_HrStarffAction(formData1, setFormData1) {
                 });
                 isValid = false;
                 return true;
-              } else if (person.Emp_sername === "") {
+              } else if (!person.Emp_name) {
+                Swal.fire({
+                  icon: "warning",
+                  title: "Cannot be submit",
+                  text: `Please Input Name`,
+                });
+                isValid = false;
+                return true;
+              } else if (!person.Emp_sername) {
+                Swal.fire({
+                  icon: "warning",
+                  title: "Cannot be submit",
+                  text: `Please Input Sername`,
+                });
+                isValid = false;
+                return true;
+              } else if (!person.Emp_JoinDate) {
                 Swal.fire({
                   icon: "warning",
                   title: "Cannot be submit",
@@ -398,9 +464,8 @@ function fn_HrStarffAction(formData1, setFormData1) {
             return;
           }
         }
-       
-     
-    }  }else {
+      }
+    } else {
       Swal.fire({
         icon: "warning",
         title: "Cannot be submit",
@@ -408,7 +473,6 @@ function fn_HrStarffAction(formData1, setFormData1) {
       });
       return;
     }
-   
   };
 
   const handleChange = (field, value) => {
@@ -653,9 +717,6 @@ function fn_HrStarffAction(formData1, setFormData1) {
       "For Dept",
       "Request Job Grade",
       "IDCode New",
-      "Name New",
-      "Surname New",
-      "JoinDate (DD/MM/YYYY)",
     ];
 
     worksheet.addRow(headers);
@@ -671,9 +732,6 @@ function fn_HrStarffAction(formData1, setFormData1) {
           item.Dept || "",
           (item.Req_Jobgrade || []).join(", "),
           "",
-          "",
-          "",
-          "",
         ]);
       });
     }
@@ -688,9 +746,6 @@ function fn_HrStarffAction(formData1, setFormData1) {
           "-",
           item.Dept || "",
           (item.Req_Jobgrade || []).join(", "),
-          "",
-          "",
-          "",
           "",
         ]);
       });
@@ -793,7 +848,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
   };
 
   const ReadFile = () => {
-    // showLoading("กำลังอ่านไฟล์...");
+    showLoading("กำลังอ่านไฟล์...");
     const file = formData1.Hr_DataFileAttach;
     if (!file) {
       Swal.fire({
@@ -871,22 +926,17 @@ function fn_HrStarffAction(formData1, setFormData1) {
           // const personIndex = i - 1;
           console.log(subdata[i], "EmpNew");
           console.log(formatDate(dataPerson[11]), "Empid new", dataPerson[11]);
-          if (
-            dataPerson[8] != "" ||
-            dataPerson[9] != "" ||
-            dataPerson[10] != "" ||
-            dataPerson[11] != ""
-          ) {
+          if (dataPerson[8] != "") {
             // if(dataPerson[9] != ''  || dataPerson[10]!= '') {
 
             // }
             Remain++;
-
             handleChangeHr_Sub(i, "CB_Complete", true);
             handleChangeHr_Sub(i, "Emp_id", dataPerson[8]);
-            handleChangeHr_Sub(i, "Emp_name", dataPerson[9]);
-            handleChangeHr_Sub(i, "Emp_sername", dataPerson[10]);
-            handleChangeHr_Sub(i, "Emp_JoinDate", formatDate(dataPerson[11]));
+            await GetUserJoinExcel(dataPerson[8], i,'Sub');
+            // handleChangeHr_Sub(i, "Emp_name", dataPerson[9]);
+            // handleChangeHr_Sub(i, "Emp_sername", dataPerson[10]);
+            // handleChangeHr_Sub(i, "Emp_JoinDate", formatDate(dataPerson[11]));
           }
         }
       }
@@ -896,17 +946,14 @@ function fn_HrStarffAction(formData1, setFormData1) {
           // const personIndex = i - 1;
           console.log(adddata[i], "EmpNew");
           console.log(formatDate(dataPerson[11]), "Empid new");
-          if (
-            dataPerson[8] != "" ||
-            dataPerson[9] != "" ||
-            dataPerson[10] != "" ||
-            dataPerson[11] != ""
-          ) {
+          if (dataPerson[8] != "") {
+            Remain++;
             handleChangeHr_Add(i, "CB_Complete", true);
             handleChangeHr_Add(i, "Emp_id", dataPerson[8]);
-            handleChangeHr_Add(i, "Emp_name", dataPerson[9]);
-            handleChangeHr_Add(i, "Emp_sername", dataPerson[10]);
-            handleChangeHr_Add(i, "Emp_JoinDate", formatDate(dataPerson[11]));
+            await GetUserJoinExcel(dataPerson[8], i,'Add');
+            // handleChangeHr_Add(i, "Emp_name", dataPerson[9]);
+            // handleChangeHr_Add(i, "Emp_sername", dataPerson[10]);
+            // handleChangeHr_Add(i, "Emp_JoinDate", formatDate(dataPerson[11]));
           }
         }
       }
@@ -915,6 +962,26 @@ function fn_HrStarffAction(formData1, setFormData1) {
     };
 
     reader.readAsArrayBuffer(file);
+  };
+
+  const GetUserJoinExcel = async (IdCode, index, Reason) => {
+    console.log(IdCode, index, Reason,'GetUserJoinExcel')
+    await axios
+      .post("/api/RequestManPower/GetUserJoinHr", { IdCode: IdCode || "" })
+      .then((res) => {
+        console.log(res.data, "GetUserJoinHr");
+        if (res.data.length > 0) {
+          if ((Reason == "Sub")) {
+            handleChangeHr_Sub(index, "Emp_name", res.data[0].Name);
+            handleChangeHr_Sub(index, "Emp_sername", res.data[0].Sername);
+            handleChangeHr_Sub(index, "Emp_JoinDate", res.data[0].JoinDate);
+          } else if (Reason == "Add") {
+            handleChangeHr_Add(index, "Emp_name", res.data[0].Name);
+            handleChangeHr_Add(index, "Emp_sername", res.data[0].Sername);
+            handleChangeHr_Add(index, "Emp_JoinDate", res.data[0].JoinDate);
+          }
+        }
+      });
   };
 
   const formatDate = (dateString) => {
@@ -989,11 +1056,12 @@ function fn_HrStarffAction(formData1, setFormData1) {
       Sl_HrCloseBy: null,
       txt_HrComment: "",
       txt_TotalManual: 0,
-      txt_TotalRemain: formData1.txt_TotalSubstitube+formData1.txt_TotalAdditional,
+      txt_TotalRemain:
+        formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional,
       CB_HrFileAttach: false,
       Hr_FileAttach: "",
       Hr_DataFileAttach: null,
-      Hr_NameFileOther: '',
+      Hr_NameFileOther: "",
       Hr_DataFileOther: null,
       Hr_Add: Array.from({ length: formData1.Person_ADD.length }, () => ({
         CB_Complete: false,
@@ -1010,7 +1078,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
         Emp_JoinDate: "",
       })),
     });
-  }
+  };
 
   return {
     handleChange,
@@ -1031,7 +1099,8 @@ function fn_HrStarffAction(formData1, setFormData1) {
     ReadFile,
     handleFileOtherChange,
     DeleteFile,
-    Bt_Reset
+    Bt_Reset,
+    GetUserJoin,
   };
 }
 

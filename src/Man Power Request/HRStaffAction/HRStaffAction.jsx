@@ -47,7 +47,7 @@ const Step4 = ({
     ReadFile,
     handleFileOtherChange,
     DeleteFile,
-    Bt_Reset
+    Bt_Reset,GetUserJoin
   } = fn_HrStarffAction(formData1, setFormData1);
   return (
     <>
@@ -554,13 +554,22 @@ const Step4 = ({
               }}
             >
               Emp ID :
-              {/* {console.log('formData1.Hr_Sub[index].CB_Complete',formData1.Hr_Sub[index].CB_Complete)} */}
               <Input
                 size="middle"
-                // disabled={!formData1.Hr_Sub[index].CB_Complete}
+
                 onChange={(e) =>
                   handleChangeHr_Sub(index, "Emp_id", e.target.value)
                 }
+                onBlur={(e) => GetUserJoin(e.target.value, index)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    e.target.blur();
+                    GetUserJoin(
+                      formData1.Hr_Sub[index].Emp_id,
+                      index
+                    );
+                  }
+                }}
                 disabled={
                   !formData1.Hr_Sub[index].CB_Complete ||
                   formData1.ID_Status == "MR0107" ||
@@ -576,14 +585,15 @@ const Step4 = ({
               Name :
               <Input
                 size="middle"
-                disabled={
-                  !formData1.Hr_Sub[index].CB_Complete ||
-                  formData1.ID_Status == "MR0107" ||
-                  formData1.ID_Status == "MR0108"
-                }
-                onChange={(e) =>
-                  handleChangeHr_Sub(index, "Emp_name", e.target.value)
-                }
+                disabled
+                // disabled={
+                //   !formData1.Hr_Sub[index].CB_Complete ||
+                //   formData1.ID_Status == "MR0107" ||
+                //   formData1.ID_Status == "MR0108"
+                // }
+                // onChange={(e) =>
+                //   handleChangeHr_Sub(index, "Emp_name", e.target.value)
+                // }
                 value={formData1.Hr_Sub[index].Emp_name}
                 style={{
                   width: "200px",
@@ -595,25 +605,26 @@ const Step4 = ({
               <Input
                 size="middle"
                 value={formData1.Hr_Sub[index].Emp_sername}
-                disabled={
-                  !formData1.Hr_Sub[index].CB_Complete ||
-                  formData1.ID_Status == "MR0107" ||
-                  formData1.ID_Status == "MR0108"
-                }
-                onChange={(e) =>
-                  handleChangeHr_Sub(index, "Emp_sername", e.target.value)
-                }
+                // disabled={
+                //   !formData1.Hr_Sub[index].CB_Complete ||
+                //   formData1.ID_Status == "MR0107" ||
+                //   formData1.ID_Status == "MR0108"
+                // }
+                // onChange={(e) =>
+                //   handleChangeHr_Sub(index, "Emp_sername", e.target.value)
+                // }
+                disabled
                 style={{ width: "200px", marginLeft: "5px" }}
               />
               {console.log("JoinDate2", formData1.Hr_Sub[index].Emp_JoinDate)}
               <p style={{ marginLeft: "10px" }}>Join date:</p>
               <Input
                 type="date"
-                disabled={
+                // disabled={
                  
-                  formData1.ID_Status == "MR0107" ||
-                  formData1.ID_Status == "MR0108"
-                }
+                //   formData1.ID_Status == "MR0107" ||
+                //   formData1.ID_Status == "MR0108"
+                // }
                 style={{ marginLeft: "5px", width: "200px" }}
                 value={
                   formData1.Hr_Sub[index].Emp_JoinDate
@@ -622,14 +633,15 @@ const Step4 = ({
                         .join("-")
                     : ""
                 }
-                onChange={(e) => {
-                  const dateValue = e.target.value;
-                  const formattedDate = dateValue
-                    .split("-")
-                    .reverse()
-                    .join("/");
-                  handleChangeHr_Sub(index, "Emp_JoinDate", formattedDate);
-                }}
+                disabled
+                // onChange={(e) => {
+                //   const dateValue = e.target.value;
+                //   const formattedDate = dateValue
+                //     .split("-")
+                //     .reverse()
+                //     .join("/");
+                //   handleChangeHr_Sub(index, "Emp_JoinDate", formattedDate);
+                // }}
               />
             </div>
           </div>

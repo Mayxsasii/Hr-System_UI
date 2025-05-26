@@ -49,49 +49,7 @@ function fn_NewRefferenceLetter(formData1, setFormData1, Disable, setDisable) {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
 
-  const GenReqNo = async () => {
-    if (formData1.txt_ReqbyID == "") {
-      Swal.fire({
-        icon: "error",
-        title: "Please Input Requested By",
-      });
-      return;
-    }
-    if(formData1.txt_Email == "") {
-      Swal.fire({
-        icon: "error",
-        title: "Please Input Email",
-      });
-      return;
-    }
-    if(formData1.Date_Target == "") {
-        Swal.fire({
-          icon: "error",
-          title: "Please Select Target Date",
-        });
-        return;
-      }
-    if(formData1.txt_Tel == "") {
-      Swal.fire({
-        icon: "error",
-        title: "Please Input Tel",
-      });
-      return;
-    }
-
-    let ReqNo = "";
-    await axios
-      .post("/api/RefferenceLetter/GenReqNo", {
-        FacValue: formData1.txt_FactoryValue,
-        FacDesc: formData1.txt_Factory,
-      })
-      .then((res) => {
-        console.log(res.data, "GenReqNo");
-        ReqNo = res.data[0].ReqNo;
-        handleChange("txt_ReqNo", ReqNo);
-      });
-  };
-  return { GetDataPerson, GenReqNo };
+  return { GetDataPerson };
 }
 
 export { fn_NewRefferenceLetter };

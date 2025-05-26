@@ -218,6 +218,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
     handleChange("txt_RecriveByTel", '');
     handleChange("Date_RecriveDate", null);
   }
+  
   return {
     Condition,
     datauser,

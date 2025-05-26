@@ -9,7 +9,7 @@ const Step1 = ({
   setDisable,
   setCurrent,
 }) => {
-  const { GetDataPerson, GenReqNo } = fn_NewRefferenceLetter(
+  const { GetDataPerson } = fn_NewRefferenceLetter(
     formData1,
     setFormData1,
     Disable,

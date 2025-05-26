@@ -85,6 +85,7 @@ const SearchManPower = () => {
               <td style={{ width: "220px" }}>
                 <Select
                   showSearch
+                  disabled={Path=='HrActionRefferenceLetter'}
                   value={SL_Factory}
                   style={{
                     width: "100%",

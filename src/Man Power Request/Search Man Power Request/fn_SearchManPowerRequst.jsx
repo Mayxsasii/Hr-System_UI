@@ -48,7 +48,6 @@ function fn_SearchManPowerRequst() {
       GetDepartment();
     }
     GetFactory();
-
     GetStatus();
     Title();
     if (Path == "ManPowerRequest") {
@@ -79,14 +78,16 @@ function fn_SearchManPowerRequst() {
           console.log(res.data, "GetFactoryIssue");
           setFactory(res.data);
         });
-    } else if (Path == "ManPowerMasterList") {
-      await axios
-        .post("/api/RequestManPower/GetFactoryMasterlist", {})
-        .then((res) => {
-          console.log(res.data, "GetFactoryHrAction");
-          setFactory(res.data);
-        });
-    } else {
+    } 
+    // else if (Path == "ManPowerMasterList") {
+    //   await axios
+    //     .post("/api/RequestManPower/GetFactoryMasterlist", {})
+    //     .then((res) => {
+    //       console.log(res.data, "GetFactoryHrAction");
+    //       setFactory(res.data);
+    //     });
+    // } 
+    else {
       await axios
         .post("/api/RequestManPower/GetFactory", {
           User_login: userlogin || "",
@@ -94,6 +95,9 @@ function fn_SearchManPowerRequst() {
         .then((res) => {
           console.log(res.data, "GetFactory");
           setFactory(res.data);
+          if(Path=='HrActionManPowerRequest'){
+            setSL_Factory(res.data[0].value)
+          }
         });
     }
   };
@@ -360,7 +364,6 @@ function fn_SearchManPowerRequst() {
   };
   
   const bt_Reset =  () => {
-    setSL_Factory(null);
     setSL_Department(null);
     setSL_Position(null);
     setSL_JobGrade(null);
@@ -372,8 +375,10 @@ function fn_SearchManPowerRequst() {
     if( Path != "ManPowerRequest") {
       settxt_ReqBy('');
     }
+    if(Path!='HrActionManPowerRequest'){
+      setSL_Factory(null);
+    }
     setDataSearch([]);
-
   }
 
   const columns = [

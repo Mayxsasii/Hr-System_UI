@@ -3,8 +3,14 @@ import { Checkbox, Input, Button, Select, Radio } from "antd";
 const { TextArea } = Input;
 import { fn_ApproveRefferenceLetter } from "../ApproveRefferenceLetter/fn_ApproveRefferenceLetter";
 const Step2 = ({ formData1, setFormData1 }) => {
-  const { handleChange, options, Supervisor, SendApprove, Bt_Submit,Bt_Reset } =
-    fn_ApproveRefferenceLetter(formData1, setFormData1);
+  const {
+    handleChange,
+    options,
+    Supervisor,
+    SendApprove,
+    Bt_Submit,
+    Bt_Reset,
+  } = fn_ApproveRefferenceLetter(formData1, setFormData1);
 
   return (
     <div>
@@ -45,7 +51,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
               handleChange("Date_Resignation", null);
             }
             if (checkedValues.includes("LT0205")) {
-              handleChange("txt_LetterOther", '');
+              handleChange("txt_LetterOther", "");
             }
           }}
         >

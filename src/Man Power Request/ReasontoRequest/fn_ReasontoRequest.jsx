@@ -49,7 +49,7 @@ function fn_ReasontoRequest(formData1, setFormData1, Disable, setDisable) {
 
   const GetDataPersonByIDCode = async (Idcode, index) => {
     await axios
-      .post("/api/RequestManPower/  ", {
+      .post("/api/RequestManPower/GetDataPersonByIDCode  ", {
         Id_Code: Idcode || "",
       })
       .then((res) => {

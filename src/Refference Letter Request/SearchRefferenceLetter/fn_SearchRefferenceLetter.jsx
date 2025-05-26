@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import moment from "moment";
 import { useLoading } from "../../loading/fn_loading";
-import { EditOutlined, DeleteOutlined, CloseOutlined } from "@ant-design/icons";
-import { Button, Space, FloatButton, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
 import ImgViewFile from "../../assets/search.png";
-import ImgEdit from "../../assets/edit.png";
 import ImgApprove from "../../assets/approved.png";
-import ImgDelete from "../../assets/trash.png";
-import { fn_Header } from "../../Header/fn_Header";
 import Swal from "sweetalert2";
 
 function fn_SearchRefferenceLetter() {
@@ -19,7 +13,6 @@ function fn_SearchRefferenceLetter() {
   const userlogin = localStorage.getItem("username");
   const ROLL = localStorage.getItem("ROLL");
   const { showLoading, hideLoading } = useLoading();
-  const { datauser } = fn_Header();
 
   const [Factory, setFactory] = useState([]);
   const [Department, setDepartment] = useState([]);
@@ -79,8 +72,12 @@ function fn_SearchRefferenceLetter() {
         Roll:ROLL||''
       })
       .then((res) => {
+
         console.log(res.data, "GetFactory");
         setFactory(res.data);
+        if(Path=='HrActionRefferenceLetter'){
+          setSL_Factory(res.data[0].value)
+        }
       });
   };
 
@@ -229,8 +226,6 @@ function fn_SearchRefferenceLetter() {
   };
 
   const bt_Reset = () => {
-    console.log("reset");
-    setSL_Factory(null);
     setSL_Status(null);
     settxt_ReqNoFrom("");
     settxt_ReqNoTo("");
@@ -240,6 +235,9 @@ function fn_SearchRefferenceLetter() {
     setSL_Letter(null);
     settxt_ReqBy("");
     setSL_Department(null);
+    if(Path!='HrActionRefferenceLetter'){
+      setSL_Factory(null);
+    }
   };
 
   const columns = [
@@ -397,7 +395,7 @@ function fn_SearchRefferenceLetter() {
     bt_Reset,
     LetterType,
     setSL_Letter,
-    SL_Letter,
+    SL_Letter
   };
 }
 
