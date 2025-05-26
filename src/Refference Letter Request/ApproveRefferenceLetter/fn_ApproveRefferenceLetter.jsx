@@ -48,7 +48,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       return;
     } else {
       if (formData1.CB_letterType.includes("LT0203")) {
-        if (formData1.Date__Resignation == null) {
+        if (formData1.Date_Resignation == null) {
           Swal.fire({
             icon: "warning",
             title: "Please Select Resignation Date",
@@ -116,7 +116,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
     let detail = "";
     for (let i = 0; i < formData1.CB_letterType.length; i++) {
       if (formData1.CB_letterType[i].includes("LT0203")) {
-        detail = formData1.Date__Resignation;
+        detail = formData1.Date_Resignation;
       }
       if (formData1.CB_letterType[i].includes("LT0205")) {
         detail = formData1.txt_LetterOther;
@@ -197,7 +197,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
     if (formData1.txt_ReqStatusValue == "LT0101") {
       console.log("เข้านี้่11111");
       handleChange("CB_letterType", []);
-      handleChange("Date__Resignation", null);
+      handleChange("Date_Resignation", null);
       handleChange("txt_LetterOther", "");
       handleChange("txt_Remark", "");
       handleChange("Sl_Supervisor", null);

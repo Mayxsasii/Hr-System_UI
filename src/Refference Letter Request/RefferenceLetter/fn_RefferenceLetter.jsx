@@ -59,7 +59,7 @@ function fn_RefferenceLetter() {
     txt_Tel: "",
     //step2.1
     CB_letterType: [],
-    Date__Resignation: null,
+    Date_Resignation: null,
     txt_LetterOther: "",
     txt_Remark: "",
     //step2.2
@@ -109,7 +109,6 @@ function fn_RefferenceLetter() {
       const [day, month, year] = date.split("/");
       formattedDate = `${year}-${month}-${day}`;
     }
-
     return formattedDate;
   };
   const GetdataEdit = async () => {
@@ -183,7 +182,7 @@ function fn_RefferenceLetter() {
           if (res.data[i].LetterType == "LT0203") {
             const [day, month, year] = res.data[i].LetterDetail.split("/");
             const formattedDate = `${year}-${month}-${day}`;
-            handleChange("Date__Resignation", formattedDate);
+            handleChange("Date_Resignation", formattedDate);
           }
           if (res.data[i].LetterType == "LT0205") {
             handleChange("txt_LetterOther", res.data[i].LetterDetail);

@@ -41,6 +41,12 @@ const Step2 = ({ formData1, setFormData1 }) => {
           onChange={(checkedValues) => {
             console.log("CB", checkedValues);
             handleChange("CB_letterType", checkedValues);
+            if (checkedValues.includes("LT0203")) {
+              handleChange("Date_Resignation", null);
+            }
+            if (checkedValues.includes("LT0205")) {
+              handleChange("txt_LetterOther", '');
+            }
           }}
         >
           {options.map((option) => (
@@ -67,9 +73,9 @@ const Step2 = ({ formData1, setFormData1 }) => {
                         disabled={formData1.txt_ReqStatusValue != "LT0101"}
                         style={{ width: "300px" }}
                         placeholder="กรุณาเลือกวันที่"
-                        value={formData1.Date__Resignation}
+                        value={formData1.Date_Resignation}
                         onChange={(e) =>
-                          handleChange("Date__Resignation", e.target.value)
+                          handleChange("Date_Resignation", e.target.value)
                         }
                       />
                     </div>

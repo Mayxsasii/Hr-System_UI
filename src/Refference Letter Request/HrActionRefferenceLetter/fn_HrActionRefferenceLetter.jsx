@@ -185,7 +185,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
         date_submit: date_submit ? `'${formatDate(date_submit)}'` : null,
       })
       .then(async (res) => {
-        // setCondition(res.data);
+
         console.log("UpdateHrStaff", res.data);
       });
       setTimeout(() => {
