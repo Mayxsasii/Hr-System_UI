@@ -114,14 +114,20 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       .then((res) => {
         console.log(res.data, "InsSendSubmit");
       });
-    let detail = "";
+ 
     for (let i = 0; i < formData1.CB_letterType.length; i++) {
-      if (formData1.CB_letterType[i].includes("LT0203")) {
-        detail = formData1.Date_Resignation;
+      let detail = "";
+      console.log('formData1.CB_letterType[i]',formData1.CB_letterType[i])
+      if (formData1.CB_letterType[i]=='LT0203') {
+        let date =formData1.Date_Resignation
+        const formattedDate = date ? date.split('-').reverse().join('/') : '';
+        detail = formattedDate;
+   
       }
-      if (formData1.CB_letterType[i].includes("LT0205")) {
+      else if (formData1.CB_letterType[i]=='LT0205') {
         detail = formData1.txt_LetterOther;
       }
+      console.log(detail,'hhhhhhh',formData1.CB_letterType[i])
       await axios
         .post("/api/RefferenceLetter/InsSendSubmit2", {
           ReqNo: ReqNo,

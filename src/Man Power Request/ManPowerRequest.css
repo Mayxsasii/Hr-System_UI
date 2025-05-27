@@ -62,6 +62,34 @@ input[type="file"] {
   /* opacity: 1 !important; ปรับ opacity เพื่อให้สีชัดเจน */
   cursor: not-allowed; /* เปลี่ยนเคอร์เซอร์ */
 }
+.ant-radio-disabled .ant-radio-inner,
+.ant-radio-disabled + span,
+.ant-checkbox-disabled .ant-checkbox-inner,
+.ant-checkbox-disabled + span {
+  color: #504b4b !important;
+  border-color: #504b4b !important;
+  cursor: not-allowed !important;
+}
+
+.ant-select-disabled .ant-select-selector {
+  color: #504b4b !important;              /* สีฟอนต์ */
+  /* /* background-color: #f5f5f5 !important;  */
+  cursor: not-allowed !important;         /* เปลี่ยน cursor */
+  opacity: 1 !important;                  /* ลบความโปร่งแสง */
+}
+
+/* ตัวแสดงข้อความที่เลือกใน Select */
+.ant-select-disabled .ant-select-selection-item {
+  color: #504b4b !important;
+}
+
+/* สำหรับ placeholder ขณะ disabled */
+.ant-select-disabled .ant-select-selection-placeholder {
+  color: #504b4b !important;
+}
+
+
+
 
 .NameFile {
   margin: 0;

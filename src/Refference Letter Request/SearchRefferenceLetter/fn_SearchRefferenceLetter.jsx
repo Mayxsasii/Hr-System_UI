@@ -4,6 +4,7 @@ import { useLoading } from "../../loading/fn_loading";
 import { useNavigate } from "react-router-dom";
 import ImgViewFile from "../../assets/search.png";
 import ImgApprove from "../../assets/approved.png";
+import { Tag } from "antd";
 import Swal from "sweetalert2";
 
 function fn_SearchRefferenceLetter() {
@@ -69,14 +70,13 @@ function fn_SearchRefferenceLetter() {
     await axios
       .post("/api/RefferenceLetter/GetFactoryLetter", {
         User_login: userlogin || "",
-        Roll:ROLL||''
+        Roll: ROLL || "",
       })
       .then((res) => {
-
         console.log(res.data, "GetFactory");
         setFactory(res.data);
-        if(Path=='HrActionRefferenceLetter'){
-          setSL_Factory(res.data[0].value)
+        if (Path == "HrActionRefferenceLetter") {
+          setSL_Factory(res.data[0].value);
         }
       });
   };
@@ -130,10 +130,7 @@ function fn_SearchRefferenceLetter() {
   };
 
   const handleViewMasterList = (record) => {
-    // console.log("Edit record:", record.ReqNo);
-    // navigate(
-    //   `/HrSystem/ManPowerMasterList/ManPowerRequest?ReqNo=${record.ReqNo}`
-    // );
+    navigate(`/HrSystem/ViewRefferenceLetterList?ReqNo=${record.ReqNo}`);
   };
 
   const bt_Search = async () => {
@@ -235,7 +232,7 @@ function fn_SearchRefferenceLetter() {
     setSL_Letter(null);
     settxt_ReqBy("");
     setSL_Department(null);
-    if(Path!='HrActionRefferenceLetter'){
+    if (Path != "HrActionRefferenceLetter") {
       setSL_Factory(null);
     }
   };
@@ -296,74 +293,63 @@ function fn_SearchRefferenceLetter() {
     },
     {
       title: "Letter Type",
-      width: "100px",
+      width: "300px",
       dataIndex: "LetterType",
       key: "Letter Type",
-      // align:'right',
+      className: "scrollable-columnLetter",
       render: (text, record, index) => {
-        return <div className="scrollable-columnLetter">{text}</div>;
+        return <div>{text}</div>;
       },
     },
     {
       title: "Request By",
       dataIndex: "ReqBy",
-      width: "100px",
+      width: "200px",
       key: "Request By",
       align: "center",
       render: (text, record, index) => {
-        return <div className="scrollable-columnLetter">{text}</div>;
+        return <div>{text}</div>;
       },
     },
     {
       title: "Status",
       dataIndex: "Status",
       key: "Status",
+      width: "100px",
+      render: (text, record, index) => {
+        console.log(text, "Statussssss", record);
+        if (
+          record.Status_value == "LT0102" ||
+          record.Status_value == "LT0103"
+        ) {
+          return <Tag color="warning">{text}</Tag>;
+        } else if (record.Status_value == "LT0104") {
+          return <Tag color="processing">{text}</Tag>;
+        } else if (
+          record.Status_value == "LT0107" ||
+          record.Status_value == "LT0108"
+        ) {
+          return <Tag color="success">{text}</Tag>;
+        } else if (
+          record.Status_value == "LT0109" ||
+          record.Status_value == "LT0190"
+        ) {
+          return <Tag color="red">{text}</Tag>;
+        }
+      },
     },
     {
       title: "Last Action By",
       dataIndex: "LastBy",
       key: "Last Action By",
+      width: "120px",
     },
-    // {
-    //   title: "Status",
-    //   width: "180px",
-    //   dataIndex: "Status",
-    //   key: "Status",
-    //   align: "center",
-    //   render: (text, record, index) => {
-    //     if (
-    //       record.Status_value == "MR0101" ||
-    //       record.Status_value == "MR0106"
-    //     ) {
-    //       return <Tag color="processing">{text}</Tag>;
-    //     } else if (
-    //       record.Status_value == "MR0102" ||
-    //       record.Status_value == "MR0103" ||
-    //       record.Status_value == "MR0104" ||
-    //       record.Status_value == "MR0105"
-    //     ) {
-    //       return <Tag color="warning">{text}</Tag>;
-    //     } else if (
-    //       record.Status_value == "MR0129" ||
-    //       record.Status_value == "MR0139" ||
-    //       record.Status_value == "MR0149" ||
-    //       record.Status_value == "MR0190"
-    //     ) {
-    //       return <Tag color="error">{text}</Tag>;
-    //     } else if (
-    //       record.Status_value == "MR0107" ||
-    //       record.Status_value == "MR0108" ||
-    //       record.Status_value == "LT0108"
-    //     ) {
-    //       return <Tag color="success">{text}</Tag>;
-    //     }
-    //   },
-    // },
 
     {
       title: "Last Action Date",
       dataIndex: "LastDate",
       key: "Last Action Date",
+      width: "130px",
     },
   ];
 
@@ -395,7 +381,7 @@ function fn_SearchRefferenceLetter() {
     bt_Reset,
     LetterType,
     setSL_Letter,
-    SL_Letter
+    SL_Letter,
   };
 }
 

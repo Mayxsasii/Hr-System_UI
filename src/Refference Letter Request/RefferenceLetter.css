@@ -98,8 +98,9 @@
   }
 
   .scrollable-columnLetter {
+    /* border: 1px solid #ddd; */
     max-width: 300px;
     overflow-x: auto;
     white-space: nowrap;
-    text-align: left;
+    /* text-align: left; */
   }
