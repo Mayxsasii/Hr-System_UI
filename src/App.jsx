@@ -51,16 +51,12 @@ const App = () => {
           <Routes>
             {/* ------------------------------------------Not Login-------------------------------------- */}
             <Route path="/HrSystem/Login" element={<Login />} />
-
-            {/* <Route path="/test_page" element={<Page />} /> */}
-            {/* <Route path="/HrSystem/NewManPowerRequest" element={<NewManPowerRequest />} /> */}
-            {/* <Route path="/HrSystem/ManPowerRequest" element={<ManPowerRequest />} /> */}
-            {/* <Route path="/HrSystem/ApproveManPower" element={<ManPowerRequest />} /> */}
-            {/* <Route path="/HrSystem/HrActionManPowerRequest" element={<ManPowerRequest />} /> */}
-            <Route path="/HrSystem/Home" element={<Home />} />
-            <Route path="/HrSystem/RefferenceLetterMasterList" element={<SearchRefferenceLetter />} />
-            <Route path="/HrSystem/NewRefferenceLetter" element={<RefferenceLetter />} />
             {/* -------------------------------------------login----------------------------------------- */}
+            
+             {/* ----------Home------------------ */}
+            <Route path="/HrSystem/Home"
+              element={<ProtectedRoute  element={<Home/>}/>}/>
+              {/* ----------Man Power------------------ */}
             <Route path="/HrSystem/ManPowerMasterList/ManPowerRequest"
               element={<ProtectedRoute  element={<ReqManPowerList/>}/>}/>
             <Route path="/HrSystem/ManPowerMasterList"
@@ -73,16 +69,17 @@ const App = () => {
               element={<ProtectedRoute  element={<ManPowerRequest/>}/>}/>
             <Route path="/HrSystem/NewManPowerRequest"
               element={<ProtectedRoute  element={<NewManPowerRequest/>}/>}/>
-            {/* <Route path="/HrSystem/Home"
-              element={<ProtectedRoute  element={<Home/>}/>}/> */}
+               {/* ----------Letter------------------ */}
             <Route path="/HrSystem/ApproveRefferenceLetter"
               element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/>
             <Route path="/HrSystem/HrActionRefferenceLetter"
               element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/>
             <Route path="/HrSystem/ViewRefferenceLetterList"
               element={<ProtectedRoute  element={<LetterList/>}/>}/>
-              {/* <Route path="/HrSystem/RefferenceLetterMasterList"
-              element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/> */}
+              <Route path="/HrSystem/RefferenceLetterMasterList"
+              element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/>
+               <Route path="/HrSystem/NewRefferenceLetter"
+              element={<ProtectedRoute  element={<RefferenceLetter/>}/>}/>
           </Routes>
         </AppLayout>
       </Router>

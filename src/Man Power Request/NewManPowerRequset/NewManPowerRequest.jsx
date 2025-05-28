@@ -53,7 +53,7 @@ const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
             <Select
               disabled={Disable.SL_Factory}
               showSearch
-              value={formData1.SL_Factory}
+             
               style={{
                 width: "200px",
                 marginLeft: "5px",

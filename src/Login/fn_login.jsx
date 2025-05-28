@@ -14,6 +14,7 @@ function fn_login() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    localStorage.clear()
     LoginWithPath();
   }, []);
   const LoginWithPath = async () => {
@@ -61,7 +62,7 @@ function fn_login() {
         Password: password,
       })
       .then((res) => {
-        console.log(username, password, "mayyyyyyyyy");
+
         if (res.data.length <= 0) {
           Swal.fire({
             icon: "error",

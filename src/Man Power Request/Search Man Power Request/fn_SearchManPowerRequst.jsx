@@ -44,9 +44,10 @@ function fn_SearchManPowerRequst() {
   const [dataSearch, setDataSearch] = useState([]);
 
   useEffect(() => {
-    if(Path!='ManPowerMasterList'){
+    if (Path != "ManPowerMasterList") {
       GetDepartment();
     }
+
     GetFactory();
     GetStatus();
     Title();
@@ -67,6 +68,18 @@ function fn_SearchManPowerRequst() {
     }
   };
 
+  const GetDepartmentFac = async (Fac) => {
+    await axios
+      .post("/api/RequestManPower/GetDepartmentMasterList", {
+        Fac: Fac || "",
+      })
+      .then((res) => {
+        console.log(res.data, "GetDepartmentMasterList");
+        // setFactory(res.data);
+        setDepartment(res.data);
+      });
+  };
+
   const GetFactory = async () => {
     console.log(userlogin, "userlogin");
     if (Path == "ManPowerRequest") {
@@ -78,15 +91,7 @@ function fn_SearchManPowerRequst() {
           console.log(res.data, "GetFactoryIssue");
           setFactory(res.data);
         });
-    } 
-    // else if (Path == "ManPowerMasterList") {
-    //   await axios
-    //     .post("/api/RequestManPower/GetFactoryMasterlist", {})
-    //     .then((res) => {
-    //       console.log(res.data, "GetFactoryHrAction");
-    //       setFactory(res.data);
-    //     });
-    // } 
+    }
     else {
       await axios
         .post("/api/RequestManPower/GetFactory", {
@@ -95,8 +100,11 @@ function fn_SearchManPowerRequst() {
         .then((res) => {
           console.log(res.data, "GetFactory");
           setFactory(res.data);
-          if(Path=='HrActionManPowerRequest'){
-            setSL_Factory(res.data[0].value)
+          if (Path == "HrActionManPowerRequest") {
+            setSL_Factory(res.data[0].value);
+            if (Path == "HrActionManPowerRequest") {
+              GetDepartmentFac(res.data[0].value);
+            }
           }
         });
     }
@@ -168,19 +176,11 @@ function fn_SearchManPowerRequst() {
       });
   };
 
-  const handleFactory =async (value) => {
+  const handleFactory = async (value) => {
     setSL_Factory(value);
     GetPosition(value);
-    if(Path=='ManPowerMasterList'){
-      await axios
-      .post("/api/RequestManPower/GetDepartmentMasterList", {
-        Fac: value || "",
-      })
-      .then((res) => {
-        console.log(res.data, "GetDepartmentMasterList");
-        // setFactory(res.data);
-        setDepartment(res.data);
-      });
+    if (Path == "ManPowerMasterList") {
+      GetDepartmentFac(value);
     }
   };
 
@@ -362,8 +362,8 @@ function fn_SearchManPowerRequst() {
     }
     hideLoading();
   };
-  
-  const bt_Reset =  () => {
+
+  const bt_Reset = () => {
     setSL_Department(null);
     setSL_Position(null);
     setSL_JobGrade(null);
@@ -372,14 +372,14 @@ function fn_SearchManPowerRequst() {
     settxt_ReqNoTo("");
     setDateFrom("");
     setDateTo("");
-    if( Path != "ManPowerRequest") {
-      settxt_ReqBy('');
+    if (Path != "ManPowerRequest") {
+      settxt_ReqBy("");
     }
-    if(Path!='HrActionManPowerRequest'){
+    if (Path != "HrActionManPowerRequest") {
       setSL_Factory(null);
     }
     setDataSearch([]);
-  }
+  };
 
   const columns = [
     {
@@ -583,7 +583,7 @@ function fn_SearchManPowerRequst() {
     txt_ReqBy,
     Path,
     TitlePage,
-    bt_Reset
+    bt_Reset,
   };
 }
 

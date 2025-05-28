@@ -47,10 +47,10 @@ const Step2 = ({ formData1, setFormData1 }) => {
           onChange={(checkedValues) => {
             console.log("CB", checkedValues);
             handleChange("CB_letterType", checkedValues);
-            if (checkedValues.includes("LT0203")) {
+            if (!checkedValues.includes("LT0203")) {
               handleChange("Date_Resignation", null);
             }
-            if (checkedValues.includes("LT0205")) {
+            if (!checkedValues.includes("LT0205")) {
               handleChange("txt_LetterOther", "");
             }
           }}

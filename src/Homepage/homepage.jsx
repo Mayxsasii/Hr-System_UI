@@ -6,11 +6,11 @@ import ImgHR3 from "../assets/id-card.png";
 import ImgHR4 from "../assets/stationery (1).png";
 import ImgHR5 from "../assets/safety-at-work.png";
 import { fn_home } from "./fn_home";
+import { CaretRightOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import "./HomePage.css";
 const Login = () => {
+  const { ManPower, GoPathManPower,GoPathLetter,Letter} = fn_home();
 
-  const {ManPower,GoPathManPower} = fn_home();
-  console.log(ManPower, "ManPower11111");
   return (
     <div>
       <div className="Home_Page">
@@ -31,7 +31,9 @@ const Login = () => {
               >
                 Man Power Request
               </span>
-              <span className="Font_Count">Total {ManPower[5]?.Total||0} Request</span>
+              <span className="Font_Count">
+                Total {ManPower[5]?.Total || 0} Request
+              </span>
             </div>
           </div>
           <div className="Div_Status">
@@ -41,7 +43,7 @@ const Login = () => {
                 background: "#E3FCEF",
                 borderLeft: "10px solid #2E7D32",
               }}
-              onClick={() => GoPathManPower('1',ManPower[0]?.Create)}
+              onClick={() => GoPathManPower("1", ManPower[0]?.Create)}
             >
               <p
                 className="P_Title_Status"
@@ -58,17 +60,16 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                {ManPower[0]?.Create||0} 
+                {ManPower[0]?.Create || 0}
               </p>
             </div>
-            {console.log(ManPower[0]?.WaitDeptApprove, "howwwww")}
             <div
               className="Home_Status"
               style={{
-                background: "#E3FCEF", 
+                background: "#E3FCEF",
                 borderLeft: "10px solid #2E7D32",
               }}
-              onClick={() => GoPathManPower('2',ManPower[1]?.WaitDeptApprove)}
+              onClick={() => GoPathManPower("2", ManPower[1]?.WaitDeptApprove)}
             >
               <p
                 className="P_Title_Status"
@@ -85,17 +86,17 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-               {ManPower[1]?.WaitDeptApprove||0} 
+                {ManPower[1]?.WaitDeptApprove || 0}
               </p>
             </div>
 
             <div
               className="Home_Status"
               style={{
-                background: "#E3FCEF", 
+                background: "#E3FCEF",
                 borderLeft: "10px solid #2E7D32",
               }}
-              onClick={() => GoPathManPower('2',ManPower[2]?.WaitFMGMApprove)}
+              onClick={() => GoPathManPower("2", ManPower[2]?.WaitFMGMApprove)}
             >
               <p
                 className="P_Title_Status"
@@ -112,7 +113,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
- {ManPower[2]?.WaitFMGMApprove||0} 
+                {ManPower[2]?.WaitFMGMApprove || 0}
               </p>
             </div>
 
@@ -120,9 +121,11 @@ const Login = () => {
               className="Home_Status"
               style={{
                 background: "#E3FCEF",
-                borderLeft: "10px solid #2E7D32"
+                borderLeft: "10px solid #2E7D32",
               }}
-              onClick={() => GoPathManPower('2',ManPower[3]?.WaitHRManagerApprove)}
+              onClick={() =>
+                GoPathManPower("2", ManPower[3]?.WaitHRManagerApprove)
+              }
             >
               <p
                 className="P_Title_Status"
@@ -139,17 +142,17 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                {ManPower[3]?.WaitHRManagerApprove||0} 
+                {ManPower[3]?.WaitHRManagerApprove || 0}
               </p>
             </div>
 
             <div
               className="Home_Status"
               style={{
-                background: "#E3FCEF", 
-                borderLeft: "10px solid #2E7D32", 
+                background: "#E3FCEF",
+                borderLeft: "10px solid #2E7D32",
               }}
-              onClick={() => GoPathManPower('3',ManPower[4]?.WaitHRStaff)}
+              onClick={() => GoPathManPower("3", ManPower[4]?.WaitHRStaff)}
             >
               <p
                 className="P_Title_Status"
@@ -166,7 +169,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                 {ManPower[4]?.WaitHRStaff||0} 
+                {ManPower[4]?.WaitHRStaff || 0}
               </p>
             </div>
           </div>
@@ -190,7 +193,7 @@ const Login = () => {
               >
                 Refference Letter Request
               </span>
-              <span className="Font_Count">Total 10 Request</span>
+              <span className="Font_Count">Total   {Letter[2]?.Total || 0} Request</span>
             </div>
           </div>
 
@@ -203,6 +206,7 @@ const Login = () => {
                 background: "#FFF3E0", // สีเขียวอ่อน
                 borderLeft: "10px solid #F57C00", // สีเขียวเข้ม
               }}
+              onClick={() => GoPathLetter("C", '')}
             >
               <p
                 className="P_Title_Status"
@@ -217,9 +221,10 @@ const Login = () => {
                 style={{
                   color: "#F57C00",
                   border: "2px solid #F57C00",
+                  // fontWeight: "bold",
                 }}
               >
-                5
+                <ArrowRightOutlined />
               </p>
             </div>
 
@@ -230,6 +235,7 @@ const Login = () => {
                 background: "#FFF3E0", // สีเขียวอ่อน
                 borderLeft: "10px solid #F57C00", // สีเขียวเข้ม
               }}
+              onClick={() => GoPathLetter("A", Letter[0]?.WaitSVApprove || 0)}
             >
               <p
                 className="P_Title_Status"
@@ -249,7 +255,7 @@ const Login = () => {
                   margin: 0,
                 }}
               >
-                5
+                 {Letter[0]?.WaitSVApprove || 0}
               </p>
             </div>
 
@@ -260,6 +266,7 @@ const Login = () => {
                 background: "#FFF3E0", // สีเขียวอ่อน
                 borderLeft: "10px solid #F57C00", // สีเขียวเข้ม
               }}
+              onClick={() => GoPathLetter("H", Letter[1]?.WaitHRStaff || 0)}
             >
               <p
                 className="P_Title_Status"
@@ -276,7 +283,7 @@ const Login = () => {
                   border: "2px solid #F57C00",
                 }}
               >
-                5
+                {Letter[1]?.WaitHRStaff || 0}
               </p>
             </div>
           </div>
@@ -298,7 +305,7 @@ const Login = () => {
                   color: "#0288D1",
                 }}
               >
-                Man Power Request
+                Employee Card Request
               </span>
               <span className="Font_Count">Total 10 Request</span>
             </div>
@@ -329,6 +336,32 @@ const Login = () => {
                   border: "2px solid #0288D1",
                 }}
               >
+                     <ArrowRightOutlined />
+              </p>
+            </div>
+
+            <div
+              className="Home_Status"
+              style={{
+                background: "#E3F2FD", // สีเขียวอ่อน
+                borderLeft: "10px solid #0288D1", // สีเขียวเข้ม
+              }}
+            >
+              <p
+                className="P_Title_Status"
+                style={{
+                  color: "#0288D1",
+                }}
+              >
+                Wait Supervisor Up Approve
+              </p>
+              <p
+                className="P_Count_Status"
+                style={{
+                  color: "#0288D1",
+                  border: "2px solid #0288D1",
+                }}
+              >
                 5
               </p>
             </div>
@@ -346,7 +379,7 @@ const Login = () => {
                   color: "#0288D1",
                 }}
               >
-                Create
+               Wait HR Staff Action
               </p>
               <p
                 className="P_Count_Status"
@@ -358,56 +391,9 @@ const Login = () => {
                 5
               </p>
             </div>
-            <div
-              className="Home_Status"
-              style={{
-                background: "#E3F2FD", // สีเขียวอ่อน
-                borderLeft: "10px solid #0288D1", // สีเขียวเข้ม
-              }}
-            >
-              <p
-                className="P_Title_Status"
-                style={{
-                  color: "#0288D1",
-                }}
-              >
-                Create
-              </p>
-              <p
-                className="P_Count_Status"
-                style={{
-                  color: "#0288D1",
-                  border: "2px solid #0288D1",
-                }}
-              >
-                5
-              </p>
-            </div>
-            <div
-              className="Home_Status"
-              style={{
-                background: "#E3F2FD", // สีเขียวอ่อน
-                borderLeft: "10px solid #0288D1", // สีเขียวเข้ม
-              }}
-            >
-              <p
-                className="P_Title_Status"
-                style={{
-                  color: "#0288D1",
-                }}
-              >
-                Create
-              </p>
-              <p
-                className="P_Count_Status"
-                style={{
-                  color: "#0288D1",
-                  border: "2px solid #0288D1",
-                }}
-              >
-                5
-              </p>
-            </div>
+
+
+
           </div>
         </div>
         {/* content4 */}

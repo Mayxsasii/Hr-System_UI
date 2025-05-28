@@ -38,14 +38,14 @@ function fn_Header() {
       .then((res) => {
         if (res.data.length > 0) {
           setdatauser(res.data[0]);
-          console.log(res.data[0], "GetDataUser");
         }
       });
   };
 
-  const logout = () => (
-    localStorage.clear(), (window.location.href = "/HrSystem/Login")
-  );
+  const logout = () => {
+    window.location.href = "/HrSystem/Login"
+    localStorage.clear()
+}
 
   return {
     datauser,

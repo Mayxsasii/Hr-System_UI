@@ -5,40 +5,58 @@ import Swal from "sweetalert2";
 import { useLocation } from "react-router-dom";
 function fn_home() {
   const [ManPower, setManPower] = useState([]);
+  const [Letter, setLetter] = useState([]);
   const User = localStorage.getItem("username");
   const Roll = localStorage.getItem("ROLL");
- 
-  useEffect( () => {
+
+  useEffect(() => {
     getmenucount();
-   
   }, []);
-  const getmenucount = async() => {
-    console.log("Roll", Roll);
-      await axios
+  const getmenucount = async () => {
+    await axios
       .post("/api/RequestManPower/HomeStatusCountManPower", {
         UserLogin: User,
-        Roll: [Roll]
+        Roll: [Roll],
       })
       .then((res) => {
-        console.log(res.data, "ManPower2222");
         setManPower(res.data);
       });
-  }
-  const GoPathManPower = (value,count) => {
-    console.log("GoPathManPower", count,value);
-    if(count > 0) {
-    if( value === "1") {
-      window.location.href = "/HrSystem/ManPowerRequest";
+
+      await axios
+      .post("/api/RefferenceLetter/HomeStatusCountLetter", {
+        UserLogin: User,
+        Roll: [Roll],
+      })
+      .then((res) => {
+        setLetter(res.data);
+        console.log("Letter", res.data);
+      });
+  };
+  const GoPathManPower = (value, count) => {
+    if (count > 0) {
+      if (value === "1") {
+        window.location.href = "/HrSystem/ManPowerRequest";
+      } else if (value === "2") {
+        window.location.href = "/HrSystem/ApproveManPower";
+      } else if (value === "3") {
+        window.location.href = "/HrSystem/HrActionManPowerRequest";
+      }
     }
-    else if( value === "2") {
-      window.location.href = "/HrSystem/ApproveManPower";
+  };
+  const GoPathLetter = (Page,Count) => {
+    if (Page == "C") {
+      window.location.href = "/HrSystem/NewRefferenceLetter";
     }
-    else if( value === "3") {
-      window.location.href = "/HrSystem/HrActionManPowerRequest";
+    if(Count>0){
+      if(Page == "A"){
+        window.location.href = "/HrSystem/ApproveRefferenceLetter";
+      }
+      if(Page == "H"){
+        window.location.href = "/HrSystem/HrActionRefferenceLetter";
+      }
     }
-  }
-  }
-  return {ManPower,GoPathManPower};
+  };
+  return { ManPower, GoPathManPower,GoPathLetter,Letter};
 }
 
 export { fn_home };

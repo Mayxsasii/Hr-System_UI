@@ -77,6 +77,7 @@ function fn_SearchRefferenceLetter() {
         setFactory(res.data);
         if (Path == "HrActionRefferenceLetter") {
           setSL_Factory(res.data[0].value);
+           GetDeptFac(res.data[0].value);
         }
       });
   };
@@ -110,17 +111,21 @@ function fn_SearchRefferenceLetter() {
       });
   };
 
+
+  const GetDeptFac = async (value) => {
+    await axios
+    .post("/api/RefferenceLetter/GetDeptallFac", {
+      Fac: value || "",
+    })
+    .then((res) => {
+      console.log(res.data, "GetDeptallFac");
+      setDepartment(res.data);
+    });
+  }
   const handleFactory = async (value) => {
     setSL_Factory(value);
     if (Path != "ApproveRefferenceLetter") {
-      await axios
-        .post("/api/RefferenceLetter/GetDeptallFac", {
-          Fac: value || "",
-        })
-        .then((res) => {
-          console.log(res.data, "GetDeptallFac");
-          setDepartment(res.data);
-        });
+      await GetDeptFac(value);
     }
   };
 

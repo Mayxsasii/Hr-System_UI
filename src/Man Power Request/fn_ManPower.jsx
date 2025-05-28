@@ -62,10 +62,10 @@ function fn_ManPower() {
     txt_EmpType_Other: "",
     txt_EmpReq_Other: "",
     txt_Remark: "",
-    txt_SendDate:'',
+    txt_SendDate: "",
     //Step2
-    txt_FileNameReadData:'',
-    DataFileReadData:null,
+    txt_FileNameReadData: "",
+    DataFileReadData: null,
     // ------------------------
     CB_Substitube: "",
     txt_TotalSubstitube: 0,
@@ -152,7 +152,7 @@ function fn_ManPower() {
     CB_HrFileAttach: false,
     Hr_FileAttach: "",
     Hr_DataFileAttach: null,
-    Hr_NameFileOther: '',
+    Hr_NameFileOther: "",
     Hr_DataFileOther: null,
     Hr_Add: [
       {
@@ -251,7 +251,6 @@ function fn_ManPower() {
   };
 
   const GetDisable = async (ID_Status, StatusType) => {
-    console.log("ID_Status0", ID_Status, StatusType);
     if (StatusType == "C" || StatusType == "R") {
       // if(formData1.)
       DisableChange("CB_DepartmentApprove", true);
@@ -352,7 +351,7 @@ function fn_ManPower() {
       showLoading("Loading...");
       await GetdataEdit();
       await GetFile();
-      await GetFileDetail()
+      await GetFileDetail();
       // await GetDisable(formData1.ID_Status);
       hideLoading();
     } else {
@@ -368,7 +367,6 @@ function fn_ManPower() {
         ReqNo: ReqNo,
       })
       .then(async (res) => {
-        console.log(res.data, "GetDataEdit");
         await GetDisable(res.data[0].Status_code, res.data[0].Status_Type);
 
         handleChange("txt_ReqNo", res.data[0].Req_No);
@@ -377,7 +375,6 @@ function fn_ManPower() {
         handleChange("ID_Status", res.data[0].Status_code);
         handleChange("txt_SendDate", res.data[0].SendDate);
         if (res.data[0].Status_Type == "C" || res.data[0].Status_Type == "R") {
-          console.log("vvvvvvv", res.data[0].Cb_Sub);
           DisableChange("SL_Factory", true);
           DisableChange("SL_Department", true);
           // DisableChange("SL_Position", true);
@@ -456,7 +453,6 @@ function fn_ManPower() {
         //step4
         handleChange("Radio_HrStatus", res.data[0].HrStaff_Status);
         handleChange("Sl_HrCloseBy", res.data[0].HrStaff_Condition);
-        console.log(res.data[0].HrStaff_Condition, "Sl_HrCloseBy");
         handleChange("txt_HrComment", res.data[0].HrStaff_Comment);
         handleChange("txt_TotalManual", res.data[0].HrStaff_Complete);
         handleChange(
@@ -471,7 +467,6 @@ function fn_ManPower() {
         ReqNo: ReqNo,
       })
       .then((res) => {
-        console.log(res.data, "GetDataDetailStep1");
         if (res.data.length > 0) {
           const empRequirements = [];
           for (let i = 0; i < res.data.length; i++) {
@@ -498,7 +493,6 @@ function fn_ManPower() {
         ReqNo: ReqNo,
       })
       .then((res) => {
-        console.log(res.data, "mmmmmm1");
         if (res.data.length > 0) {
           const DataPerson_Sub = [];
           const DataPerson_ADD = [];
@@ -577,7 +571,6 @@ function fn_ManPower() {
         ReqNo: ReqNo,
       })
       .then((res) => {
-        console.log(res.data, "GetDataPersonDetail");
         let Data_Sub = [];
         let Data_Add = [];
         for (let i = 0; i < res.data.length; i++) {
@@ -624,7 +617,6 @@ function fn_ManPower() {
               updatedPersonSub[recIdIndex].Education.push(Data_Sub[i].Sl_value);
 
               if (Data_Sub[i].Sl_value === "MR0490") {
-                console.log(Data_Sub[i].txt_other, "Data_SubMR0490");
                 updatedPersonSub[recIdIndex].EducationOther =
                   Data_Sub[i].txt_other || "";
               }
@@ -648,7 +640,6 @@ function fn_ManPower() {
               updatedPersonSub[recIdIndex].Req_Jobgrade.push(
                 Data_Sub[i].Sl_value
               );
-              console.log(updatedPersonSub, "updatedPersonSub");
               return {
                 ...prev,
                 Person_Sub: updatedPersonSub,
@@ -668,7 +659,6 @@ function fn_ManPower() {
 
               updatedPersonSub[recIdIndex].Course.push(Data_Sub[i].Sl_value);
               if (Data_Sub[i].Sl_value === "MR0507") {
-                console.log(Data_Sub[i].txt_other, "Data_SubMR0507");
                 updatedPersonSub[recIdIndex].CourseOther =
                   Data_Sub[i].txt_other || "";
               }
@@ -691,7 +681,6 @@ function fn_ManPower() {
 
               updatedPersonSub[recIdIndex].Field.push(Data_Sub[i].Sl_value);
               if (Data_Sub[i].Sl_value === "MR0699") {
-                console.log(Data_Sub[i].txt_other, "Data_SubMR0699");
                 updatedPersonSub[recIdIndex].FieldOther =
                   Data_Sub[i].txt_other || "";
               }
@@ -789,46 +778,49 @@ function fn_ManPower() {
   const GetFile = async () => {
     const processFile = (fileName, fileData) => {
       if (!fileName || !fileData) return null;
-  
+
       let mimeType = "";
       if (fileName.endsWith(".pdf")) {
         mimeType = "application/pdf";
       } else if (fileName.endsWith(".xls")) {
         mimeType = "application/vnd.ms-excel";
       } else if (fileName.endsWith(".xlsx")) {
-        mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        mimeType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       } else {
         console.error("Unsupported file type");
         return null;
       }
-  
-      const blob = new Blob([new Uint8Array(fileData.data)], { type: mimeType });
+
+      const blob = new Blob([new Uint8Array(fileData.data)], {
+        type: mimeType,
+      });
       return new File([blob], fileName, { type: mimeType });
     };
-  
+
     try {
-      const response = await axios.post("/api/Common/GetFile", { ReqNo: ReqNo });
-      console.log(response.data, "GetFile");
-  
+      const response = await axios.post("/api/Common/GetFile", {
+        ReqNo: ReqNo,
+      });
+
       const resData = response.data[0];
       if (!resData) {
         console.error("No data found");
         return;
       }
-  
+
       const fileAdd = processFile(resData.AddName, resData.AddName_File);
       const fileSub = processFile(resData.SubName, resData.SubName_File);
       const fileHr = processFile(resData.HrAcName, resData.HrAcName_File);
-      console.log(fileAdd, fileSub, fileHr, "fileAdd,fileSub,fileHr");
       if (fileAdd) {
         handleChange("FileName_Add", fileAdd.name);
         handleChange("DataFileADD", fileAdd);
       }
-      if (fileSub){
+      if (fileSub) {
         handleChange("FileName_Sub", fileSub.name);
         handleChange("DataFileSub", fileSub);
       }
-      if (fileHr){
+      if (fileHr) {
         handleChange("Hr_NameFileOther", fileHr.name);
         handleChange("Hr_DataFileOther", fileHr);
       }
@@ -840,97 +832,100 @@ function fn_ManPower() {
   const GetFileDetail = async () => {
     const processFile = (fileName, fileData) => {
       if (!fileName || !fileData || !fileData.data) {
-        console.error("Invalid file data or file name:", { fileName, fileData });
+        console.error("Invalid file data or file name:", {
+          fileName,
+          fileData,
+        });
         return null;
       }
-  
+
       let mimeType = "";
       if (fileName.endsWith(".pdf")) {
         mimeType = "application/pdf";
       } else if (fileName.endsWith(".xls")) {
         mimeType = "application/vnd.ms-excel";
       } else if (fileName.endsWith(".xlsx")) {
-        mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        mimeType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       } else {
         console.error("Unsupported file type:", fileName);
         return null;
       }
-  
+
       try {
-        const blob = new Blob([new Uint8Array(fileData.data)], { type: mimeType });
+        const blob = new Blob([new Uint8Array(fileData.data)], {
+          type: mimeType,
+        });
         return new File([blob], fileName, { type: mimeType });
       } catch (error) {
         console.error("Error creating file object:", error);
         return null;
       }
     };
-  
+
     try {
-      const response = await axios.post("/api/Common/GetFileDetail", { ReqNo: ReqNo });
-      console.log(response.data, "GetFileDetail0");
-  
+      const response = await axios.post("/api/Common/GetFileDetail", {
+        ReqNo: ReqNo,
+      });
+ 
+
       const resData = response.data;
-      console.log(resData, "GetFileDetail1");
-  
+
+
       if (!resData || resData.length === 0) {
         console.error("No data found");
         return;
       }
-  
+
       for (let i = 0; i < resData.length; i++) {
         const fileName = resData[i].FileName || "";
         const fileData = resData[i].File || null;
         const recID = resData[i].RecID || "";
-  
-        if (fileName=='') {
-          console.log(`Invalid file data at index ${i}:`, resData[i]);
+
+        if (fileName == "") {
           continue;
         }
-  
+
         const fileDetail = processFile(fileName, fileData);
         if (!fileDetail) {
-          console.log(`Failed to process file at index ${i}:`, fileName,recID);
           continue;
         }
-  
-        // console.log(fileDetail, "fileDetailxxx",recID);
-  
-        const ADDSUB = recID.charAt(0); 
-        const index = parseInt(recID.slice(-2), 10)-1; 
-  
-        // console.log("subbbbAdddd", recID, ADDSUB, index);
-  
-       
-        if (ADDSUB === 'S') {
+
+
+
+        const ADDSUB = recID.charAt(0);
+        const index = parseInt(recID.slice(-2), 10) - 1;
+
+        if (ADDSUB === "S") {
           setFormData1((prev) => {
-            const updatedPersonSub = [...(prev.Person_Sub || [])]; 
+            const updatedPersonSub = [...(prev.Person_Sub || [])];
             if (!updatedPersonSub[index]) {
-              updatedPersonSub[index] = {}; 
+              updatedPersonSub[index] = {};
             }
             updatedPersonSub[index] = {
               ...updatedPersonSub[index],
               DataFilefeature: fileDetail,
-              Filefeature:fileName
+              Filefeature: fileName,
             };
-        
+
             return {
               ...prev,
               Person_Sub: updatedPersonSub,
             };
           });
         }
-        if (ADDSUB === 'A') {
+        if (ADDSUB === "A") {
           setFormData1((prev) => {
-            const updatedPersonADD = [...(prev.Person_ADD || [])]; 
+            const updatedPersonADD = [...(prev.Person_ADD || [])];
             if (!updatedPersonADD[index]) {
-              updatedPersonADD[index] = {}; 
+              updatedPersonADD[index] = {};
             }
             updatedPersonADD[index] = {
               ...updatedPersonADD[index],
               DataFilefeature: fileDetail,
-              Filefeature:fileName
+              Filefeature: fileName,
             };
-        
+
             return {
               ...prev,
               Person_Sub: updatedPersonADD,
@@ -962,7 +957,7 @@ function fn_ManPower() {
         User: UserLogin,
       })
       .then(async (res) => {
-        console.log(res.data, "GetPersonData");
+
         if (res.data.length <= 0) {
           Swal.fire({
             icon: "error",
@@ -975,25 +970,24 @@ function fn_ManPower() {
   };
 
   const next = async () => {
-    console.log(current, "currentnext");
+
     if (current === 0 && !validateStep1()) {
-      return
+      return;
     } else if (current == 2 && !(await validateStep4())) {
       // setCurrent(current);
       return;
     }
     setCurrent(current + 1);
-   
   };
 
   const prev = () => {
-    console.log(current-1, "currentprev");
-    if(current-1 == -1){
-       showLoading("Loading...");
+
+    if (current - 1 == -1) {
+      showLoading("Loading...");
       window.history.back(); // ย้อนกลับไปยังหน้าก่อนหน้า
       hideLoading();
       return;
-    }else{
+    } else {
       setCurrent(current - 1);
     }
     // setCurrent(current - 1);
@@ -1026,7 +1020,6 @@ function fn_ManPower() {
   const handleChange = (field, value) => {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
-
 
   return {
     current,
