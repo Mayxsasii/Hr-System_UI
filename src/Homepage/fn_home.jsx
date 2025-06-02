@@ -8,7 +8,7 @@ function fn_home() {
   const [Letter, setLetter] = useState([]);
   const User = localStorage.getItem("username");
   const Roll = localStorage.getItem("ROLL");
-
+  const Fac = localStorage.getItem("FAC_CODE");
   useEffect(() => {
     getmenucount();
   }, []);
@@ -17,6 +17,7 @@ function fn_home() {
       .post("/api/RequestManPower/HomeStatusCountManPower", {
         UserLogin: User,
         Roll: [Roll],
+        Fac:Fac||''
       })
       .then((res) => {
         setManPower(res.data);
@@ -26,6 +27,7 @@ function fn_home() {
       .post("/api/RefferenceLetter/HomeStatusCountLetter", {
         UserLogin: User,
         Roll: [Roll],
+        Fac:Fac||''
       })
       .then((res) => {
         setLetter(res.data);

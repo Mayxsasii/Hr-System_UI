@@ -1213,6 +1213,7 @@ function fn_ForApprove(
         await axios
           .post("/api/Common/GetEmailHrStaff", {
             Fac: formData1.SL_Factory,
+            formenu:'MAN POWER'
           })
           .then((res) => {
             console.log(res.data, "GetEmailHrStaff");
@@ -1232,6 +1233,7 @@ function fn_ForApprove(
         await axios
           .post("/api/Common/GetEmailUser", {
             user: Usermail,
+             formenu:'MAN POWER'
           })
           .then((res) => {
             if (res.data.length > 0) {
@@ -1268,6 +1270,7 @@ function fn_ForApprove(
       await axios
         .post("/api/Common/GetEmailUser", {
           user: Usermail,
+          formenu:'MAN POWER'
         })
         .then((res) => {
           if (res.data.length > 0) {

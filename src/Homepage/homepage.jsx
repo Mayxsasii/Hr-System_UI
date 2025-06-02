@@ -6,10 +6,11 @@ import ImgHR3 from "../assets/id-card.png";
 import ImgHR4 from "../assets/stationery (1).png";
 import ImgHR5 from "../assets/safety-at-work.png";
 import { fn_home } from "./fn_home";
-import { CaretRightOutlined, ArrowRightOutlined } from "@ant-design/icons";
+import { ArrowRightOutlined } from "@ant-design/icons";
 import "./HomePage.css";
+
 const Login = () => {
-  const { ManPower, GoPathManPower,GoPathLetter,Letter} = fn_home();
+  const { ManPower, GoPathManPower, GoPathLetter, Letter } = fn_home();
 
   return (
     <div>
@@ -193,7 +194,9 @@ const Login = () => {
               >
                 Refference Letter Request
               </span>
-              <span className="Font_Count">Total   {Letter[2]?.Total || 0} Request</span>
+              <span className="Font_Count">
+                Total {Letter[2]?.Total || 0} Request
+              </span>
             </div>
           </div>
 
@@ -206,7 +209,7 @@ const Login = () => {
                 background: "#FFF3E0", // สีเขียวอ่อน
                 borderLeft: "10px solid #F57C00", // สีเขียวเข้ม
               }}
-              onClick={() => GoPathLetter("C", '')}
+              onClick={() => GoPathLetter("C", "")}
             >
               <p
                 className="P_Title_Status"
@@ -255,7 +258,7 @@ const Login = () => {
                   margin: 0,
                 }}
               >
-                 {Letter[0]?.WaitSVApprove || 0}
+                {Letter[0]?.WaitSVApprove || 0}
               </p>
             </div>
 
@@ -336,7 +339,7 @@ const Login = () => {
                   border: "2px solid #0288D1",
                 }}
               >
-                     <ArrowRightOutlined />
+                <ArrowRightOutlined />
               </p>
             </div>
 
@@ -379,7 +382,7 @@ const Login = () => {
                   color: "#0288D1",
                 }}
               >
-               Wait HR Staff Action
+                Wait HR Staff Action
               </p>
               <p
                 className="P_Count_Status"
@@ -391,9 +394,6 @@ const Login = () => {
                 5
               </p>
             </div>
-
-
-
           </div>
         </div>
         {/* content4 */}

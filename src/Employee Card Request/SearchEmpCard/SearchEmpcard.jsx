@@ -1,44 +1,61 @@
- import React from "react";
-import { Checkbox, Input, Button, Select, DatePicker, Table } from "antd";
-import {
-  SearchOutlined,
-  PlusOutlined,
-  ReloadOutlined,
-} from "@ant-design/icons";
-import ImgExcel from "../../assets/excel.png";
-import { fn_SearchRefferenceLetter } from "./fn_SearchRefferenceLetter.jsx";
+import React from "react";
+import { Form, Input, Button, Table, Select } from "antd";
+import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
+import "../EmpCard.css"; // เชื่อมโยงไฟล์ CSS
+import { fn_SearchEmpcard } from "./fn_SearchEmpcard";
+const { Option } = Select;
 
-const SearchManPower = () => {
+const SearchEmpCard = () => {
   const {
-    columns,
     Factory,
-    Department,
     SL_Factory,
+    handleFactory,
+    Path,
+    Department,
     SL_Department,
     setSL_Department,
-    handleFactory,
-    DateFrom,
-    DateTo,
-    txt_ReqNoFrom,
-    txt_ReqNoTo,
-    setDateFrom,
-    setDateTo,
-    settxt_ReqNoFrom,
-    settxt_ReqNoTo,
-    bt_Search,
-    dataSearch,
-    SL_Status,
-    setSL_Status,
-    Status,
-    settxt_ReqBy,
-    txt_ReqBy,
-    Path,
     TitlePage,
+    Status,
+    setSL_Status,
+    SL_Status,
+    Reason,
+    setSL_Reason,
+    SL_Reason,
+    txt_ReqNoFrom,
+    settxt_ReqNoFrom,
+    txt_ReqNoTo,
+    settxt_ReqNoTo,
+    DateFrom,
+    setDateFrom,
+    DateTo,
+    setDateTo,
+    txt_ReqBy,
+    settxt_ReqBy,
     bt_Reset,
-    LetterType,
-    setSL_Letter,
-    SL_Letter
-  } = fn_SearchRefferenceLetter();
+    bt_Search,
+    columns,
+    dataSearch
+  } = fn_SearchEmpcard();
+  // const columns = [
+  //   { title: "Employee ID", dataIndex: "employeeId", key: "employeeId" },
+  //   { title: "First Name", dataIndex: "firstName", key: "firstName" },
+  //   { title: "Last Name", dataIndex: "lastName", key: "lastName" },
+  //   { title: "Department", dataIndex: "department", key: "department" },
+  //   { title: "Position", dataIndex: "position", key: "position" },
+  //   { title: "Status", dataIndex: "status", key: "status" },
+  // ];
+
+  // const data = [
+  //   {
+  //     key: "1",
+  //     employeeId: "123",
+  //     firstName: "John",
+  //     lastName: "Doe",
+  //     department: "IT",
+  //     position: "Developer",
+  //     status: "Active",
+  //   },
+  // ];
 
   return (
     <div
@@ -49,18 +66,8 @@ const SearchManPower = () => {
         margin: "0 auto",
       }}
     >
-      <div
-        style={{
-          borderRadius: "15px",
-          color: "#ffffff",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: "20px",
-          backgroundColor: "#8E7DBE",
-          padding: "10px 0",
-        }}
-      >
+      {/* Header */}
+      <div className="divTitleSearch">
         <p style={{ margin: 0, fontSize: "20px", fontWeight: "bold" }}>
           <SearchOutlined style={{ marginRight: "8px" }} />
           {TitlePage}
@@ -73,19 +80,19 @@ const SearchManPower = () => {
           justifyContent: "center",
           margin: "20px 0",
           borderRadius: "15px",
-          backgroundColor: "#fff",
+          backgroundColor: "#FFFFFF",
           padding: "20px",
           boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <table style={{ width: "100%" }} className="SearchLetter">
+        <table style={{ width: "100%" }} className="SearchEmpcard">
           <tbody>
             <tr>
-              <td style={{ textAlign: "right" }}>โรงงาน/Factory :</td>
-              <td style={{ width: "220px" }}>
+              <td style={{ textAlign: "right", width: "100px" }}>Factory :</td>
+              <td style={{ width: "200px" }}>
                 <Select
                   showSearch
-                  disabled={Path=='HrActionRefferenceLetter'}
+                  disabled={Path == "HrActionEmployeeCard"}
                   value={SL_Factory}
                   style={{
                     width: "100%",
@@ -101,17 +108,16 @@ const SearchManPower = () => {
                   onChange={handleFactory}
                 />
               </td>
-              <td style={{ textAlign: "right" }}>แผนก/Department :</td>
-              <td style={{ width: "250px" }}>
+              <td style={{ textAlign: "right", width: "100px" }}>
+                Department :
+              </td>
+              <td style={{ width: "200px" }}>
                 <Select
-                  showSearch
                   mode="multiple"
-                  maxTagCount={"responsive"}
+                  showSearch
                   value={SL_Department}
                   style={{
                     width: "100%",
-                    // display: "block",
-                    // marginTop: "5px",
                   }}
                   placeholder="Select Department"
                   optionFilterProp="children"
@@ -124,41 +130,13 @@ const SearchManPower = () => {
                   onChange={setSL_Department}
                 />
               </td>
-
-              <td style={{ textAlign: "right" }}>เลขที่/Req No. :</td>
-              <td style={{}}>
-                <Input
-                  value={txt_ReqNoFrom}
-                  style={{ width: "100%" }}
-                  onChange={(e) => settxt_ReqNoFrom(e.target.value)}
-                />
-              </td>
-              <td style={{ textAlign: "right" }}>To :</td>
-              <td style={{}}>
-                <Input
-                  value={txt_ReqNoTo}
-                  style={{ width: "100%" }}
-                  onChange={(e) => settxt_ReqNoTo(e.target.value)}
-                />
-              </td>
-            </tr>
-
-            <tr>
-              <td style={{ textAlign: "right" }}>Request by ID :</td>
-              <td style={{}}>
-                <Input
-                  value={txt_ReqBy}
-                  onChange={(e) => settxt_ReqBy(e.target.value)}
-                  style={{ width: "100%" }}
-                />
-              </td>
-              <td style={{ textAlign: "right" }}>ประเภท/Letter Type :</td>
-              <td>
+              <td style={{ textAlign: "right", width: "100px" }}>Reason :</td>
+              <td style={{ width: "200px" }}>
                 <Select
                   showSearch
                   mode="multiple"
                   maxTagCount={"responsive"}
-                  value={SL_Letter}
+                  value={SL_Reason}
                   style={{
                     width: "100%",
                   }}
@@ -169,44 +147,37 @@ const SearchManPower = () => {
                       .toLowerCase()
                       .includes(input.toLowerCase())
                   }
-                  options={LetterType}
-                  onChange={setSL_Letter}
-                />
-              </td>
-              <td style={{ textAlign: "right" }}>วันที่ขอ/Request Date :</td>
-              <td style={{}}>
-                {/* <DatePicker value={DateFrom} style={{ width: "100%" }}   onChange={setDateFrom}/> */}
-                <Input
-                  type="date"
-                  style={{ width: "100%" }}
-                  value={DateFrom}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                />
-              </td>
-              <td style={{ textAlign: "right" }}>To :</td>
-              <td style={{}}>
-     
-                <Input
-                  type="date"
-                  style={{ width: "100%" }}
-                  value={DateTo}
-                  onChange={(e) => setDateTo(e.target.value)}
+                  options={Reason}
+                  onChange={setSL_Reason}
                 />
               </td>
             </tr>
             <tr>
-            <td style={{ textAlign: "right" }}>สถานะ/Request Status :</td>
-              <td style={{}}>
-               
-              <Select
+              <td style={{ textAlign: "right" }}>Req No. :</td>
+              <td>
+                <Input
+                  value={txt_ReqNoFrom}
+                  style={{ width: "100%" }}
+                  onChange={(e) => settxt_ReqNoFrom(e.target.value)}
+                />
+              </td>
+              <td style={{ textAlign: "right" }}>To :</td>
+              <td>
+                <Input
+                  value={txt_ReqNoTo}
+                  style={{ width: "100%" }}
+                  onChange={(e) => settxt_ReqNoTo(e.target.value)}
+                />
+              </td>
+              <td style={{ textAlign: "right" }}>Status :</td>
+              <td>
+                <Select
                   showSearch
-                  mode="multiple"
+                  disabled={Path == "ApproveEmployeeCard"}
                   maxTagCount={"responsive"}
                   value={SL_Status}
                   style={{
                     width: "100%",
-                    // display: "block",
-                    // marginTop: "5px",
                   }}
                   placeholder="Select Status"
                   optionFilterProp="children"
@@ -219,17 +190,48 @@ const SearchManPower = () => {
                   onChange={setSL_Status}
                 />
               </td>
-              {/* align={{alignItems:Path=='ApproveRefferenceLetter'?'':'center'}} */}
-              <td colSpan={6}  >
+            </tr>
+            <tr>
+              <td style={{ textAlign: "right" }}>Request Date :</td>
+              <td>
+                <Input
+                  value={DateFrom}
+                  type="date"
+                  style={{ width: "100%" }}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                />
+              </td>
+              <td style={{ textAlign: "right" }}>To :</td>
+              <td>
+                <Input
+                  value={DateTo}
+                  type="date"
+                  style={{ width: "100%" }}
+                  onChange={(e) => setDateTo(e.target.value)}
+                />
+              </td>
+              <td style={{ textAlign: "right" }}>Request By :</td>
+              <td>
+                <Input
+                  value={txt_ReqBy}
+                  style={{ width: "100%" }}
+                  onChange={(e) => settxt_ReqBy(e.target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td
+                colSpan={6}
+                style={{ textAlign: "center", paddingTop: "10px" }}
+              >
                 <Button
                   type="primary"
                   icon={<SearchOutlined />}
-                  style={{ marginRight: "10px",marginLeft:'15px'}}
+                  style={{ marginRight: "10px" }}
                   onClick={() => bt_Search()}
                 >
                   Search
                 </Button>
-          
                 <Button
                   type="primary"
                   danger
@@ -243,39 +245,28 @@ const SearchManPower = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Employee Data Table */}
       <div
         style={{
           marginTop: "20px",
           borderRadius: "15px",
-          backgroundColor: "#fff",
+          backgroundColor: "#FFFFFF",
           padding: "20px",
           boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: "10px",
-          }}
-        >
-          <Button>
-            <img src={ImgExcel} alt="Export" style={{ width: "16px" }} />
-            Export
-          </Button>
-        </div>
         <Table
           columns={columns}
           dataSource={dataSearch}
           bordered
           pagination={{ pageSize: 5 }}
           size="middle"
-          scroll={{ x: "max-content" }}
-          className="tb_letter"
+          className="custom-table"
         />
       </div>
     </div>
   );
 };
 
-export default SearchManPower;
+export default SearchEmpCard;

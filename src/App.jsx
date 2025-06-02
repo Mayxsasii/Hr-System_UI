@@ -13,6 +13,7 @@ import Login from './Login/Login';
 import Home from './Homepage/homepage';
 import ReqManPowerList from './Man Power Request/ManPowerMasterList/ViewManPowerRequest';
 import LetterList from './Refference Letter Request/RefferenceLetterMasterList/RefferenceLetterMasterList';
+import SearchEmpcard from './Employee Card Request/SearchEmpCard/SearchEmpcard';
 import { LoadingProvider } from "./loading/fn_loading";
 const { Content } = Layout;
 
@@ -51,6 +52,7 @@ const App = () => {
           <Routes>
             {/* ------------------------------------------Not Login-------------------------------------- */}
             <Route path="/HrSystem/Login" element={<Login />} />
+            {/* <Route path="/HrSystem/SearchEmpcard" element={<SearchEmpcard />} /> */}
             {/* -------------------------------------------login----------------------------------------- */}
             
              {/* ----------Home------------------ */}
@@ -80,6 +82,13 @@ const App = () => {
               element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/>
                <Route path="/HrSystem/NewRefferenceLetter"
               element={<ProtectedRoute  element={<RefferenceLetter/>}/>}/>
+              {/* ----------EmpCaard------------------ */}
+              <Route path="/HrSystem/ApproveEmployeeCard"
+              element={<ProtectedRoute  element={<SearchEmpcard/>}/>}/>
+               <Route path="/HrSystem/HrActionEmployeeCard"
+              element={<ProtectedRoute  element={<SearchEmpcard/>}/>}/>
+               <Route path="/HrSystem/EmployeeCardMasterList"
+              element={<ProtectedRoute  element={<SearchEmpcard/>}/>}/>
           </Routes>
         </AppLayout>
       </Router>

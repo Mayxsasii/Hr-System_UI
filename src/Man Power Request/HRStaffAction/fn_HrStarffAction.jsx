@@ -205,6 +205,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
     await axios
       .post("/api/Common/GetEmailUser", {
         user: [formData1.txt_ReqBy],
+        formenu:'MAN POWER'
       })
       .then((res) => {
         if (res.data.length > 0) {
@@ -1020,7 +1021,6 @@ function fn_HrStarffAction(formData1, setFormData1) {
           const response = await axios.post("/api/RequestManPower/UploadHr", {
             fileData: Array.from(byteArray),
             ReqNo: formData1.txt_ReqNo,
-            // ColumnName:ColumnName
           });
           console.log("File uploaded successfully:", response.data);
         } catch (error) {

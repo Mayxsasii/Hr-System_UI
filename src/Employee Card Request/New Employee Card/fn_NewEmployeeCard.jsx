@@ -10,39 +10,19 @@ import axios from "axios";
 import { useLoading } from "../../loading/fn_loading";
 import { Await, useLocation } from "react-router-dom";
 
-function fn_RefferenceLetter() {
-  const steps = [
-    {
-      title: "New Refference Letter Request",
-      content: (props) => <Step1 {...props} />,
-    },
-    {
-      title: "Letter Type/For Approve",
-      content: (props) => <Step2 {...props} />,
-    },
-    {
-      title: "HR Staff Action",
-      content: (props) => <Step3 {...props} />,
-    },
-  ];
+function fn_NewEmployeeCard() {
+
   const { showLoading, hideLoading } = useLoading();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ReqNo = queryParams.get("ReqNo");
   // const Email = localStorage.getItem("Email");
-  const UserLogin = localStorage.getItem("username");
 
   const { token } = theme.useToken();
-  const today = new Date();
-  const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
-    today.getMonth() + 1
-  ).padStart(2, "0")}/${today.getFullYear()}`;
-  const [current, setCurrent] = useState(0);
-
   const [formData1, setFormData1] = useState({
     //Step1
     txt_ReqNo: "",
-    txt_ReqDate: DateToday,
+    txt_ReqDate: '',
     txt_ReqStatusValue: "LT0101",
     txt_ReqStatusDesc: "Create",
     txt_ReqbyID: "",
@@ -57,7 +37,6 @@ function fn_RefferenceLetter() {
     txt_Email: "",
     Date_Target: null,
     txt_Tel: "",
-    txt_Sendate: DateToday,
     //step2.1
     CB_letterType: [],
     Date_Resignation: null,
@@ -66,14 +45,14 @@ function fn_RefferenceLetter() {
     //step2.2
     Sl_Supervisor: null,
     Rd_SupervisorApprove: "",
-    Date_SupervisorActionDate: DateToday,
+    Date_SupervisorActionDate: '',
     txt_SupervisorCooment: "",
     //step3
-    Rd_HRStatus: "LT0104",
+    Rd_HRStatus: "",
     Sl_HrCondion: null,
     txt_HrStaff: "",
-    txt_HrActionDate: DateToday,
-    Date_HrConfirmAcDate: DateToday,
+    txt_HrActionDate: '',
+    Date_HrConfirmAcDate: '',
     txt_HrComment: "",
     txt_RecriveById: "",
     txt_RecriveByName: "",
@@ -81,7 +60,7 @@ function fn_RefferenceLetter() {
     txt_RecriveByDepartment: "",
     txt_RecriveByEmail: "",
     txt_RecriveByTel: "",
-    Date_RecriveDate: DateToday,
+    Date_RecriveDate: '',
   });
 
   useEffect(() => {
@@ -112,6 +91,7 @@ function fn_RefferenceLetter() {
     }
     return formattedDate;
   };
+
   const GetdataEdit = async () => {
     handleChange("txt_ReqNo", ReqNo);
     await axios
@@ -133,14 +113,13 @@ function fn_RefferenceLetter() {
         handleChange("txt_Email", data.Email);
         handleChange("Date_Target", fomatdate(data.Target_Date));
         handleChange("txt_Tel", data.Tel);
-        handleChange("txt_SendDate", data.Send_Date);
         //step2
         handleChange("txt_Remark", data.Remark);
         handleChange("Sl_Supervisor", data.Sv_by);
         handleChange("Rd_SupervisorApprove", data.Sv_flg);
         console.log("dataaaaaa");
         if (data.Status_value == "LT0102" || data.Status_value == "LT0101") {
-          handleChange("Date_SupervisorActionDate", DateToday);
+          handleChange("Date_SupervisorActionDate", '');
         } else {
           handleChange("Date_SupervisorActionDate", data.Sv_date);
         }
@@ -156,7 +135,7 @@ function fn_RefferenceLetter() {
           );
         } else {
           
-          handleChange("Date_HrConfirmAcDate", fomatdate(DateToday));
+          handleChange("Date_HrConfirmAcDate", fomatdate(''));
         }
 
         handleChange("txt_HrComment", data.Hr_comment);
@@ -169,7 +148,13 @@ function fn_RefferenceLetter() {
         if (data.Hr_ResiveDate != null) {
           handleChange("Date_RecriveDate", fomatdate(data.Hr_ResiveDate));
         } else {
-          handleChange("Date_RecriveDate", fomatdate(DateToday));
+          handleChange("Date_RecriveDate", fomatdate(''));
+        }
+        handleChange("txt_HrStaff", data.Hr_lastby || "");
+        if (data.Hr_lastdate != null) {
+          handleChange("txt_HrActionDate", data.Hr_lastdate);
+        } else {
+          handleChange("txt_HrActionDate", '');
         }
       });
     await axios
@@ -182,6 +167,7 @@ function fn_RefferenceLetter() {
         for (let i = 0; i < res.data.length; i++) {
           data.push(res.data[i].LetterType);
           if (res.data[i].LetterType == "LT0203") {
+            console.log('ggggg',res.data[i].LetterDetail)
             const [day, month, year] = res.data[i].LetterDetail.split("/");
             const formattedDate = `${year}-${month}-${day}`;
             handleChange("Date_Resignation", formattedDate);
@@ -229,118 +215,16 @@ function fn_RefferenceLetter() {
   const handleChange = (field, value) => {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
-  const validateStep1 = () => {
-    if (formData1.txt_ReqbyID == "") {
-      Swal.fire({
-        icon: "warning",
-        title: "Please Input Requested By",
-      });
-      return false;
-    }
-    if (formData1.txt_Email == "") {
-      Swal.fire({
-        icon: "warning",
-        title: "Please Input Email",
-      });
-      return false;
-    }
-    if (formData1.Date_Target == null) {
-      Swal.fire({
-        icon: "warning",
-        title: "Please Select Target Date",
-      });
-      return false;
-    }
-    if (formData1.Date_Target == "") {
-      Swal.fire({
-        icon: "error",
-        title: "Please Select Target Date",
-      });
-      return false;
-    }
-    return true;
-  };
-
-  const validateStep3 = async () => {
-    let check = true;
-    await axios
-      .post("/api/RefferenceLetter/GetHrStarffLetter", {
-        User: UserLogin,
-      })
-      .then(async (res) => {
-        console.log(res.data, "GetPersonData");
-        if (res.data.length <= 0) {
-          Swal.fire({
-            icon: "error",
-            title: "For HR Staff Only",
-          });
-          check = false;
-        }
-      });
-    return check;
-  };
-
-  const next = async () => {
-    console.log(current, "currentnext");
-    if (current === 0 && !validateStep1()) {
-      return; //กลับมาเปิดด้วย
-    } else if (current == 1 && !(await validateStep3())) {
-      return;
-    }
-
-    setCurrent(current + 1);
-  };
-
-  const prev = () => {
-    console.log(current - 1, "currentprev");
-    if (current - 1 == -1) {
-      showLoading("Loading...");
-      window.history.back(); // ย้อนกลับไปยังหน้าก่อนหน้า
-      hideLoading();
-      return;
-    } else {
-      setCurrent(current - 1);
-    }
-    // setCurrent(current - 1);
-  };
-
-  const onChange = async (current) => {
-    if (current > 0 && !validateStep1()) {
-      return;
-    }
-    if (current == 2 && !(await validateStep3())) {
-      return;
-    }
-    setCurrent(current);
-  };
-
-  const items = steps.map((item) => ({
-    key: item.title,
-    title: item.title,
-  }));
-
+ 
   const contentStyle = {
-    // padding: "10px",
     backgroundColor: token.colorFillAlter,
     borderRadius: token.borderRadiusLG,
     border: `1px dashed ${token.colorBorder}`,
-    // marginTop: 30,
-    // marginRight: 10,
   };
-
+console.log('mnmnmnmnmn',formData1)
   return {
-    current,
-    onChange,
-    items,
-    steps,
-    formData1,
-    setFormData1,
-    prev,
-    next,
-    contentStyle,
-    setCurrent,
-    // GetdataEdit,
+    formData1,contentStyle
   };
 }
 
-export { fn_RefferenceLetter };
+export { fn_NewEmployeeCard };
