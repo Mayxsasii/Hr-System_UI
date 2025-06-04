@@ -1,52 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Input,
   Card,
   Checkbox,
   Select,
   Radio,
+  DatePicker,
+  Button,
+  Spin,
 } from "antd";
 const { TextArea } = Input;
-import "../RefferenceLetter.css";
+// import "../RefferenceLetter.css";
 
+import Swal from "sweetalert2";
 import { fn_NewEmployeeCard } from "./fn_NewEmployeeCard";
 const RefferenceLetterMasterList = ({}) => {
-  const { formData1, contentStyle } = fn_NewEmployeeCard();
-  useEffect(() => {
-    GetConditionClose();
-    GetSupervisor()
-  }, []);
+  const {
+    formData1,
+    handleChange,
+    GetDataPerson,
+    Reason,
+    GetDayWork,
+    isCalculating,
+  } = fn_NewEmployeeCard();
 
-  const GetConditionClose = async () => {
-    await axios
-      .post("/api/RefferenceLetter/GetConditionClose", {})
-      .then(async (res) => {
-        setCondition(res.data);
-      });
-  };
-  const [Supervisor, setSupervisor] = useState([]);
-  const [Condition, setCondition] = useState([]);
-  const options = [
-    { label: "หนังสือรับรองเงินเดือน", value: "LT0201" },
-    { label: "หนังสือรับรองการทำงาน", value: "LT0202" },
-    {
-      label: "หนังสือรับรองการผ่านงาน (เฉพาะพนักงานที่ลาออก)",
-      value: "LT0203",
-    },
-    { label: "หนังสือผ่านสิทธิสวัสดิการ ธอส.", value: "LT0204" },
-    { label: "อื่นๆ (ใส่ชื่อเอกสารที่ต้องการ)", value: "LT0205" },
-  ];
-
-  const GetSupervisor = async () => {
-    await axios
-      .post("/api/RefferenceLetter/GetSupervisorUp", {
-        Fac: formData1.txt_FactoryValue,
-        Dept: formData1.txt_Department,
-      })
-      .then((res) => {
-        setSupervisor(res.data);
-      });
-  };
   return (
     <div
       style={{
@@ -69,7 +46,7 @@ const RefferenceLetterMasterList = ({}) => {
             fontWeight: "bold",
           }}
         >
-          Refference Letter Request
+          Employee Card Request
           {formData1.txt_ReqNo ? (
             <>
               {" >>"} {formData1.txt_ReqNo}
@@ -79,515 +56,408 @@ const RefferenceLetterMasterList = ({}) => {
           )}
         </p>
 
-          <fieldset
-            style={{
-              border: "1px solid #ccc",
-              padding: "16px",
-              borderRadius: "8px",
-            }}
-          >
-            <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
-              For Request
-            </legend>
-            <table className="reference-table">
-              <tr>
-                <td align="right">
-                  {" "}
-                  <label>Request No.:</label>
-                </td>
-                <td>
-                  {" "}
-                  <Input
-                    value={formData1.txt_ReqNo}
-                    disabled
-                    onChange={(e) => handleChange("txt_ReqNo", e.target.value)}
-                  />
-                </td>
-                <td align="right">
-                  <label>Request Date:</label>
-                </td>
-                <td>
-                  <Input
-                    value={formData1.txt_ReqDate}
-                    disabled
-                    // value={formData1.txt_ReqNo}
-                    // onChange={(e) => handleChange("txt_ReqDate", e.target.value)}
-                  />
-                </td>
-                <td align="right">
-                  <label>Request Status:</label>
-                </td>
-                <td colSpan={3}>
-                  <Input
-                    value={formData1.txt_ReqStatusDesc}
-                    // style={{ width: "300px" }}
-                    disabled
-                    onChange={(e) =>
-                      handleChange("txt_ReqStatusDesc", e.target.value)
+        <fieldset
+          style={{
+            border: "1px solid #ccc",
+            padding: "16px",
+            borderRadius: "8px",
+          }}
+        >
+          <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
+            For Request
+          </legend>
+          <table className="reference-table">
+            <tr>
+              <td align="right" style={{ width: "250px" }}>
+                {" "}
+                <label>Request No.:</label>
+              </td>
+              <td style={{ width: "165px" }}>
+                {" "}
+                <Input value={formData1.txt_ReqNo} disabled />
+              </td>
+              <td align="right">
+                <label>Request Date:</label>
+              </td>
+              <td>
+                <Input
+                  value={formData1.txt_ReqDate}
+                  disabled
+                  // value={formData1.txt_ReqNo}
+                  // onChange={(e) => handleChange("txt_ReqDate", e.target.value)}
+                />
+              </td>
+              <td align="right" style={{}}>
+                <label>Request Status:</label>
+              </td>
+              <td colSpan={3}>
+                <Input value={formData1.txt_ReqStatusDesc} disabled />
+              </td>
+            </tr>
+            <tr>
+              <td align="right">
+                <label>ผู้ขอ/Requested By:</label>
+              </td>
+              <td>
+                <Input
+                  value={formData1.txt_ReqbyID}
+                  placeholder="กรุณากรอก ID Code"
+                  onChange={(e) => handleChange("txt_ReqbyID", e.target.value)}
+                  onBlur={(e) => GetDataPerson(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.target.blur();
+                      GetDataPerson(formData1.txt_ReqbyID);
                     }
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>ผู้ขอ/Requested By:</label>
-                </td>
-                <td>
-                  <Input
-                    value={formData1.txt_ReqbyID}
-                    disabled
-                    placeholder="กรุณากรอก ID Code"
-                    
-                  />
-                </td>
-                <td colSpan={2}>
-                  <Input
-                    value={formData1.txt_ReqbyName}
+                  }}
+                />
+              </td>
+              <td colSpan={2}>
+                <Input value={formData1.txt_ReqbyName} disabled />
+              </td>
+              <td align="right">
+                <label>Factory :</label>
+              </td>
+              <td>
+                <Input
+                  value={formData1.txt_Factory}
+                  style={{ width: "80px" }}
+                  disabled
+                />
+              </td>
+              <td align="right">
+                <label>Department:</label>
+              </td>
+              <td>
+                <Input
+                  value={formData1.txt_Department}
+                  style={{ width: "80px" }}
+                  disabled
+                />
+              </td>
+            </tr>
 
-                    disabled
-                  />
-                </td>
-                <td align="right">
-                  <label>Factory :</label>
-                </td>
-                <td>
-                  <Input
-                    value={formData1.txt_Factory}
-                    style={{ width: "80px" }}
-                    disabled
-                  />
-                </td>
-                <td align="right">
-                  <label>Department:</label>
-                </td>
-                <td>
-                  <Input
-                    value={formData1.txt_Department}
-                    style={{ width: "80px" }}
-                    disabled
-                    
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Employee type :</label>
-                </td>
-                <td colSpan={3}>
-                  {" "}
-                  <Input
-                    value={formData1.txt_EmpType}
-                   
-                    disabled
-                  />
-                </td>
-                <td align="right">
-                  <label>Join Date :</label>
-                </td>
-                <td>
-                  <Input
-                    value={formData1.txt_JoinDate}
-                
-                    disabled
-                  />
-                </td>
-                <td align="right">
-                  <label>Job Grade :</label>
-                </td>
-                <td>
-                  <Input
-                    value={formData1.txt_JobGrade}
-                    style={{ width: "80px" }}
-                    
-                    disabled
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Email :</label>
-                </td>
-                <td colSpan={3}>
-                  <Input
-                   disabled
-                    value={formData1.txt_Email}
-                   
-                  />
-                </td>
-                <td align="right" style={{ width: "170px" }}>
-                  <label>วันที่ต้องการ/Target Date :</label>
-                </td>
-                <td>
-                  <Input
-                     disabled
-                    type="date"
-                    style={{ width: "100%" }}
-                    value={formData1.Date_Target || ""}
-                  
-                    placeholder="กรุณาเลือกวันที่"
-                    
-                  />
-                </td>
-                <td align="right">
-                  <label>เบอร์ภายใน/Tel :</label>
-                </td>
-                <td>
-                  <Input
-                    disabled
-                    placeholder="เบอร์ภายใน/Tel :"
-                    value={formData1.txt_Tel}
-                    style={{ width: "80px" }}
-                   
-                  />
-                </td>
-              </tr>
-            </table>
-            <Checkbox.Group
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
-                marginLeft: "30px",
-              }}
-              value={formData1.CB_letterType || []}
-               disabled
-            >
-              {options.map((option) => (
-                <div
-                  key={option.value}
-                  style={{ display: "flex", alignItems: "center" }}
+            <tr>
+              <td align="right">
+                <label>Employee type :</label>
+              </td>
+              <td colSpan={3}>
+                {" "}
+                <Input value={formData1.txt_EmpType} disabled />
+              </td>
+              <td align="right">
+                <label>Join Date :</label>
+              </td>
+              <td>
+                <Input value={formData1.txt_JoinDate} disabled />
+              </td>
+              <td align="right">
+                <label>Job Grade :</label>
+              </td>
+              <td>
+                <Input
+                  value={formData1.txt_JobGrade}
+                  style={{ width: "80px" }}
+                  disabled
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <td align="right">
+                <label>Email :</label>
+              </td>
+              <td colSpan={3}>
+                <Input
+                  value={formData1.txt_Email}
+                  onChange={(e) => handleChange("txt_Email", e.target.value)}
+                />
+              </td>
+
+              <td align="right" style={{ width: "110px" }}>
+                <label>เบอร์ภายใน/Tel :</label>
+              </td>
+              <td>
+                <Input
+                  onChange={(e) => handleChange("txt_Tel", e.target.value)}
+                  value={formData1.txt_Tel}
+                  style={{ width: "80px" }}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td align="right">
+                <label>สาเหตุที่ขอทำบัตรใหม่/Reason :</label>
+              </td>
+              <td colSpan={3}>
+                <Select
+                  showSearch
+                  style={{
+                    width: "100%",
+                  }}
+                  placeholder="Please Select Condition"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={Reason}
+                  onChange={(value, option) => {
+                    handleChange("Sl_Reason", value);
+
+                    // ตรวจสอบว่ามีค่า expenses ใน option ที่เลือก
+                    if (option?.expenses) {
+                      handleChange("txt_expenses", option.expenses);
+                    } else {
+                      handleChange("txt_expenses", "");
+                    }
+                  }}
+                />
+              </td>
+
+              <td colSpan={3}>
+                <Input
+                  disabled={formData1.Sl_Reason !== "CD0208"}
+                  value={formData1.txt_ReasonOther}
+                  onChange={(e) =>
+                    handleChange("txt_ReasonOther", e.target.value)
+                  }
+                  style={{ width: "100%" }}
+                  placeholder="หากเลือกอื่นๆ กรุณากรอกสาเหตุที่ขอทำบัตรใหม่"
+                />
+              </td>
+              <td align="right">
+                <label>ค่าใช้จ่าย :</label>
+              </td>
+              <td>
+                <Input
+                  disabled
+                  value={formData1.txt_expenses}
+                  // onChange={(e) => handleChange("txt_expenses", e.target.value)}
+                  style={{ width: "80px" }}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={2} align="right" style={{}}>
+                <label>
+                  ไม่ได้บันทึกเวลาทำงานที่เครื่องบันทึกเวลา/No Record Working
+                  Time :
+                </label>{" "}
+              </td>
+              <td>
+                <Input
+                  value={formData1.Date_WorkingForm}
+                  type="date"
+                  onChange={(e) =>
+                    handleChange("Date_WorkingForm", e.target.value)
+                  }
+                  // style={{ width: "80px" }}
+                />
+              </td>
+              {console.log("isCalculating", isCalculating)}
+              <td style={{ display: "flex", alignItems: "center" }}>
+                <label style={{ marginRight: "5px" }}>to:</label>
+                <Input
+                  value={formData1.Date_WorkingTo}
+                  style={{ width: "100%" }}
+                  type="date"
+                  onChange={(e) => {
+                    const selectedDate = new Date(e.target.value);
+                    const startDate = new Date(formData1.Date_WorkingForm);
+
+                    if (selectedDate < startDate) {
+                      Swal.fire({
+                        icon: "warning",
+                        text: "วันที่สิ้นสุดต้องไม่น้อยกว่าวันที่เริ่มต้น!",
+                      });
+                      return;
+                    }
+
+                    handleChange("Date_WorkingTo", e.target.value);
+                  }}
+                />
+              </td>
+              <td>
+                {" "}
+                <Button
+                  disabled={isCalculating}
+                  onClick={() =>
+                    GetDayWork(
+                      formData1.Date_WorkingForm,
+                      formData1.Date_WorkingTo
+                    )
+                  }
                 >
-                  <Checkbox value={option.value}>{option.label}</Checkbox>
-                  {formData1.CB_letterType?.includes(option.value) && (
+                  {" "}
+                  {isCalculating ? (
                     <>
-                      {option.value === "LT0203" && (
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginLeft: "10px",
-                          }}
-                        >
-                          <label style={{ marginRight: "10px" }}>
-                            วันที่ลาออกจากบริษัท:
-                          </label>
-                          <Input
-                            type="date"
-                             disabled
-                            style={{ width: "300px" }}
-                            placeholder="กรุณาเลือกวันที่"
-                            value={formData1.Date_Resignation}
-                            
-                          />
-                        </div>
-                      )}
-                      {option.value === "LT0205" && (
-                        <Input
-                          type="text"
-                           disabled
-                          style={{ marginLeft: "10px", width: "500px" }}
-                          placeholder="กรุณากรอกชื่อเอกสารที่ต้องการ"
-                          value={formData1.txt_LetterOther}
-                        />
-                      )}
+                      <Spin size="small" style={{ marginRight: "5px" }} />
+                      กำลังคำนวณ
                     </>
+                  ) : (
+                    "คำนวณ"
                   )}
+                </Button>{" "}
+              </td>
+              {/**/}
+            </tr>
+            <tr>
+              <td align="right">
+                <label>วันที่ไม่ได้รูดบัตร (เฉพาะวันทำงาน):</label>{" "}
+              </td>
+              <td colSpan={9}>
+                <TextArea
+                  disabled
+                  value={formData1.Date_DayWork}
+                  onChange={(e) => handleChange("Date_DayWork", e.target.value)}
+                  style={{ height: "50px" }}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td align="right">
+                <label>หมายเหตุ/Remark :</label>{" "}
+              </td>
+              <td colSpan={9}>
+                <TextArea
+                  onChange={(e) => handleChange("txt_Remark", e.target.value)}
+                  value={formData1.txt_Remark}
+                  style={{ height: "50px" }}
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <td colSpan={9}>
+                <label style={{ color: "red" }}>
+                  *ข้อกำหนด : HR จะทำบัตรหลังเวลา 13.30 น. ของทุกวันทำงาน
+                  ดังนั้นหัวหน้างานจะต้องอนุมัติการทำบัตรพนักงานก่อนเวลา 13.00
+                  น.และพนักงานจะต้องมารับบัตรพนักงานหลังเวลา 15.00 น.{" "}
+                </label>
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+        <br />
+        <fieldset
+          style={{
+            border: "1px solid #ccc",
+            padding: "16px",
+            borderRadius: "8px",
+          }}
+        >
+          <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
+            For Approve
+          </legend>
+          <table style={{ width: "100%" }}>
+            <tr>
+              <td style={{ textAlign: "right", width: "100px" }}>
+                Supervisor Up :
+              </td>
+              <td style={{ width: "300px" }}>
+                <Select
+                  showSearch
+                  value={formData1.Sl_Supervisor}
+                  style={{ width: "300px" }}
+                  placeholder="Select Department Manager"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  // options={Supervisor}
+                />
+              </td>
+              <td style={{ textAlign: "center" }}>
+                {" "}
+                <Radio.Group
+                  style={{
+                    display:
+                      formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                  }}
+                  name="radiogroup"
+                  value={formData1.Rd_SupervisorApprove}
+                  options={[
+                    {
+                      value: "A",
+                      label: "Approve",
+                    },
+                    {
+                      value: "R",
+                      label: "Reject",
+                    },
+                  ]}
+                />
+              </td>
+              <td style={{ width: "90px", textAlign: "right" }}>
+                <div>
+                  <label
+                    style={{
+                      display:
+                        formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                    }}
+                  >
+                    Action Date:
+                  </label>
                 </div>
-              ))}
-            </Checkbox.Group>
-            <br />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                // marginBottom: "10px",
-                marginLeft: "30px",
-              }}
-            >
-              <label style={{ marginRight: "10px" }}>หมายเหตุ/Remark:</label>
-              <TextArea
-                 disabled
-                value={formData1.txt_Remark}
-                style={{ height: "50px" }}
-              />
-            </div>
-          </fieldset>
-          <br />
-          <fieldset
-            style={{
-              border: "1px solid #ccc",
-              padding: "16px",
-              borderRadius: "8px",
-            }}
-          >
-            <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
-              For Approve
-            </legend>
-            <table style={{ width: "100%" }}>
-              <tr>
-                <td style={{ textAlign: "right", width: "100px" }}>
-                  Supervisor Up :
-                </td>
-                <td style={{ width: "300px" }}>
-                  <Select
-                     disabled
-                    showSearch
-                    value={formData1.Sl_Supervisor}
-                    style={{ width: "300px" }}
-                    placeholder="Select Department Manager"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      (option?.label ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                    options={Supervisor}
-                   
-                  />
-                </td>
-                <td style={{ textAlign: "center" }}>
+              </td>
+              <td style={{ width: "300px" }}>
+                <Input
+                  style={{
+                    display:
+                      formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                  }}
+                  value={formData1.Date_SupervisorActionDate}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td style={{ textAlign: "right" }}>
+                <div>
                   {" "}
-                  <Radio.Group
-                    name="radiogroup"
-                    disabled
-                    value={formData1.Rd_SupervisorApprove}
-                    options={[
-                      {
-                        value: "A",
-                        label: "Approve",
-                      },
-                      {
-                        value: "R",
-                        label: "Reject",
-                      },
-                    ]}
-                  />
-                </td>
-                <td style={{ width: "90px", textAlign: "right" }}>
-                  <div>
-                    <label
-                      style={{
-                        display:
-                          formData1.txt_ReqStatusValue === "LT0101"
-                            ? "none"
-                            : "",
-                      }}
-                    >
-                      Action Date:
-                    </label>
-                  </div>
-                </td>
-                <td style={{ width: "300px" }}>
-                  <Input
+                  <label
+                    style={{
+                      display:
+                        formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                    }}
+                  >
+                    Comment :
+                  </label>
+                </div>
+              </td>
+              <td colSpan={4}>
+                <Input
+                  style={{
+                    display:
+                      formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                  }}
+                  // value={formData1.txt_SupervisorCooment}
+                />
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+        <div style={{textAlign:'center',width:'100%',marginTop:'5px'}}><Button>Send Approve</Button> <Button>Save</Button> <Button>Reset</Button> </div>
 
-                    disabled
-                    value={formData1.Date_SupervisorActionDate}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={{ textAlign: "right" }}>
-                  <div>
-                    {" "}
-                    <label
-                      
-                    >
-                      Comment :
-                    </label>
-                  </div>
-                </td>
-                <td colSpan={4}>
-                  <Input
-                   disabled
-                   
-                    value={formData1.txt_SupervisorCooment}
-                    
-                  />
-                </td>
-              </tr>
-            </table>
-          </fieldset>
-
-          <br />
-          <fieldset
-            style={{
-              border: "1px solid #ccc",
-              padding: "16px",
-              borderRadius: "8px",
-            }}
-          >
-            <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
-              HR Staff Action
-            </legend>
-            <table style={{ width: "100%" }}>
-              <tr>
-                <td align="right" style={{ width: "150px" }}>
-                  <label>Status :</label>
-                </td>
-                <td style={{ width: "360px" }}>
-                  <Radio.Group
-                    style={{ marginLeft: "5px" }}
-                    name="radiogroup"
-                    disabled
-                    value={formData1.Rd_HRStatus}
-                   
-                    options={[
-                      {
-                        value: "LT0104",
-                        label: "On Process",
-                      },
-                      {
-                        value: "LT0107",
-                        label: "Close",
-                      },
-                      {
-                        value: "LT0108",
-                        label: "Close by condition",
-                      },
-                    ]}
-                  />
-                </td>
-                <td>
-                  {" "}
-                  <Select
-                    showSearch
-                    style={{
-                      width: "300px",
-                      display: formData1.Rd_HRStatus == "LT0108" ? "" : "none",
-                    }}
-                    placeholder="Please Select Condition"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      (option?.label ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                    options={Condition}
-                   disabled
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>HR Staff :</label>
-                </td>
-                <td>
-                  {" "}
-                  <Input
-                    style={{ width: "300px" }}
-                    disabled
-                    value={formData1.txt_HrStaff }
-                  />
-                </td>
-                <td>
-                  <label>Action Date :</label>
-                  <Input
-                    disabled
-                    style={{
-                      width: "275px",
-                      marginLeft: "5px",
-                    }}
-                    value={formData1.txt_HrActionDate}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>HR confim action date :</label>
-                </td>
-                <td colSpan={2}>
-                  <Input
-                    type="date"
-                    style={{
-                      width: "300px",
-                    }}
-                    value={formData1.Date_HrConfirmAcDate}
-                   disabled
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Comment :</label>
-                </td>
-                <td colSpan={2}>
-                  <TextArea
-                    value={formData1.txt_HrComment}
-                   disabled
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Receive By :</label>
-                </td>
-                <td colSpan={2}>
-                  <Input
-                    value={formData1.txt_RecriveById}
-                    disabled
-                    style={{ width: "100px" }}
-                  />{" "}
-                  <Input
-                    style={{ width: "400px" }}
-                    value={formData1.txt_RecriveByName}
-                    disabled
-                  />
-                  <label style={{ marginLeft: "40px", marginRight: "5px" }}>
-                    Job Grade :
-                  </label>
-                  <Input
-                    style={{ width: "70px" }}
-                    value={formData1.txt_RecriveByJobGrade}
-                    disabled
-                  />
-                  <label style={{ marginLeft: "50px", marginRight: "5px" }}>
-                    Department :
-                  </label>
-                  <Input
-                    style={{ width: "70px" }}
-                    value={formData1.txt_RecriveByDepartment}
-                    disabled
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <labe>Email :</labe>
-                </td>
-                <td colSpan={2}>
-                  <Input
-                    style={{ width: "505px" }}
-                    value={formData1.txt_RecriveByEmail}
-                    disabled
-                  />{" "}
-                  <label style={{ marginLeft: "80px", marginRight: "5px" }}>
-                    Tel :
-                  </label>
-                  <Input
-                    style={{ width: "120px" }}
-                    value={formData1.txt_RecriveByTel}
-                    disabled
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Recrive Date :</label>
-                </td>
-                <td colSpan={2}>
-                  <Input
-                    type="date"
-                    style={{
-                      width: "300px",
-                    }}
-                    disabled
-                    value={formData1.Date_RecriveDate}
-                  />
-                </td>
-              </tr>
-            </table>
-          </fieldset>
-      
+        <br />
+        <fieldset
+          style={{
+            display: ["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)
+              ? ""
+              : "none",
+            border: "1px solid #ccc",
+            padding: "16px",
+            borderRadius: "8px",
+          }}
+        >
+          <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
+            HR Staff Action
+          </legend>
+          fdsfsdfsdf
+        </fieldset>
       </Card>
     </div>
   );

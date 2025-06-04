@@ -14,6 +14,7 @@ import Home from './Homepage/homepage';
 import ReqManPowerList from './Man Power Request/ManPowerMasterList/ViewManPowerRequest';
 import LetterList from './Refference Letter Request/RefferenceLetterMasterList/RefferenceLetterMasterList';
 import SearchEmpcard from './Employee Card Request/SearchEmpCard/SearchEmpcard';
+import NewEmpCard from './Employee Card Request/New Employee Card/NewEmployeeCard';
 import { LoadingProvider } from "./loading/fn_loading";
 const { Content } = Layout;
 
@@ -89,6 +90,8 @@ const App = () => {
               element={<ProtectedRoute  element={<SearchEmpcard/>}/>}/>
                <Route path="/HrSystem/EmployeeCardMasterList"
               element={<ProtectedRoute  element={<SearchEmpcard/>}/>}/>
+               <Route path="/HrSystem/NewEmployeeCard"
+              element={<ProtectedRoute  element={<NewEmpCard/>}/>}/>
           </Routes>
         </AppLayout>
       </Router>
