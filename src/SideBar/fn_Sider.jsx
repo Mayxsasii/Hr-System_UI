@@ -150,7 +150,19 @@ function fn_Sider() {
       window.location.href = "/HrSystem/HrActionRefferenceLetter";
     } else if (selectedMenu.MENU_NAME === "Refference Letter Master List") {
       window.location.href = "/HrSystem/RefferenceLetterMasterList";
+    }else if (selectedMenu.MENU_NAME === "Employee Card Request") {
+      window.location.href = "/HrSystem/NewEmployeeCard";
     }
+    else if (selectedMenu.MENU_NAME === "Approve Employee Card") {
+      window.location.href = "/HrSystem/ApproveEmployeeCard";
+    }
+    else if (selectedMenu.MENU_NAME === "Employee Card Request (HR Staff Action)") {
+      window.location.href = "/HrSystem/HrActionEmployeeCard";
+    }
+    else if (selectedMenu.MENU_NAME === "Employee Card Master List") {
+      window.location.href = "/HrSystem/EmployeeCardMasterList";
+    }
+    
   };
 
   const handleMouseLeave = () => {

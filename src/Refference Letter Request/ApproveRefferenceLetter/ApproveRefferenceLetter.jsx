@@ -225,9 +225,9 @@ const Step2 = ({ formData1, setFormData1 }) => {
                   display:
                     formData1.txt_ReqStatusValue === "LT0101" ? "none" : "",
                 }}
-                value={formData1.txt_SupervisorCooment}
+                value={formData1.txt_SupervisorComment}
                 onChange={(e) => {
-                  handleChange("txt_SupervisorCooment", e.target.value);
+                  handleChange("txt_SupervisorComment", e.target.value);
                 }}
               />
             </td>

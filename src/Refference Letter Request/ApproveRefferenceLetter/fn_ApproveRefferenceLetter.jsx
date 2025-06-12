@@ -178,8 +178,8 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
     }
     if (formData1.Rd_SupervisorApprove == "R") {
       if (
-        formData1.txt_SupervisorCooment == "" ||
-        formData1.txt_SupervisorCooment == null
+        formData1.txt_SupervisorComment == "" ||
+        formData1.txt_SupervisorComment == null
       ) {
         Swal.fire({
           icon: "warning",
@@ -198,7 +198,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
         ReqNo: formData1.txt_ReqNo,
         Status: nextstatus,
         Sv_Radio: formData1.Rd_SupervisorApprove || "",
-        Sv_Comment: formData1.txt_SupervisorCooment || "",
+        Sv_Comment: formData1.txt_SupervisorComment || "",
         Sv_by: userlogin || "",
       })
       .then((res) => {
@@ -229,7 +229,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
     if (formData1.txt_ReqStatusValue == "LT0102") {
       console.log("เข้านี้่2222");
       handleChange("Rd_SupervisorApprove", null);
-      handleChange("txt_SupervisorCooment", "");
+      handleChange("txt_SupervisorComment", "");
     }
   };
 
@@ -339,7 +339,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       statusDesc = "Wait Supervisor up Approve";
     }
     if (status === "LT0102") {
-      ActionComment = formData1.txt_SupervisorCooment;
+      ActionComment = formData1.txt_SupervisorComment;
       statusDesc = "Wait HR Staff Action";
     }
     if (status === "LT0103") {

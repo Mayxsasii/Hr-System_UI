@@ -88,9 +88,30 @@ input[type="file"] {
   color: #504b4b !important;
 }
 
+/* กล่องภายนอกของ DatePicker เมื่อ disabled */
+.ant-picker.ant-picker-disabled {
+  color: #504b4b !important;
+  background-color: #f5f5f5 !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+  border-color: #504b4b !important;
+}
 
+/* ข้อความ input ภายใน DatePicker */
+.ant-picker-disabled .ant-picker-input > input {
+  color: #504b4b !important;
+  cursor: not-allowed !important;
+}
 
+/* placeholder เมื่อ DatePicker เป็น disabled */
+.ant-picker-disabled .ant-picker-input > input::placeholder {
+  color: #504b4b !important;
+}
 
+/* ปุ่ม calendar icon ขณะ disabled */
+.ant-picker-disabled .ant-picker-suffix {
+  color: #504b4b !important;
+}
 .NameFile {
   margin: 0;
   margin-top: 0;

@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 // import "../RefferenceLetter.css";
 
 import Swal from "sweetalert2";
-import { fn_NewEmployeeCard } from "./fn_NewEmployeeCard";
+import { fn_NewEmployeeCard } from "../New Employee Card/fn_NewEmployeeCard";
 const RefferenceLetterMasterList = ({}) => {
   const {
     formData1,
@@ -105,17 +105,10 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td>
                 <Input
-                  disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
+                 disabled
                   value={formData1.txt_ReqbyID}
                   placeholder="กรุณากรอก ID Code"
-                  onChange={(e) => handleChange("txt_ReqbyID", e.target.value)}
-                  onBlur={(e) => GetDataPerson(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      e.target.blur();
-                      GetDataPerson(formData1.txt_ReqbyID);
-                    }
-                  }}
+                 
                 />
               </td>
               <td colSpan={2}>
@@ -175,9 +168,9 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={3}>
                 <Input
-                  disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
+                 disabled
                   value={formData1.txt_Email}
-                  onChange={(e) => handleChange("txt_Email", e.target.value)}
+                 
                 />
               </td>
 
@@ -186,8 +179,8 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td>
                 <Input
-                  disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
-                  onChange={(e) => handleChange("txt_Tel", e.target.value)}
+               disabled
+                 
                   value={formData1.txt_Tel}
                   style={{ width: "80px" }}
                 />
@@ -199,46 +192,23 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={3}>
                 <Select
-                  disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
+                 disabled
                   showSearch
                   style={{
                     width: "100%",
                   }}
                   placeholder="Please Select Condition"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
+                 
                   value={formData1.Sl_Reason}
                   options={Reason}
-                  onChange={(value, option) => {
-                    handleChange("Sl_Reason", value);
-
-                    // ตรวจสอบว่ามีค่า expenses ใน option ที่เลือก
-                    if (option?.expenses) {
-                      handleChange("txt_expenses", option.expenses);
-                    } else {
-                      handleChange("txt_expenses", "");
-                    }
-                    if (value != "CD0208") {
-                      handleChange("txt_ReasonOther", "");
-                    }
-                  }}
+                 
                 />
               </td>
 
               <td colSpan={3}>
                 <Input
-                  disabled={
-                    !["CD0101"].includes(formData1.txt_ReqStatusValue) ||
-                    formData1.Sl_Reason !== "CD0208"
-                  }
+                 disabled
                   value={formData1.txt_ReasonOther}
-                  onChange={(e) =>
-                    handleChange("txt_ReasonOther", e.target.value)
-                  }
                   style={{ width: "100%" }}
                   placeholder="อื่นๆโปรดระบุ"
                 />
@@ -250,12 +220,11 @@ const RefferenceLetterMasterList = ({}) => {
                 <Input
                   disabled
                   value={formData1.txt_expenses}
-                  // onChange={(e) => handleChange("txt_expenses", e.target.value)}
                   style={{ width: "80px" }}
                 />
               </td>
             </tr>
-            <tr
+            {/* <tr
               style={{
                 display: !["CD0101"].includes(formData1.txt_ReqStatusValue)
                   ? "none"
@@ -289,13 +258,9 @@ const RefferenceLetterMasterList = ({}) => {
                   size="middle"
                 />
               </td>
-            </tr>
+            </tr> */}
             <tr
-              style={{
-                display: ["CD0101"].includes(formData1.txt_ReqStatusValue)
-                  ? "none"
-                  : "",
-              }}
+              
             >
               <td align="right">
                 <label>วันที่ไม่ได้รูดบัตร (เฉพาะวันทำงาน):</label>{" "}
@@ -304,7 +269,6 @@ const RefferenceLetterMasterList = ({}) => {
                 <TextArea
                   disabled
                   value={formData1.Date_DayWork2}
-                  onChange={(e) => handleChange("Date_DayWork", e.target.value)}
                   style={{ height: "50px" }}
                 />
               </td>
@@ -315,8 +279,7 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={9}>
                 <TextArea
-                  disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
-                  onChange={(e) => handleChange("txt_Remark", e.target.value)}
+                 disabled
                   value={formData1.txt_Remark}
                   style={{ height: "50px" }}
                 />
@@ -338,7 +301,6 @@ const RefferenceLetterMasterList = ({}) => {
 
         <fieldset
           style={{
-            display: formData1.txt_ReqbyName == "" ? "none" : "",
             border: "1px solid #ccc",
             padding: "16px",
             borderRadius: "8px",
@@ -354,55 +316,29 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td style={{ width: "300px" }}>
                 <Select
-                  disabled={formData1.txt_ReqStatusValue != "CD0101"}
-                  showSearch
+                 disabled
+                  
                   value={formData1.Sl_Supervisor}
                   style={{ width: "300px" }}
-                  placeholder="Select Department Manager"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
+                
                   options={supervisor}
-                  onChange={(value) => {
-                    handleChange("Sl_Supervisor", value);
-                  }}
+                  
                 />
               </td>
               <td style={{ textAlign: "center" }}>
                 {" "}
                 <Radio.Group
-                  style={{
-                    display:
-                      formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
-                  }}
-                  disabled={formData1.txt_ReqStatusValue != "CD0102"}
+      
+                 disabled
                   name="radiogroup"
                   value={formData1.Rd_SupervisorApprove}
-                  onChange={(e) => {
-                    handleChange("Rd_SupervisorApprove", e.target.value);
-                  }}
-                  options={[
-                    {
-                      value: "A",
-                      label: "Approve",
-                    },
-                    {
-                      value: "R",
-                      label: "Reject",
-                    },
-                  ]}
+                 
                 />
               </td>
               <td style={{ width: "90px", textAlign: "right" }}>
                 <div>
                   <label
-                    style={{
-                      display:
-                        formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
-                    }}
+                   
                   >
                     Action Date:
                   </label>
@@ -411,10 +347,7 @@ const RefferenceLetterMasterList = ({}) => {
               <td style={{ width: "300px" }}>
                 <Input
                   disabled
-                  style={{
-                    display:
-                      formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
-                  }}
+                 
                   value={formData1.Date_SupervisorActionDate}
                 />
               </td>
@@ -424,10 +357,7 @@ const RefferenceLetterMasterList = ({}) => {
                 <div>
                   {" "}
                   <label
-                    style={{
-                      display:
-                        formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
-                    }}
+                  
                   >
                     Comment :
                   </label>
@@ -435,54 +365,20 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={4}>
                 <Input
-                  disabled={formData1.txt_ReqStatusValue != "CD0102"}
-                  style={{
-                    display:
-                      formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
-                  }}
+               disabled
+                  
                   value={formData1.txt_SupervisorComment}
-                  onChange={(e) => {
-                    handleChange("txt_SupervisorComment", e.target.value);
-                  }}
+                
                 />
               </td>
             </tr>
           </table>
         </fieldset>
-        <div
-          style={{
-            textAlign: "center",
-            width: "100%",
-            marginTop: "5px",
-            display: ["CD0101", "CD0102"].includes(formData1.txt_ReqStatusValue)
-              ? ""
-              : "none",
-          }}
-        >
-          <Button
-            style={{
-              display: formData1.txt_ReqStatusValue == "CD0101" ? "" : "none",
-            }}
-            onClick={() => Bt_SendApprove()}
-          >
-            Send Approve
-          </Button>{" "}
-          <Button
-            style={{
-              display: formData1.txt_ReqStatusValue == "CD0102" ? "" : "none",
-            }}
-            onClick={() => Bt_Submit()}
-          >
-            Submit
-          </Button>{" "}
-          <Button>Reset</Button>{" "}
-        </div>
+       
         <br />
         <fieldset
           style={{
-            display: ["CD0103", "CD0104",'CD0107','CD0108'].includes(formData1.txt_ReqStatusValue)
-              ? ""
-              : "none",
+          
             border: "1px solid #ccc",
             padding: "16px",
             borderRadius: "8px",
@@ -498,14 +394,11 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={2}>
                 <Radio.Group
-                 disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
+             disabled
                   style={{ marginLeft: "5px" }}
                   name="radiogroup"
                   value={formData1.Rd_HRStatus}
-                  onChange={(e) => {
-                  
-                    handleStatus(e);
-                  }}
+                
                   options={[
                     {
                       value: "CD0104",
@@ -522,24 +415,16 @@ const RefferenceLetterMasterList = ({}) => {
                   ]}
                 />
                 <Select
-                 disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
+                disabled
                   showSearch
                   style={{
                     width: "300px",
                     display: formData1.Rd_HRStatus == "CD0108" ? "" : "none",
                   }}
-                  placeholder="Please Select Condition"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
+                
                   options={Condition}
                   value={formData1.Sl_HrCondion}
-                  onChange={(value) => {
-                    handleChange("Sl_HrCondion", value);
-                  }}
+                  
                 />
               </td>
             </tr>
@@ -606,33 +491,14 @@ const RefferenceLetterMasterList = ({}) => {
               <td>
                 {" "}
                 <Select
-                  showSearch
+                  
                   style={{
                     width: "100%",
                   }}
-                   disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
-                  placeholder="Please Select Condition"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
+                  disabled
                   value={formData1.txt_cause}
                   options={Reason}
-                  onChange={(value, option) => {
-                    handleChange("txt_cause", value);
-
-                    // ตรวจสอบว่ามีค่า expenses ใน option ที่เลือก
-                    if (option?.expenses) {
-                      handleChange("txt_ExpensesCause", option.expenses);
-                    } else {
-                      handleChange("txt_ExpensesCause", "");
-                    }
-                    if (value != "CD0208") {
-                      handleChange("txt_CauseOther", "");
-                    }
-                  }}
+                 
                 />
               </td>
               <td>
@@ -640,23 +506,19 @@ const RefferenceLetterMasterList = ({}) => {
                 <Input
              
                   style={{ width: "440px" }}
-                  disabled={formData1.txt_cause != "CD0208"||!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
+                  disabled
                   placeholder="อื่นๆโปรดระบุ"
-                  onChange={(e) =>
-                    handleChange("txt_CauseOther", e.target.value)
-                  }
+                  
                   value={formData1.txt_CauseOther}
                 />
                 <label style={{ marginLeft: "30px" }}>ค่าใช้จ่ายจริง :</label>
                 <Input
-                  disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
+                disabled
                   style={{
                     width: "70px",
                     marginLeft: "5px",
                   }}
-                  onChange={(e) =>
-                    handleChange("txt_ExpensesCause", e.target.value)
-                  }
+                  
                   value={formData1.txt_ExpensesCause}
                 />
               </td>
@@ -667,11 +529,9 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={2}>
                 <TextArea
-                  disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
+                  disabled
                   value={formData1.txt_HrComment}
-                  onChange={(e) =>
-                    handleChange("txt_HrComment", e.target.value)
-                  }
+                 
                   maxLength={2000}
                 />
               </td>
@@ -682,18 +542,10 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={2}>
                 <Input
+                disabled
                   value={formData1.txt_RecriveById}
-                    disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
-                  onChange={(e) =>
-                    handleChange("txt_RecriveById", e.target.value)
-                  }
-                  onBlur={(e) => GetDataPersonForHr(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      e.target.blur();
-                      GetDataPersonForHr(formData1.txt_RecriveById);
-                    }
-                  }}
+                  
+                 
                   style={{ width: "100px" }}
                 />{" "}
                 <Input
@@ -725,23 +577,19 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={2}>
                 <Input
-                  disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
+                  disabled
                   style={{ width: "505px" }}
                   value={formData1.txt_RecriveByEmail}
-                  onChange={(e) =>
-                    handleChange("txt_RecriveByEmail", e.target.value)
-                  }
+                 
                 />{" "}
                 <label style={{ marginLeft: "80px", marginRight: "5px" }}>
                   Tel :
                 </label>
                 <Input
-                  disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
+                  disabled
                   style={{ width: "120px" }}
                   value={formData1.txt_RecriveByTel}
-                  onChange={(e) =>
-                    handleChange("txt_RecriveByTel", e.target.value)
-                  }
+                 
                 />
               </td>
             </tr>
@@ -751,95 +599,39 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={2}>
                 <Input
-                  disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
+                  disabled
                   type="date"
                   style={{
                     width: "300px",
                   }}
-                  onChange={(e) =>
-                    handleChange("Date_RecriveDate", e.target.value)
-                  }
+                 
                   value={formData1.Date_RecriveDate}
-                  min={new Date().toISOString().split("T")[0]} // กำหนดวันที่ขั้นต่ำเป็น
+                
                 />
                 <label style={{ marginLeft: "30px" }}>Payment status : </label>
                 <Select
-                   disabled={!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
-                  showSearch
+                    disabled
+                  
                   style={{
                     width: "300px",
                   }}
                   value={formData1.Sl_PaymentStatus}
-                  placeholder="Please Select"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
+               
                   options={StatusPayment}
-                  // onChange={(value) => {
-                  //   handleChange("Sl_PaymentStatus", value);
-                  // }}
-                  onChange={(value, option) => {
-                    handleChange("Sl_PaymentStatus", value);
-
-                    // ตรวจสอบว่ามีค่า expenses ใน option ที่เลือก
-                   
-                    if (value != "CD0403") {
-                      handleChange("txt_PaymentStatusOther", "");
-        
-                    }
-                  }}
+       
                 />
                 <Input
-                  disabled={formData1.Sl_PaymentStatus != "CD0403"||!["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)}
+                 disabled
                   style={{ width: "300px", marginLeft: "5px" }}
                   placeholder="อื่นๆโปรดระบุ"
                   value={formData1.txt_PaymentStatusOther}
-                  onChange={(e) =>
-                    handleChange("txt_PaymentStatusOther", e.target.value)
-                  }
+                  
                 />
               </td>
             </tr>
           </table>
         </fieldset>
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: "10px",
-            display: ["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)
-              ? ""
-              : "none",
-          }}
-        >
-          <Button
-            onClick={() => {
-             Bt_SubmitForHr('SaveDraft')
-            }}
-          >
-            Save Draft
-          </Button>
-          <Button
-            type="primary"
-            style={{ marginLeft: 8 }}
-            onClick={() => {
-             Bt_SubmitForHr('Submit')
-            }}
-          >
-            Submit
-          </Button>
-          <Button
-            danger
-            style={{ marginLeft: 8 }}
-            onClick={() => {
-              /* cancel logic */
-            }}
-          >
-            Cancel
-          </Button>
-        </div>
+
       </Card>
     </div>
   );

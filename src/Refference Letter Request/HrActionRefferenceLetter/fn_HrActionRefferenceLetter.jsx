@@ -304,7 +304,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       statusDesc = "Wait Supervisor up Approve";
     }
     if (status === "LT0102") {
-      ActionComment = formData1.txt_SupervisorCooment;
+      ActionComment = formData1.txt_SupervisorComment;
       statusDesc = "Wait HR Staff Action";
     }
     if (status === "LT0103") {

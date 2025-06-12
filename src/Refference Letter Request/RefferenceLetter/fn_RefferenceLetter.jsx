@@ -67,7 +67,7 @@ function fn_RefferenceLetter() {
     Sl_Supervisor: null,
     Rd_SupervisorApprove: "",
     Date_SupervisorActionDate: DateToday,
-    txt_SupervisorCooment: "",
+    txt_SupervisorComment: "",
     //step3
     Rd_HRStatus: "LT0104",
     Sl_HrCondion: null,
@@ -144,7 +144,7 @@ function fn_RefferenceLetter() {
         } else {
           handleChange("Date_SupervisorActionDate", data.Sv_date);
         }
-        handleChange("txt_SupervisorCooment", data.Sv_Comment);
+        handleChange("txt_SupervisorComment", data.Sv_Comment);
         //step3
         handleChange("Rd_HRStatus", data.Hr_Status);
         handleChange("Sl_HrCondion", data.Hr_Condition);

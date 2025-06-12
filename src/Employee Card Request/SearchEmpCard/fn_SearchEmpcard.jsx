@@ -12,6 +12,7 @@ function fn_SearchEmpcard() {
   const url = window.location.href;
   const Path = url.split("/").pop();
   const userlogin = localStorage.getItem("username");
+  console.log("userlogin", userlogin);
   const ROLL = localStorage.getItem("ROLL");
   const { showLoading, hideLoading } = useLoading();
 
@@ -142,11 +143,11 @@ function fn_SearchEmpcard() {
   };
 
   const handleEdit = (record) => {
-    // navigate(`/HrSystem/NewRefferenceLetter?ReqNo=${record.ReqNo}`);
+    navigate(`/HrSystem/NewEmployeeCard?ReqNo=${record.ReqNo}`);
   };
 
   const handleViewMasterList = (record) => {
-    // navigate(`/HrSystem/ViewRefferenceLetterList?ReqNo=${record.ReqNo}`);
+    navigate(`/HrSystem/MasterListEmployeeCard?ReqNo=${record.ReqNo}`);
   };
 
   const bt_Search = async () => {
@@ -155,7 +156,7 @@ function fn_SearchEmpcard() {
       if (
         SL_Factory == null &&
         SL_Department == null &&
-        SL_Reason == nulll &&
+        SL_Reason == null &&
         SL_Status == null &&
         txt_ReqNoFrom == "" &&
         txt_ReqNoTo == "" &&
@@ -169,47 +170,49 @@ function fn_SearchEmpcard() {
         });
         hideLoading();
         return;
-      }
-      else{
+      } else {
+        console.log("eeeeeee", userlogin);
         await axios
-        .post("/api/EmployeeCard/GetSearchRequestEmployeeCard", {
-          factory: SL_Factory ? `'${SL_Factory}'` : null,
-          req_no_from: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
-          req_no_to: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
-          req_date_from: txt_ReqNoTo ? `'${DateFrom}'` : null,
-          req_date_to: DateTo ? `'${DateTo}'` : null,
-          req_by: txt_ReqBy ? `'${txt_ReqBy}'` : null,
-          reason:
-            SL_Reason != null && SL_Reason.length > 0
-              ? `array[${SL_Reason.map((reason) => `'${reason}'`).join(",")}]`
-              : null,
-          dept:
-            SL_Department != null && SL_Department.length > 0
-              ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
-              : null,
-          status: Path == "HrActionEmployeeCard"
-          ? Array.isArray(SL_Status) && SL_Status.length > 0
-            ? SL_Status
-            : ["CD0103", "CD0104"]
-          : Path == "EmployeeCardMasterList"
-          ? Array.isArray(SL_Status) && SL_Status.length > 0
-            ? SL_Status
-            : [
-                "CD0101",
-                "CD0102",
-                "CD0103",
-                "CD0104",
-                "CD0107",
-                "CD0108",
-                "CD0109",
-                "CD0190",
-              ]
-          : [],
-        })
-        .then((res) => {
-          console.log("SearchApprove", res.data);
-          setDataSearch(res.data);
-        });
+          .post("/api/EmployeeCard/GetSearchRequestEmployeeCard", {
+            factory: SL_Factory ? `'${SL_Factory}'` : null,
+            req_no_from: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
+            req_no_to: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
+            req_date_from: txt_ReqNoTo ? `'${DateFrom}'` : null,
+            req_date_to: DateTo ? `'${DateTo}'` : null,
+            req_by: txt_ReqBy ? `'${txt_ReqBy}'` : null,
+            approveby: null,
+            reason:
+              SL_Reason != null && SL_Reason.length > 0
+                ? `array[${SL_Reason.map((reason) => `'${reason}'`).join(",")}]`
+                : null,
+            dept:
+              SL_Department != null && SL_Department.length > 0
+                ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
+                : null,
+            status:
+              Path == "HrActionEmployeeCard"
+                ? Array.isArray(SL_Status) && SL_Status.length > 0
+                  ? SL_Status
+                  : ["CD0103", "CD0104"]
+                : Path == "EmployeeCardMasterList"
+                ? Array.isArray(SL_Status) && SL_Status.length > 0
+                  ? SL_Status
+                  : [
+                      "CD0101",
+                      "CD0102",
+                      "CD0103",
+                      "CD0104",
+                      "CD0107",
+                      "CD0108",
+                      "CD0109",
+                      "CD0190",
+                    ]
+                : [],
+          })
+          .then((res) => {
+            console.log("SearchApprove", res.data);
+            setDataSearch(res.data);
+          });
       }
       hideLoading();
     } else {
@@ -230,6 +233,7 @@ function fn_SearchEmpcard() {
               ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
               : null,
           status: ["CD0102"],
+          approveby: userlogin ? `'${userlogin}'` : null,
         })
         .then((res) => {
           console.log("SearchApprove", res.data);
@@ -271,8 +275,7 @@ function fn_SearchEmpcard() {
               height: "30px",
               cursor: "pointer",
               display:
-                Path == "ApproveEmployeeCard" ||
-                Path == "HrActionEmployeeCard"
+                Path == "ApproveEmployeeCard" || Path == "HrActionEmployeeCard"
                   ? ""
                   : "none",
             }}
@@ -335,7 +338,6 @@ function fn_SearchEmpcard() {
       dataIndex: "ReqDate",
       key: "Request Date",
       width: "100px",
-      
     },
     {
       title: "Status",
@@ -361,8 +363,7 @@ function fn_SearchEmpcard() {
           record.Status_value == "LT0190"
         ) {
           return <Tag color="red">{text}</Tag>;
-        }
-        else return <Tag color="default">{text}</Tag>;
+        } else return <Tag color="default">{text}</Tag>;
       },
     },
 
@@ -408,7 +409,7 @@ function fn_SearchEmpcard() {
     bt_Reset,
     bt_Search,
     columns,
-    dataSearch
+    dataSearch,
   };
 }
 

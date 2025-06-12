@@ -400,7 +400,7 @@ const RefferenceLetterMasterList = ({}) => {
                   <Input
                    disabled
                    
-                    value={formData1.txt_SupervisorCooment}
+                    value={formData1.txt_SupervisorComment}
                     
                   />
                 </td>
