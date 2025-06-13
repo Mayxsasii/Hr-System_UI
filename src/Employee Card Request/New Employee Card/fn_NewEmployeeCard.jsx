@@ -4,20 +4,23 @@ import { theme } from "antd";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useLoading } from "../../loading/fn_loading";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function fn_NewEmployeeCard() {
   const { showLoading, hideLoading } = useLoading();
   const location = useLocation();
+  const url = window.location.href;
+  const Path = url.split("/").pop().split("?")[0];
+  console.log(Path, "Pathhhhh");
   const queryParams = new URLSearchParams(location.search);
   const ReqNo = queryParams.get("ReqNo");
   const today = new Date();
 
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
-  ).padStart(2, "0")}/${today.getFullYear()}`;
+  ).padStart(2, "0")}/${today.getFullYear()}`; //DD/MM/YYYY
   const DateToday2 = `${today.getFullYear()}-${String(
-    today.getMonth() + 1
+    today.getMonth() + 1 //YYYY-MM-DD
   ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const User = localStorage.getItem("username");
   const [Reason, setReason] = useState([]);
@@ -81,37 +84,39 @@ function fn_NewEmployeeCard() {
   }, []);
 
   useEffect(() => {
-    if (
-      formData1.txt_cause != null &&
-      formData1.txt_RecriveById != "" &&
-      formData1.txt_RecriveByEmail != "" &&
-      formData1.txt_RecriveByTel != "" &&
-      formData1.Date_RecriveDate != null &&
-      formData1.Sl_PaymentStatus != null
-    ) {
-      if (formData1.txt_cause == "CD0208") {
-        if (formData1.txt_CauseOther != "") {
-          handleChange("Rd_HRStatus", "CD0107");
+    if (Path != "MasterListEmployeeCard") {
+      if (
+        formData1.txt_cause != null &&
+        formData1.txt_RecriveById != "" &&
+        formData1.txt_RecriveByEmail != "" &&
+        formData1.txt_RecriveByTel != "" &&
+        formData1.Date_RecriveDate != null &&
+        formData1.Sl_PaymentStatus != null
+      ) {
+        if (formData1.txt_cause == "CD0208") {
+          if (formData1.txt_CauseOther != "") {
+            handleChange("Rd_HRStatus", "CD0107");
+          } else {
+            handleChange("Rd_HRStatus", "CD0104");
+            return;
+          }
         } else {
-          handleChange("Rd_HRStatus", "CD0104");
-          return;
+          handleChange("Rd_HRStatus", "CD0107");
+        }
+        if (formData1.Sl_PaymentStatus == "CD0403") {
+          if (formData1.txt_PaymentStatusOther != "") {
+            handleChange("Rd_HRStatus", "CD0107");
+          } else {
+            handleChange("Rd_HRStatus", "CD0104");
+            return;
+          }
+        } else {
+          handleChange("Rd_HRStatus", "CD0107");
         }
       } else {
-        handleChange("Rd_HRStatus", "CD0107");
+        handleChange("Rd_HRStatus", "CD0104");
+        return;
       }
-      if (formData1.Sl_PaymentStatus == "CD0403") {
-        if (formData1.txt_PaymentStatusOther != "") {
-          handleChange("Rd_HRStatus", "CD0107");
-        } else {
-          handleChange("Rd_HRStatus", "CD0104");
-          return;
-        }
-      } else {
-        handleChange("Rd_HRStatus", "CD0107");
-      }
-    } else {
-      handleChange("Rd_HRStatus", "CD0104");
-      return;
     }
   }, [
     formData1.txt_cause,
@@ -162,18 +167,18 @@ function fn_NewEmployeeCard() {
         handleChange("txt_expenses", res.data[0].expenses);
         // await GetDayWork(res.data[0].work_timestart, res.data[0].work_timeend);
         handleChange("txt_Remark", res.data[0].remark);
-        handleChange("Sl_Reason", res.data[0].reason);
+        handleChange("Sl_Reason", res.data[0].reason||null);
         //Approve
-        handleChange("Sl_Supervisor", res.data[0].Sl_sv);
+        handleChange("Sl_Supervisor", res.data[0].Sl_sv||null);
         if (status != "CD0102") {
           handleChange("Date_SupervisorActionDate", res.data[0].Ap_date);
           handleChange("Rd_SupervisorApprove", res.data[0].Ap_Radio);
           handleChange("txt_SupervisorComment", res.data[0].Ap_Comment);
         }
         //----Hr
-        handleChange("Rd_HRStatus", res.data[0].HR_Rd_Status);
+        handleChange("Rd_HRStatus", res.data[0].HR_Rd_Status||null);
         handleChange("Sl_HrCondion", res.data[0].HR_Condition);
-        handleChange("txt_cause", res.data[0].HR_Reason);
+        handleChange("txt_cause", res.data[0].HR_Reason||null);
         handleChange("txt_CauseOther", res.data[0].HR_Reason_other);
         handleChange("txt_ExpensesCause", res.data[0].HR_cost);
         handleChange("txt_HrComment", res.data[0].HR_Comment);
@@ -184,11 +189,11 @@ function fn_NewEmployeeCard() {
         //
         handleChange("txt_RecriveByEmail", res.data[0].HR_Receive_Email);
         handleChange("txt_RecriveByTel", res.data[0].HR_Receive_Tel);
-        if(res.data[0].HR_Receive_Date) {
+        if (res.data[0].HR_Receive_Date) {
           handleChange("Date_RecriveDate", res.data[0].HR_Receive_Date);
         }
-        
-        handleChange("Sl_PaymentStatus", res.data[0].HR_Payment);
+
+        handleChange("Sl_PaymentStatus", res.data[0].HR_Payment||null);
         handleChange("txt_PaymentStatusOther", res.data[0].HR_Payment_other);
         if (status == "CD0107" || status == "CD0108") {
           handleChange("txt_HrStaff", res.data[0].HR_last_By);
@@ -335,7 +340,9 @@ function fn_NewEmployeeCard() {
   const handleStatus = (e) => {
     const selectedValue = e.target.value;
     console.log(selectedValue, "selectedValue");
-
+    if(selectedValue!='CD0108') {
+      handleChange("Sl_HrCondion", null);
+    }
     if (selectedValue === "CD0107") {
       // ตรวจสอบข้อมูลหลัก
       if (
@@ -538,82 +545,84 @@ function fn_NewEmployeeCard() {
 
   const Bt_SubmitForHr = async (save) => {
     if (save == "Submit") {
-      if (formData1.Rd_HRStatus == "") {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Select Status!",
-        });
-        return;
-      }
-      if (formData1.Rd_HRStatus == "CD0108") {
-        if (formData1.Sl_HrCondion == null) {
+      if (formData1.Rd_HRStatus == "CD0107") {
+        if (formData1.Rd_HRStatus == "") {
           Swal.fire({
             icon: "warning",
-            title: "Please Select Conditon For Close!",
+            title: "Please Select Status!",
           });
           return;
         }
-      }
+        if (formData1.Rd_HRStatus == "CD0108") {
+          if (formData1.Sl_HrCondion == null) {
+            Swal.fire({
+              icon: "warning",
+              title: "Please Select Conditon For Close!",
+            });
+            return;
+          }
+        }
 
-      if (formData1.txt_cause == null) {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Select Reason!",
-        });
-        return;
-      }
-
-      if (formData1.txt_cause == "CD0208") {
-        if (formData1.txt_CauseOther == "") {
+        if (formData1.txt_cause == null) {
           Swal.fire({
             icon: "warning",
-            title: "Please Input Reason Other!",
+            title: "Please Select Reason!",
           });
           return;
         }
-      }
-      if (formData1.txt_RecriveById == "") {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Input Recrive By!",
-        });
-        return;
-      }
-      if (formData1.txt_RecriveByEmail == "") {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Input Email!",
-        });
-        return;
-      }
-      if (formData1.txt_RecriveByTel == "") {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Input Tel!",
-        });
-        return;
-      }
-      if (formData1.Date_RecriveDate == "") {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Input Recrive Date!",
-        });
-        return;
-      }
-      if (formData1.Sl_PaymentStatus == null) {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Select Payment Status!",
-        });
-        return;
-      }
-      if (formData1.Sl_PaymentStatus == "CD0403") {
-        if (formData1.txt_PaymentStatusOther == "") {
+
+        if (formData1.txt_cause == "CD0208") {
+          if (formData1.txt_CauseOther == "") {
+            Swal.fire({
+              icon: "warning",
+              title: "Please Input Reason Other!",
+            });
+            return;
+          }
+        }
+        if (formData1.txt_RecriveById == "") {
           Swal.fire({
             icon: "warning",
-            title: "Please Input Payment Status Other!",
+            title: "Please Input Recrive By!",
           });
           return;
+        }
+        if (formData1.txt_RecriveByEmail == "") {
+          Swal.fire({
+            icon: "warning",
+            title: "Please Input Email!",
+          });
+          return;
+        }
+        if (formData1.txt_RecriveByTel == "") {
+          Swal.fire({
+            icon: "warning",
+            title: "Please Input Tel!",
+          });
+          return;
+        }
+        if (formData1.Date_RecriveDate == "") {
+          Swal.fire({
+            icon: "warning",
+            title: "Please Input Recrive Date!",
+          });
+          return;
+        }
+        if (formData1.Sl_PaymentStatus == null) {
+          Swal.fire({
+            icon: "warning",
+            title: "Please Select Payment Status!",
+          });
+          return;
+        }
+        if (formData1.Sl_PaymentStatus == "CD0403") {
+          if (formData1.txt_PaymentStatusOther == "") {
+            Swal.fire({
+              icon: "warning",
+              title: "Please Input Payment Status Other!",
+            });
+            return;
+          }
         }
       }
     }
@@ -660,7 +669,7 @@ function fn_NewEmployeeCard() {
         icon: "success",
         title: "Save Success",
       }).then(async () => {
-        window.location.href = "/HrSystem/HrActionEmployeeCard";
+        // window.location.href = "/HrSystem/HrActionEmployeeCard";
       });
       return;
     } else {
@@ -672,6 +681,18 @@ function fn_NewEmployeeCard() {
       });
     }
   };
+
+   const Bt_Reset = async (page) => {
+    if(page=='Request'){
+
+    }
+    if(page=='Approve'){
+
+    }
+    if(page=='Hr'){
+
+    }
+   }
 
   return {
     formData1,
@@ -686,6 +707,7 @@ function fn_NewEmployeeCard() {
     StatusPayment,
     Bt_SubmitForHr,
     handleStatus,
+    Bt_Reset
   };
 }
 

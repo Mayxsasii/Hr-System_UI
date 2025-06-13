@@ -211,7 +211,11 @@ function fn_SearchEmpcard() {
           })
           .then((res) => {
             console.log("SearchApprove", res.data);
-            setDataSearch(res.data);
+            if (res.data.length === 0) {
+              Swal.fire({ icon: "warning", title: "Not Found Data!" });
+            } else {
+              setDataSearch(res.data);
+            }
           });
       }
       hideLoading();
@@ -237,7 +241,11 @@ function fn_SearchEmpcard() {
         })
         .then((res) => {
           console.log("SearchApprove", res.data);
-          setDataSearch(res.data);
+          if (res.data.length === 0) {
+            Swal.fire({ icon: "warning", title: "Not Found Data!" });
+          } else {
+            setDataSearch(res.data);
+          }
         });
       hideLoading();
     }
@@ -263,7 +271,8 @@ function fn_SearchEmpcard() {
   const columns = [
     {
       key: "actions",
-      width: "60px",
+      width: "30px",
+      align: "center",
       render: (_, record) => (
         <div>
           <img
@@ -298,18 +307,21 @@ function fn_SearchEmpcard() {
     {
       title: "Factory",
       width: "20px",
+      align: "center",
       dataIndex: "Fac",
       key: "Factory",
     },
     {
       title: "Dept.",
       width: "20px",
+      align: "center",
       dataIndex: "Dept",
       key: "Dept",
     },
     {
       title: "Req No.",
       width: "130px",
+      align: "center",
       dataIndex: "ReqNo",
       key: "ReqNo",
     },
@@ -326,9 +338,9 @@ function fn_SearchEmpcard() {
     {
       title: "ผู้ขอ/Request By",
       dataIndex: "RequestBy",
-      width: "200px",
+      width: "230px",
       key: "Request By",
-      align: "center",
+       className: "scrollable-columnLetter",
       render: (text, record, index) => {
         return <div>{text}</div>;
       },
@@ -337,13 +349,14 @@ function fn_SearchEmpcard() {
       title: "Request Date",
       dataIndex: "ReqDate",
       key: "Request Date",
-      width: "100px",
+      width: "80px",
+      align: "center",
     },
     {
       title: "Status",
       dataIndex: "ReqStatus",
       key: "Status",
-      width: "120px",
+      width: "100px",
       render: (text, record, index) => {
         console.log(text, "Statussssss", record);
         if (
@@ -371,13 +384,14 @@ function fn_SearchEmpcard() {
       title: "Last Action By",
       dataIndex: "LastActionBy",
       key: "Last Action By",
-      width: "130px",
+      width: "120px",
     },
     {
       title: "Last Action Date",
       dataIndex: "LastActionDate",
       key: "Last Action Date",
-      width: "130px",
+      width: "100px",
+      align: "center",
     },
   ];
 

@@ -10,7 +10,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import "./HomePage.css";
 
 const Login = () => {
-  const { ManPower, GoPathManPower, GoPathLetter, Letter } = fn_home();
+  const { ManPower, GoPathManPower, GoPathLetter, Letter, GoPathEmpCard, EmpCard } = fn_home();
 
   return (
     <div>
@@ -310,7 +310,7 @@ const Login = () => {
               >
                 Employee Card Request
               </span>
-              <span className="Font_Count">Total 10 Request</span>
+              <span className="Font_Count">Total  {EmpCard[2]?.Total||0} Request</span>
             </div>
           </div>
 
@@ -323,6 +323,7 @@ const Login = () => {
                 background: "#E3F2FD", // สีเขียวอ่อน
                 borderLeft: "10px solid #0288D1", // สีเขียวเข้ม
               }}
+               onClick={() => GoPathEmpCard("C", "")}
             >
               <p
                 className="P_Title_Status"
@@ -349,6 +350,7 @@ const Login = () => {
                 background: "#E3F2FD", // สีเขียวอ่อน
                 borderLeft: "10px solid #0288D1", // สีเขียวเข้ม
               }}
+              //  onClick={() => GoPathEmpCard("A", EmpCard[0]?.WaitSVApprove || 0)}
             >
               <p
                 className="P_Title_Status"
@@ -365,7 +367,7 @@ const Login = () => {
                   border: "2px solid #0288D1",
                 }}
               >
-                5
+               {EmpCard[0]?.WaitSVApprove || 0} 
               </p>
             </div>
 
@@ -375,6 +377,7 @@ const Login = () => {
                 background: "#E3F2FD", // สีเขียวอ่อน
                 borderLeft: "10px solid #0288D1", // สีเขียวเข้ม
               }}
+              onClick={() => GoPathEmpCard("H", EmpCard[1]?.WaitHRStaff)}
             >
               <p
                 className="P_Title_Status"
@@ -391,7 +394,7 @@ const Login = () => {
                   border: "2px solid #0288D1",
                 }}
               >
-                5
+                {EmpCard[1]?.WaitHRStaff||0}
               </p>
             </div>
           </div>

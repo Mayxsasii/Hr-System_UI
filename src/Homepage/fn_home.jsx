@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 function fn_home() {
   const [ManPower, setManPower] = useState([]);
   const [Letter, setLetter] = useState([]);
+  const [EmpCard, setEmpCard] = useState([]);
   const User = localStorage.getItem("username");
   const Roll = localStorage.getItem("ROLL");
   const Fac = localStorage.getItem("FAC_CODE");
@@ -33,6 +34,16 @@ function fn_home() {
         setLetter(res.data);
         console.log("Letter", res.data);
       });
+       await axios
+      .post("/api/EmployeeCard/HomeStatusCountEmpCard", {
+        UserLogin: User,
+        Roll: [Roll],
+        Fac:Fac||''
+      })
+      .then((res) => {
+        setEmpCard(res.data);
+        console.log("EmpCard", res.data);
+      });
   };
   const GoPathManPower = (value, count) => {
     if (count > 0) {
@@ -58,7 +69,20 @@ function fn_home() {
       }
     }
   };
-  return { ManPower, GoPathManPower,GoPathLetter,Letter};
+   const GoPathEmpCard = (Page,Count) => {
+    if (Page == "C") {
+      window.location.href = "/HrSystem/NewEmployeeCard";
+    }
+    if(Count>0){
+      if(Page == "A"){
+        window.location.href = "/HrSystem/ApproveEmployeeCard";
+      }
+      if(Page == "H"){
+        window.location.href = "/HrSystem/HrActionEmployeeCard";
+      }
+    }
+  };
+  return { ManPower, GoPathManPower,GoPathLetter,Letter,GoPathEmpCard,EmpCard};
 }
 
 export { fn_home };

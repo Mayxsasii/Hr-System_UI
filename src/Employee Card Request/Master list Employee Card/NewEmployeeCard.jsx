@@ -328,11 +328,19 @@ const RefferenceLetterMasterList = ({}) => {
               <td style={{ textAlign: "center" }}>
                 {" "}
                 <Radio.Group
-      
                  disabled
                   name="radiogroup"
                   value={formData1.Rd_SupervisorApprove}
-                 
+                    options={[
+                    {
+                      value: "A",
+                      label: "Approve",
+                    },
+                    {
+                      value: "R",
+                      label: "Reject",
+                    },
+                  ]}
                 />
               </td>
               <td style={{ width: "90px", textAlign: "right" }}>
@@ -419,7 +427,7 @@ const RefferenceLetterMasterList = ({}) => {
                   showSearch
                   style={{
                     width: "300px",
-                    display: formData1.Rd_HRStatus == "CD0108" ? "" : "none",
+                    // display: formData1.Rd_HRStatus == "CD0108" ? "" : "none",
                   }}
                 
                   options={Condition}
