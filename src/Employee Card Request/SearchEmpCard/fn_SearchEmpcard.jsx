@@ -265,7 +265,7 @@ function fn_SearchEmpcard() {
     }
     if (Path != "ApproveEmployeeCard") {
       setSL_Status(null);
-    }
+    }                                       
   };
 
   const columns = [
@@ -360,20 +360,20 @@ function fn_SearchEmpcard() {
       render: (text, record, index) => {
         console.log(text, "Statussssss", record);
         if (
-          record.Status_value == "LT0102" ||
-          record.Status_value == "LT0103"
+          record.status == "CD0102" ||
+          record.status == "CD0103"
         ) {
           return <Tag color="warning">{text}</Tag>;
-        } else if (record.Status_value == "LT0104") {
+        } else if (record.status == "CD0104") {
           return <Tag color="processing">{text}</Tag>;
         } else if (
-          record.Status_value == "LT0107" ||
-          record.Status_value == "LT0108"
+          record.status == "CD0107" ||
+          record.status == "CD0108"
         ) {
           return <Tag color="success">{text}</Tag>;
         } else if (
-          record.Status_value == "LT0109" ||
-          record.Status_value == "LT0190"
+          record.status == "CD0109" ||
+          record.status == "CD0190"
         ) {
           return <Tag color="red">{text}</Tag>;
         } else return <Tag color="default">{text}</Tag>;

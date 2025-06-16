@@ -32,6 +32,7 @@ const RefferenceLetterMasterList = ({}) => {
     StatusPayment,
     Bt_SubmitForHr,
     handleStatus,
+    Bt_Reset,
   } = fn_NewEmployeeCard();
 
   return (
@@ -460,28 +461,26 @@ const RefferenceLetterMasterList = ({}) => {
           }}
         >
           <Button
-           color="blue" variant="solid"
-            style={
-              {
-                display: formData1.txt_ReqStatusValue == "CD0101" ? "" : "none",
-              }
-            }
+            color="blue"
+            variant="solid"
+            style={{
+              display: formData1.txt_ReqStatusValue == "CD0101" ? "" : "none",
+            }}
             onClick={() => Bt_SendApprove()}
           >
             Send Approve
           </Button>{" "}
           <Button
-           color="blue" variant="solid"
-            style={
-              {
-                display: formData1.txt_ReqStatusValue == "CD0102" ? "" : "none",
-              }
-            }
+            color="blue"
+            variant="solid"
+            style={{
+              display: formData1.txt_ReqStatusValue == "CD0102" ? "" : "none",
+            }}
             onClick={() => Bt_Submit()}
           >
             Submit
           </Button>{" "}
-          <Button color="red" variant="solid">
+          <Button color="red" variant="solid" onClick={() => Bt_Reset()}>
             Reset
           </Button>{" "}
         </div>
@@ -541,7 +540,7 @@ const RefferenceLetterMasterList = ({}) => {
                     width: "300px",
                     display: formData1.Rd_HRStatus == "CD0108" ? "" : "none",
                   }}
-                  placeholder="Please Select Condition"
+                  placeholder="Please Select Condition For Close"
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     (option?.label ?? "")
@@ -556,6 +555,7 @@ const RefferenceLetterMasterList = ({}) => {
                 />
               </td>
             </tr>
+            {console.log("formData1", formData1)}
             <tr>
               <td align="right">
                 <label>HR Staff :</label>
@@ -879,7 +879,7 @@ const RefferenceLetterMasterList = ({}) => {
             color="red"
             variant="solid"
             style={{ marginLeft: 8 }}
-            onClick={() => {}}
+           onClick={() => Bt_Reset()}
           >
             Reset
           </Button>

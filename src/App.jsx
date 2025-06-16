@@ -15,7 +15,7 @@ import ReqManPowerList from './Man Power Request/ManPowerMasterList/ViewManPower
 import LetterList from './Refference Letter Request/RefferenceLetterMasterList/RefferenceLetterMasterList';
 import SearchEmpcard from './Employee Card Request/SearchEmpCard/SearchEmpcard';
 import NewEmpCard from './Employee Card Request/New Employee Card/NewEmployeeCard';
-import MasterListEmpCard from './Employee Card Request/Master list Employee Card/NewEmployeeCard';
+import MasterListEmpCard from './Employee Card Request/Master list Employee Card/MasterListEmployeeCard';
 import { LoadingProvider } from "./loading/fn_loading";
 const { Content } = Layout;
 
@@ -73,6 +73,7 @@ const App = () => {
               element={<ProtectedRoute  element={<ManPowerRequest/>}/>}/>
             <Route path="/HrSystem/NewManPowerRequest"
               element={<ProtectedRoute  element={<NewManPowerRequest/>}/>}/>
+              
                {/* ----------Letter------------------ */}
             <Route path="/HrSystem/ApproveRefferenceLetter"
               element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/>
@@ -84,6 +85,7 @@ const App = () => {
               element={<ProtectedRoute  element={<SearchRefferenceLetter/>}/>}/>
                <Route path="/HrSystem/NewRefferenceLetter"
               element={<ProtectedRoute  element={<RefferenceLetter/>}/>}/>
+
               {/* ----------EmpCaard------------------ */}
               <Route path="/HrSystem/ApproveEmployeeCard"
               element={<ProtectedRoute  element={<SearchEmpcard/>}/>}/>

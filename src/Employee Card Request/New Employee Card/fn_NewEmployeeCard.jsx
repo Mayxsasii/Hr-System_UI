@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { useLoading } from "../../loading/fn_loading";
 import { useLocation, useNavigate } from "react-router-dom";
+import status from "daisyui/components/status";
 
 function fn_NewEmployeeCard() {
   const { showLoading, hideLoading } = useLoading();
@@ -167,18 +168,18 @@ function fn_NewEmployeeCard() {
         handleChange("txt_expenses", res.data[0].expenses);
         // await GetDayWork(res.data[0].work_timestart, res.data[0].work_timeend);
         handleChange("txt_Remark", res.data[0].remark);
-        handleChange("Sl_Reason", res.data[0].reason||null);
+        handleChange("Sl_Reason", res.data[0].reason || null);
         //Approve
-        handleChange("Sl_Supervisor", res.data[0].Sl_sv||null);
+        handleChange("Sl_Supervisor", res.data[0].Sl_sv || null);
         if (status != "CD0102") {
           handleChange("Date_SupervisorActionDate", res.data[0].Ap_date);
           handleChange("Rd_SupervisorApprove", res.data[0].Ap_Radio);
           handleChange("txt_SupervisorComment", res.data[0].Ap_Comment);
         }
         //----Hr
-        handleChange("Rd_HRStatus", res.data[0].HR_Rd_Status||null);
-        handleChange("Sl_HrCondion", res.data[0].HR_Condition);
-        handleChange("txt_cause", res.data[0].HR_Reason||null);
+        handleChange("Rd_HRStatus", res.data[0].HR_Rd_Status || null);
+        handleChange("Sl_HrCondion", res.data[0].HR_Condition||null);
+        handleChange("txt_cause", res.data[0].HR_Reason || null);
         handleChange("txt_CauseOther", res.data[0].HR_Reason_other);
         handleChange("txt_ExpensesCause", res.data[0].HR_cost);
         handleChange("txt_HrComment", res.data[0].HR_Comment);
@@ -193,9 +194,10 @@ function fn_NewEmployeeCard() {
           handleChange("Date_RecriveDate", res.data[0].HR_Receive_Date);
         }
 
-        handleChange("Sl_PaymentStatus", res.data[0].HR_Payment||null);
+        handleChange("Sl_PaymentStatus", res.data[0].HR_Payment || null);
         handleChange("txt_PaymentStatusOther", res.data[0].HR_Payment_other);
-        if (status == "CD0107" || status == "CD0108") {
+        console.log(Path, "HR_last_By");
+        if (Path == "MasterListEmployeeCard") {
           handleChange("txt_HrStaff", res.data[0].HR_last_By);
           handleChange("txt_HrActionDate", res.data[0].HR_last_Date);
         }
@@ -340,7 +342,7 @@ function fn_NewEmployeeCard() {
   const handleStatus = (e) => {
     const selectedValue = e.target.value;
     console.log(selectedValue, "selectedValue");
-    if(selectedValue!='CD0108') {
+    if (selectedValue != "CD0108") {
       handleChange("Sl_HrCondion", null);
     }
     if (selectedValue === "CD0107") {
@@ -682,17 +684,53 @@ function fn_NewEmployeeCard() {
     }
   };
 
-   const Bt_Reset = async (page) => {
-    if(page=='Request'){
+  const Bt_Reset = async () => {
+    let status = formData1.txt_ReqStatusValue;
+    console.log(status, "Bt_Reset");
+    if (status == "CD0101") {
+      handleChange("txt_ReqbyID", "");
+      handleChange("txt_Userlogin", "");
+      handleChange("txt_ReqbyName", "");
+      handleChange("txt_Factory", "");
+      handleChange("txt_FactoryValue", "");
+      handleChange("txt_Department", "");
+      handleChange("txt_EmpType", "");
+      handleChange("txt_JoinDate", "");
+      handleChange("txt_JobGrade", "");
+      handleChange("txt_Email", "");
+      handleChange("txt_Tel", "");
+      handleChange("Sl_Reason", null);
+      handleChange("txt_ReasonOther", "");
+      handleChange("txt_expenses", "");
+      handleChange("Date_DayWork2", []);
+      handleChange("Date_DayWork", []);
+      handleChange("txt_Remark", "");
 
+      //step2.2
+      handleChange("Sl_Supervisor", null);
     }
-    if(page=='Approve'){
-
+    if (status == "CD0102") {
+      handleChange("Rd_SupervisorApprove", "");
+      handleChange("txt_SupervisorComment", "");
     }
-    if(page=='Hr'){
-
+    if (status == "CD0103" || status == "CD0104") {
+      handleChange("Rd_HRStatus", "CD0104");
+      handleChange("Sl_HrCondion", null);
+      handleChange("txt_cause", null);
+      handleChange("txt_CauseOther", "");
+      handleChange("txt_ExpensesCause", "");
+      handleChange("txt_HrComment", "");
+      handleChange("txt_RecriveById", "");
+      handleChange("txt_RecriveByName", "");
+      handleChange("txt_RecriveByJobGrade", "");
+      handleChange("txt_RecriveByDepartment", "");
+      handleChange("txt_RecriveByEmail", "");
+      handleChange("txt_RecriveByTel", "");
+      handleChange("Date_RecriveDate", DateToday2);
+      handleChange("Sl_PaymentStatus", null);
+      handleChange("txt_PaymentStatusOther", "");
     }
-   }
+  };
 
   return {
     formData1,
@@ -707,7 +745,7 @@ function fn_NewEmployeeCard() {
     StatusPayment,
     Bt_SubmitForHr,
     handleStatus,
-    Bt_Reset
+    Bt_Reset,
   };
 }
 

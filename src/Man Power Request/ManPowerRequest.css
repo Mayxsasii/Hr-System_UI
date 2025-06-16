@@ -83,11 +83,6 @@ input[type="file"] {
   color: #504b4b !important;
 }
 
-/* สำหรับ placeholder ขณะ disabled */
-.ant-select-disabled .ant-select-selection-placeholder {
-  color: #504b4b !important;
-}
-
 /* กล่องภายนอกของ DatePicker เมื่อ disabled */
 .ant-picker.ant-picker-disabled {
   color: #504b4b !important;

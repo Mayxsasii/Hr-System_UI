@@ -427,9 +427,10 @@ const RefferenceLetterMasterList = ({}) => {
                   showSearch
                   style={{
                     width: "300px",
+                    
                     // display: formData1.Rd_HRStatus == "CD0108" ? "" : "none",
                   }}
-                
+                  placeholder="Please Select Condition For Close"
                   options={Condition}
                   value={formData1.Sl_HrCondion}
                   
