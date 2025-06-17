@@ -41,7 +41,9 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
   const handleStatus = (e) => {
     const selectedValue = e.target.value;
     console.log(selectedValue, "selectedValue");
-
+    if (selectedValue != "LT0108") {
+      handleChange("Sl_HrCondion", null);
+    }
     if (selectedValue == "LT0107") {
       if (
         formData1.Date_HrConfirmAcDate == null ||

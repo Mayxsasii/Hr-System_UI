@@ -76,6 +76,7 @@ const Step3 = ({
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
+              value={formData1.Sl_HrCondion}
               options={Condition}
               onChange={(value) => {
                 handleChange("Sl_HrCondion", value);

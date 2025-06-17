@@ -452,7 +452,7 @@ function fn_ManPower() {
         handleChange("txt_CommentHRManager", res.data[0].Hr_Comment);
         //step4
         handleChange("Radio_HrStatus", res.data[0].HrStaff_Status);
-        handleChange("Sl_HrCloseBy", res.data[0].HrStaff_Condition);
+        handleChange("Sl_HrCloseBy", res.data[0].HrStaff_Condition||null);
         handleChange("txt_HrComment", res.data[0].HrStaff_Comment);
         handleChange("txt_TotalManual", res.data[0].HrStaff_Complete);
         handleChange(

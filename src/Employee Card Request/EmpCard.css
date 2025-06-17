@@ -1,8 +1,8 @@
 .custom-table .ant-table-thead > tr > th {
-    background-color: #977662; /* สีส้มเข้ม */
-    color: #FFFFFF; /* สีข้อความเป็นสีขาว */
-    font-weight: bold; /* ทำให้ข้อความหนา */
-    text-align: center; /* จัดข้อความให้อยู่ตรงกลาง */
+    background-color: #977662; 
+    color: #FFFFFF; 
+    font-weight: bold; 
+    text-align: center; 
 }
 
 .divTitleSearch{
@@ -18,5 +18,4 @@
 
 .SearchEmpcard td{
     padding-top: 5px;
-    /* border: 1px solid red; */
 }

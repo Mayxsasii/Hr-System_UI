@@ -559,7 +559,9 @@ function fn_HrStarffAction(formData1, setFormData1) {
   const handleStatus = (e) => {
     const selectedValue = e.target.value;
     console.log(selectedValue, "selectedValue");
-
+   if (selectedValue != "MR0108") {
+      handleChange("Sl_HrCloseBy", null);
+    }
     if (selectedValue == "MR0107") {
       if (formData1.txt_TotalRemain != 0) {
         Swal.fire({
