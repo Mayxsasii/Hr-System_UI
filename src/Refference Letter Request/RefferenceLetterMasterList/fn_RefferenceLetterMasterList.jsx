@@ -1,28 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { theme } from "antd";
-import Step1 from "../NewRefferenceLetter/NewRefferenceLetter";
-import Step2 from "../ApproveRefferenceLetter/ApproveRefferenceLetter";
-import Step3 from "../HrActionRefferenceLetter/HrActionRefferenceLetter";
-// import Step4 from "./HRStaffAction/HRStaffAction";
-// import { fn_Header } from "../Header/fn_Header";
-import Swal from "sweetalert2";
 import axios from "axios";
 import { useLoading } from "../../loading/fn_loading";
-import { Await, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function fn_RefferenceLetterMasterList() {
-
   const { showLoading, hideLoading } = useLoading();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ReqNo = queryParams.get("ReqNo");
-  // const Email = localStorage.getItem("Email");
-
-  const { token } = theme.useToken();
+  const [Supervisor, setSupervisor] = useState([]);
+  const [Condition, setCondition] = useState([]);
+  const [options, setoptions] = useState([]);
   const [formData1, setFormData1] = useState({
     //Step1
     txt_ReqNo: "",
-    txt_ReqDate: '',
+    txt_ReqDate: "",
     txt_ReqStatusValue: "LT0101",
     txt_ReqStatusDesc: "Create",
     txt_ReqbyID: "",
@@ -45,14 +37,14 @@ function fn_RefferenceLetterMasterList() {
     //step2.2
     Sl_Supervisor: null,
     Rd_SupervisorApprove: "",
-    Date_SupervisorActionDate: '',
+    Date_SupervisorActionDate: "",
     txt_SupervisorComment: "",
     //step3
     Rd_HRStatus: "",
     Sl_HrCondion: null,
     txt_HrStaff: "",
-    txt_HrActionDate: '',
-    Date_HrConfirmAcDate: '',
+    txt_HrActionDate: "",
+    Date_HrConfirmAcDate: "",
     txt_HrComment: "",
     txt_RecriveById: "",
     txt_RecriveByName: "",
@@ -60,15 +52,17 @@ function fn_RefferenceLetterMasterList() {
     txt_RecriveByDepartment: "",
     txt_RecriveByEmail: "",
     txt_RecriveByTel: "",
-    Date_RecriveDate: '',
+    Date_RecriveDate: "",
   });
 
   useEffect(() => {
     FetchData();
+    GetConditionClose();
+    GetSupervisor();
+    GetOptionLetter();
   }, []);
 
   const FetchData = async () => {
-    // console.log('reqqq',ReqNo)
     if (ReqNo != null && ReqNo != "") {
       // queryParams.delete("ReqNo");
       // const newUrl = `${location.pathname}?${queryParams.toString()}`;
@@ -81,6 +75,33 @@ function fn_RefferenceLetterMasterList() {
       await GetdataEdit();
       hideLoading();
     }
+  };
+  const GetConditionClose = async () => {
+    await axios
+      .post("/api/RefferenceLetter/GetConditionClose", {})
+      .then(async (res) => {
+        setCondition(res.data);
+      });
+  };
+
+  const GetOptionLetter = async () => {
+    await axios
+      .post("/api/RefferenceLetter/GetOptionLetter", {})
+      .then((res) => {
+        console.log(res.data, "GetOptionLetter");
+        setoptions(res.data);
+      });
+  };
+
+  const GetSupervisor = async () => {
+    await axios
+      .post("/api/RefferenceLetter/GetSupervisorUp", {
+        Fac: formData1.txt_FactoryValue,
+        Dept: formData1.txt_Department,
+      })
+      .then((res) => {
+        setSupervisor(res.data);
+      });
   };
   const fomatdate = (date) => {
     console.log(date, "datedate");
@@ -119,7 +140,7 @@ function fn_RefferenceLetterMasterList() {
         handleChange("Rd_SupervisorApprove", data.Sv_flg);
         console.log("dataaaaaa");
         if (data.Status_value == "LT0102" || data.Status_value == "LT0101") {
-          handleChange("Date_SupervisorActionDate", '');
+          handleChange("Date_SupervisorActionDate", "");
         } else {
           handleChange("Date_SupervisorActionDate", data.Sv_date);
         }
@@ -134,8 +155,7 @@ function fn_RefferenceLetterMasterList() {
             fomatdate(data.Hr_ConfirmAcDate)
           );
         } else {
-          
-          handleChange("Date_HrConfirmAcDate", fomatdate(''));
+          handleChange("Date_HrConfirmAcDate", fomatdate(""));
         }
 
         handleChange("txt_HrComment", data.Hr_comment);
@@ -144,17 +164,17 @@ function fn_RefferenceLetterMasterList() {
         // handleChange("Sl_HrCondion", data.Hr_Condition);
         handleChange("txt_RecriveByEmail", data.Hr_ResiveEmail || "");
         handleChange("txt_RecriveByTel", data.Hr_ResiveTel || "");
-      
+
         if (data.Hr_ResiveDate != null) {
           handleChange("Date_RecriveDate", fomatdate(data.Hr_ResiveDate));
         } else {
-          handleChange("Date_RecriveDate", fomatdate(''));
+          handleChange("Date_RecriveDate", fomatdate(""));
         }
         handleChange("txt_HrStaff", data.Hr_lastby || "");
         if (data.Hr_lastdate != null) {
           handleChange("txt_HrActionDate", data.Hr_lastdate);
         } else {
-          handleChange("txt_HrActionDate", '');
+          handleChange("txt_HrActionDate", "");
         }
       });
     await axios
@@ -167,7 +187,7 @@ function fn_RefferenceLetterMasterList() {
         for (let i = 0; i < res.data.length; i++) {
           data.push(res.data[i].LetterType);
           if (res.data[i].LetterType == "LT0203") {
-            console.log('ggggg',res.data[i].LetterDetail)
+            console.log("ggggg", res.data[i].LetterDetail);
             const [day, month, year] = res.data[i].LetterDetail.split("/");
             const formattedDate = `${year}-${month}-${day}`;
             handleChange("Date_Resignation", formattedDate);
@@ -215,15 +235,12 @@ function fn_RefferenceLetterMasterList() {
   const handleChange = (field, value) => {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
- 
-  const contentStyle = {
-    backgroundColor: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    border: `1px dashed ${token.colorBorder}`,
-  };
-console.log('mnmnmnmnmn',formData1)
+
   return {
-    formData1,contentStyle
+    formData1,
+    Supervisor,
+    Condition,
+    options,
   };
 }
 

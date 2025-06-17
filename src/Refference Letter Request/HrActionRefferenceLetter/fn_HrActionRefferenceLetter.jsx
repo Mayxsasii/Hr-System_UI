@@ -11,6 +11,9 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
   ).padStart(2, "0")}/${today.getFullYear()}`;
+    const DateToday2 = `${today.getFullYear()}-${String(
+    today.getMonth() + 1 //YYYY-MM-DD
+  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const userlogin = localStorage.getItem("username");
 
   useEffect(() => {
@@ -561,7 +564,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
   const Reset = () => {
     handleChange("Rd_HRStatus", 'LT0104');
     handleChange("Sl_HrCondion", null);
-    handleChange("Date_HrConfirmAcDate", null);
+    handleChange("Date_HrConfirmAcDate", DateToday2);
     handleChange("txt_HrComment", null);
     handleChange("txt_RecriveById", '');
     handleChange("txt_RecriveByName", '');
@@ -569,7 +572,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
     handleChange("txt_RecriveByDepartment", '');
     handleChange("txt_RecriveByEmail", '');
     handleChange("txt_RecriveByTel", '');
-    handleChange("Date_RecriveDate", null);
+    handleChange("Date_RecriveDate", DateToday2);
   }
   
   return {

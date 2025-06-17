@@ -38,7 +38,7 @@ function fn_login() {
             localStorage.setItem("FAC_CODE", res.data[0].FAC_CODE);
             localStorage.setItem("Email", res.data[0].EMAIL);
             localStorage.setItem("ROLL", res.data[0].ROLL_ID||'');
-
+            localStorage.setItem("Id_Code", res.data[0].EMP);
             Swal.fire({
               icon: "success",
               title: "Login Success",
@@ -62,7 +62,7 @@ function fn_login() {
         Password: password,
       })
       .then((res) => {
-
+        console.log(res.data);
         if (res.data.length <= 0) {
           Swal.fire({
             icon: "error",
@@ -76,6 +76,7 @@ function fn_login() {
           localStorage.setItem("FAC_CODE", res.data[0].FAC_CODE);
           localStorage.setItem("Email", res.data[0].EMAIL);
           localStorage.setItem("ROLL", res.data[0].ROLL_ID);
+          localStorage.setItem("id_code", res.data[0].EMP);
           Swal.fire({
             icon: "success",
             title: "Login Success",

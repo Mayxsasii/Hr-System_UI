@@ -243,7 +243,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
         {" "}
         {console.log(formData1, "formmmm")}
         <Button
-          type="primary"
+         variant="solid"
+          color="cyan"
           style={{
             display: formData1.txt_ReqStatusValue === "LT0102" ? "" : "none",
           }}
@@ -252,7 +253,8 @@ const Step2 = ({ formData1, setFormData1 }) => {
           Submit
         </Button>{" "}
         <Button
-          type="primary"
+         variant="solid"
+          color="cyan"
           onClick={() => SendApprove()}
           style={{
             display: formData1.txt_ReqStatusValue === "LT0101" ? "" : "none",
@@ -261,7 +263,9 @@ const Step2 = ({ formData1, setFormData1 }) => {
           Send Approve
         </Button>{" "}
         <Button
-          type="primary"
+          // type="primary"
+          variant="solid"
+          color="danger"
           onClick={() => Bt_Reset()}
           style={{
             display:

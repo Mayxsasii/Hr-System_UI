@@ -24,6 +24,7 @@ function fn_NewEmployeeCard() {
     today.getMonth() + 1 //YYYY-MM-DD
   ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const User = localStorage.getItem("username");
+  const ID_Code = localStorage.getItem("id_code");
   const [Reason, setReason] = useState([]);
   const [Condition, setCondition] = useState([]);
   const [StatusPayment, setStatusPayment] = useState([]);
@@ -178,7 +179,7 @@ function fn_NewEmployeeCard() {
         }
         //----Hr
         handleChange("Rd_HRStatus", res.data[0].HR_Rd_Status || null);
-        handleChange("Sl_HrCondion", res.data[0].HR_Condition||null);
+        handleChange("Sl_HrCondion", res.data[0].HR_Condition || null);
         handleChange("txt_cause", res.data[0].HR_Reason || null);
         handleChange("txt_CauseOther", res.data[0].HR_Reason_other);
         handleChange("txt_ExpensesCause", res.data[0].HR_cost);
@@ -220,11 +221,12 @@ function fn_NewEmployeeCard() {
   const GetDataPerson = async (ID_Code) => {
     showLoading("");
     await axios
-      .post("/api/RefferenceLetter/GetDataPersonByIDCode", {
+      .post("/api/EmployeeCard/GetDataPersonByIDCodeEmpCard", {
         Id_Code: ID_Code || "",
       })
       .then(async (res) => {
         console.log(res.data, "GetDataPerson");
+
         if (res.data.length === 0) {
           handleChange("txt_Userlogin", "");
           handleChange("txt_ReqbyID", "");
@@ -242,6 +244,24 @@ function fn_NewEmployeeCard() {
           });
           hideLoading();
         } else {
+          if (res.data[0].dept == "") {
+          handleChange("txt_Userlogin", "");
+          // handleChange("txt_ReqbyID", "");
+          handleChange("txt_ReqbyName", "");
+          handleChange("txt_Factory", "");
+          handleChange("txt_FactoryValue", "");
+          handleChange("txt_Department", "");
+          handleChange("txt_EmpType", "");
+          handleChange("txt_JoinDate", "");
+          handleChange("txt_JobGrade", "");
+          handleChange("txt_Email", "");
+            Swal.fire({
+              icon: "warning",
+              text: "This Employee code cannot be approved",
+              title: "Please Contact HR Admin!",
+            });
+            return ;
+          }
           handleChange("txt_Userlogin", res.data[0].User);
           handleChange("txt_ReqbyName", res.data[0].name_surname);
           handleChange("txt_Factory", res.data[0].factory);
@@ -261,7 +281,7 @@ function fn_NewEmployeeCard() {
   const GetDataPersonForHr = async (ID_Code) => {
     showLoading("");
     await axios
-      .post("/api/RefferenceLetter/GetDataPersonByIDCode", {
+      .post("/api/EmployeeCard/GetDataPersonByIDCodeEmpCard", {
         Id_Code: ID_Code || "",
       })
       .then(async (res) => {
@@ -528,6 +548,7 @@ function fn_NewEmployeeCard() {
         RdApprove: formData1.Rd_SupervisorApprove,
         Comment: formData1.txt_SupervisorComment,
         Status: formData1.Rd_SupervisorApprove == "A" ? "CD0103" : "CD0109",
+        UpdateBy: ID_Code || "",
       })
       .then((res) => {
         console.log(res.data, "UpdateApproveSv");
@@ -645,7 +666,7 @@ function fn_NewEmployeeCard() {
         ReqNo: formData1.txt_ReqNo || "",
         Statusold: formData1.txt_ReqStatusValue || "",
         StatusNew: StatusNew || "",
-        HrBy: User || "",
+        HrBy: ID_Code || "",
         Rd_Status: formData1.Rd_HRStatus || "",
         condition: formData1.Sl_HrCondion || "",
         reason: formData1.txt_cause || "",

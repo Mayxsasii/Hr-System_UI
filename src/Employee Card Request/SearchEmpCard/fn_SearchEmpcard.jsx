@@ -384,7 +384,8 @@ function fn_SearchEmpcard() {
       title: "Last Action By",
       dataIndex: "LastActionBy",
       key: "Last Action By",
-      width: "120px",
+      width: "100px",
+      className: "scrollable-columnLetter",
     },
     {
       title: "Last Action Date",

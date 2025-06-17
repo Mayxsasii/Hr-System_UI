@@ -58,9 +58,8 @@ input[type="file"] {
 }
 
 :disabled {
-  color: #504b4b !important; /* สีฟอนต์ที่เข้มขึ้น */
-  /* opacity: 1 !important; ปรับ opacity เพื่อให้สีชัดเจน */
-  cursor: not-allowed; /* เปลี่ยนเคอร์เซอร์ */
+  color: #504b4b !important; 
+  cursor: not-allowed;
 }
 .ant-radio-disabled .ant-radio-inner,
 .ant-radio-disabled + span,
@@ -71,19 +70,26 @@ input[type="file"] {
   cursor: not-allowed !important;
 }
 
-.ant-select-disabled .ant-select-selector {
-  color: #504b4b !important;              /* สีฟอนต์ */
-  /* /* background-color: #f5f5f5 !important;  */
-  cursor: not-allowed !important;         /* เปลี่ยน cursor */
-  opacity: 1 !important;                  /* ลบความโปร่งแสง */
+
+
+.ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner::after {
+  border-color: #382b2b !important;     
+  border-width: 2.5px !important;     
+  opacity: 1 !important;             
 }
 
-/* ตัวแสดงข้อความที่เลือกใน Select */
+
+
+.ant-select-disabled .ant-select-selector {
+  color: #504b4b !important;            
+  cursor: not-allowed !important;       
+  opacity: 1 !important;                 
+}
+
 .ant-select-disabled .ant-select-selection-item {
   color: #504b4b !important;
 }
 
-/* กล่องภายนอกของ DatePicker เมื่อ disabled */
 .ant-picker.ant-picker-disabled {
   color: #504b4b !important;
   background-color: #f5f5f5 !important;
@@ -92,21 +98,20 @@ input[type="file"] {
   border-color: #504b4b !important;
 }
 
-/* ข้อความ input ภายใน DatePicker */
 .ant-picker-disabled .ant-picker-input > input {
   color: #504b4b !important;
   cursor: not-allowed !important;
 }
 
-/* placeholder เมื่อ DatePicker เป็น disabled */
 .ant-picker-disabled .ant-picker-input > input::placeholder {
   color: #504b4b !important;
 }
 
-/* ปุ่ม calendar icon ขณะ disabled */
+
 .ant-picker-disabled .ant-picker-suffix {
   color: #504b4b !important;
 }
+
 .NameFile {
   margin: 0;
   margin-top: 0;
@@ -124,8 +129,7 @@ input[type="file"] {
   background-color: #d3d2d2;
   border-radius: 5px;
   padding: 3px;
-  cursor: pointer; /* เปลี่ยนเคอร์เซอร์เป็น pointer */
-  /* text-decoration: underline;  */
+  cursor: pointer; 
 }
 
 .DeleteFile {
@@ -138,6 +142,6 @@ input[type="file"] {
 .DeleteFile:hover {
   background-color: #bbb9b9;
   border-radius: 5px;
-  padding: 5px; /* เพิ่มพื้นที่รอบข้อความ */
-  display: inline-block; /* ทำให้องค์ประกอบรองรับ padding */
+  padding: 5px; 
+  display: inline-block; 
 }

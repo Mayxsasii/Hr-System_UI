@@ -350,7 +350,7 @@ const Login = () => {
                 background: "#E3F2FD", // สีเขียวอ่อน
                 borderLeft: "10px solid #0288D1", // สีเขียวเข้ม
               }}
-              //  onClick={() => GoPathEmpCard("A", EmpCard[0]?.WaitSVApprove || 0)}
+               onClick={() => GoPathEmpCard("A", EmpCard[0]?.WaitSVApprove || 0)}
             >
               <p
                 className="P_Title_Status"

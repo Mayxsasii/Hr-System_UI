@@ -6,6 +6,7 @@ import { useLoading } from "../../loading/fn_loading";
 function fn_ApproveRefferenceLetter(formData1, setFormData1) {
   const { showLoading, hideLoading } = useLoading();
   const [Supervisor, setSupervisor] = useState([]);
+    const [options, setoptions] = useState([]);
   const today = new Date();
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
@@ -14,22 +15,13 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
 
   useEffect(() => {
     GetSupervisor();
+    GetOptionLetter();
   }, []);
 
   const handleChange = (field, value) => {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
 
-  const options = [
-    { label: "หนังสือรับรองเงินเดือน", value: "LT0201" },
-    { label: "หนังสือรับรองการทำงาน", value: "LT0202" },
-    {
-      label: "หนังสือรับรองการผ่านงาน (เฉพาะพนักงานที่ลาออก)",
-      value: "LT0203",
-    },
-    { label: "หนังสือผ่านสิทธิสวัสดิการ ธอส.", value: "LT0204" },
-    { label: "อื่นๆ (ใส่ชื่อเอกสารที่ต้องการ)", value: "LT0205" },
-  ];
 
   const GetSupervisor = async () => {
     await axios
@@ -41,21 +33,16 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
         setSupervisor(res.data);
       });
   };
-  // const SendApprove = async () => {
-  //   console.log("g-hkkkkk");
-  //       let ReqNo = "";
-  //   await axios
-  //     .post("/api/RefferenceLetter/GenReqNo", {
-  //       FacValue: formData1.txt_FactoryValue,
-  //       FacDesc: formData1.txt_Factory,
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data, "GenReqNo");
-  //       ReqNo = res.data[0].ReqNo;
-  //       handleChange("txt_ReqNo", ReqNo);
-  //     });
-  //   await GetDatamailSend(ReqNo);
-  // };
+
+    const GetOptionLetter = async () => {
+    await axios
+      .post("/api/RefferenceLetter/GetOptionLetter", {})
+      .then((res) => {
+        console.log(res.data, "GetOptionLetter");
+        setoptions(res.data);
+      });
+  };
+
   const SendApprove = async () => {
     showLoading("กำลังบันทึกข้อมูล...");
     if (formData1.CB_letterType.length == 0) {

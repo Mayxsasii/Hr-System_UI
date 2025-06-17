@@ -16,7 +16,7 @@ const Step3 = ({
     handleChange,
     GetDataPerson,
     Save,
-    Reset
+    Reset,
   } = fn_HrActionRefferenceLetter(formData1, setFormData1);
   return (
     <div>
@@ -217,15 +217,17 @@ const Step3 = ({
         </tr>
       </table>
       <div style={{ textAlign: "center", marginTop: "10px" }}>
-        <Button type="primary" onClick={() => Save("SaveDarft")}>
+        <Button variant="solid" color="orange" onClick={() => Save("SaveDarft")}>
           Save Draft
         </Button>{" "}
-        <Button type="primary" onClick={() => Reset()}>
+      
+        <Button variant="solid" color="cyan" onClick={() => Save("Submit")}>
+          Submit
+        </Button>{" "}
+      
+          <Button variant="solid" color="danger" onClick={() => Reset()}>
           Reset
         </Button>{" "}
-        <Button type="primary" onClick={() => Save("Submit")}>
-          Submit
-        </Button>
       </div>
     </div>
   );

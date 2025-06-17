@@ -51,25 +51,20 @@ const App = () => {
           }}
         >
           <Button
-            style={{
-              backgroundColor: "#1890ff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              padding: "0 20px",
-            }}
+          variant="solid"
+            color="primary"
             onClick={() => prev()}
             disabled={current === 0}
           >
             Previous
           </Button>
           <Button
-            type="primary"
+            variant="solid"
+            color="primary"
             style={{
-              backgroundColor: current === steps.length - 1 ? "#52c41a" : "#1890ff",
-              border: "none",
-              borderRadius: "5px",
-              padding: "0 20px",
+            
+
+              display:current === steps.length - 1 ? "none" : "block",
             }}
             onClick={() => next()}
             disabled={current === steps.length - 1}
