@@ -31,7 +31,6 @@ function fn_HrStarffAction(formData1, setFormData1) {
   }, [formData1.txt_TotalRemain]);
 
   const GetCondition = async () => {
-    let ReqNo = formData1.txt_ReqNo;
     await axios
       .post("/api/RequestManPower/GetConditionForClose", {})
       .then((res) => {
@@ -55,7 +54,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
       .then((res) => {
         console.log(res.data, "GetUserJoinHr");
         if (res.data.length > 0) {
-          if ((Reason = "Sub")) {
+          if (Reason == "Sub") {
             handleChangeHr_Sub(index, "Emp_name", res.data[0].Name);
             handleChangeHr_Sub(index, "Emp_sername", res.data[0].Sername);
             handleChangeHr_Sub(index, "Emp_JoinDate", res.data[0].JoinDate);
@@ -65,7 +64,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
             handleChangeHr_Add(index, "Emp_JoinDate", res.data[0].JoinDate);
           }
         } else {
-          if ((Reason = "Sub")) {
+          if (Reason == "Sub") {
             handleChangeHr_Sub(index, "Emp_id", "");
             handleChangeHr_Sub(index, "Emp_name", "");
             handleChangeHr_Sub(index, "Emp_sername", "");
@@ -901,7 +900,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
       let adddata = [];
 
       if (groupedData.length > 0) {
-        groupedData.map((item, index) => {
+        groupedData.map((item) => {
           console.log(item[0][1], "item[0][1]");
           if (item[0][1] == "Substitube") {
             console.log("Substitube", item);
@@ -922,7 +921,6 @@ function fn_HrStarffAction(formData1, setFormData1) {
         hideLoading();
         return;
       }
-      let Remain = 0;
       if (subdata.length > 0) {
         for (let i = 0; i < subdata.length; i++) {
           let dataPerson = subdata[i][0];
@@ -933,7 +931,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
             // if(dataPerson[9] != ''  || dataPerson[10]!= '') {
 
             // }
-            Remain++;
+      
             handleChangeHr_Sub(i, "CB_Complete", true);
             handleChangeHr_Sub(i, "Emp_id", dataPerson[8]);
             await GetUserJoinExcel(dataPerson[8], i,'Sub');
@@ -950,7 +948,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
           console.log(adddata[i], "EmpNew");
           console.log(formatDate(dataPerson[11]), "Empid new");
           if (dataPerson[8] != "") {
-            Remain++;
+            
             handleChangeHr_Add(i, "CB_Complete", true);
             handleChangeHr_Add(i, "Emp_id", dataPerson[8]);
             await GetUserJoinExcel(dataPerson[8], i,'Add');
@@ -1008,7 +1006,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
     return `${formattedDay}/${formattedMonth}/${fullYear}`; // รวมเป็นรูปแบบ DD/MM/YYYY
   };
 
-  const UploadFile = async (file, ColumnName) => {
+  const UploadFile = async (file) => {
     console.log(file, "UploadFile");
     if (!file) {
       console.log("เข้ามาแล้ว ไม่มีไฟล์");

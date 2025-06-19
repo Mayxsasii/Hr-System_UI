@@ -61,7 +61,6 @@ function fn_SearchRefferenceLetter() {
         User_login: userlogin || "",
       })
       .then((res) => {
-        console.log(res.data, "GetLetterTypeSearch");
         setLetterType(res.data);
       });
   };
@@ -73,11 +72,10 @@ function fn_SearchRefferenceLetter() {
         Roll: ROLL || "",
       })
       .then((res) => {
-        console.log(res.data, "GetFactory");
         setFactory(res.data);
         if (Path == "HrActionRefferenceLetter") {
           setSL_Factory(res.data[0].value);
-           GetDeptFac(res.data[0].value);
+          GetDeptFac(res.data[0].value);
         }
       });
   };
@@ -95,7 +93,6 @@ function fn_SearchRefferenceLetter() {
             : [],
       })
       .then((res) => {
-        console.log(res.data, "GetStatus");
         setStatus(res.data);
       });
   };
@@ -106,22 +103,19 @@ function fn_SearchRefferenceLetter() {
         User_login: userlogin || "",
       })
       .then((res) => {
-        console.log(res.data, "GetDepartmentApprove");
         setDepartment(res.data);
       });
   };
 
-
   const GetDeptFac = async (value) => {
     await axios
-    .post("/api/RefferenceLetter/GetDeptallFac", {
-      Fac: value || "",
-    })
-    .then((res) => {
-      console.log(res.data, "GetDeptallFac");
-      setDepartment(res.data);
-    });
-  }
+      .post("/api/RefferenceLetter/GetDeptallFac", {
+        Fac: value || "",
+      })
+      .then((res) => {
+        setDepartment(res.data);
+      });
+  };
   const handleFactory = async (value) => {
     setSL_Factory(value);
     if (Path != "ApproveRefferenceLetter") {
@@ -130,7 +124,6 @@ function fn_SearchRefferenceLetter() {
   };
 
   const handleEdit = (record) => {
-    console.log("Edit record:", record.ReqNo);
     navigate(`/HrSystem/NewRefferenceLetter?ReqNo=${record.ReqNo}`);
   };
 
@@ -162,7 +155,6 @@ function fn_SearchRefferenceLetter() {
           status: ["LT0102"],
         })
         .then((res) => {
-          console.log("SearchApprove", res.data);
           setDataSearch(res.data);
         });
     } else {
@@ -181,7 +173,7 @@ function fn_SearchRefferenceLetter() {
         hideLoading();
         return;
       }
-      console.log(DateTo, "ggggg");
+
       await axios
         .post("/api/RefferenceLetter/SearchLetter", {
           dept:
@@ -220,7 +212,6 @@ function fn_SearchRefferenceLetter() {
               : [],
         })
         .then((res) => {
-          console.log("SearchApprove", res.data);
           setDataSearch(res.data);
         });
     }
@@ -301,6 +292,7 @@ function fn_SearchRefferenceLetter() {
       width: "300px",
       dataIndex: "LetterType",
       key: "Letter Type",
+      align: "left",
       className: "scrollable-columnLetter",
       render: (text, record, index) => {
         return <div>{text}</div>;
@@ -312,6 +304,17 @@ function fn_SearchRefferenceLetter() {
       width: "200px",
       key: "Request By",
       align: "center",
+      className: "scrollable-columnLetter",
+      render: (text, record, index) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
+      title: "Request Date",
+      dataIndex: "ReqDate",
+      width: "100px",
+      key: "Request Date",
+      align: "center",
       render: (text, record, index) => {
         return <div>{text}</div>;
       },
@@ -321,8 +324,8 @@ function fn_SearchRefferenceLetter() {
       dataIndex: "Status",
       key: "Status",
       width: "100px",
+      align: "left",
       render: (text, record, index) => {
-        console.log(text, "Statussssss", record);
         if (
           record.Status_value == "LT0102" ||
           record.Status_value == "LT0103"
@@ -347,14 +350,14 @@ function fn_SearchRefferenceLetter() {
       title: "Last Action By",
       dataIndex: "LastBy",
       key: "Last Action By",
-      width: "120px",
+      width: "100px",
     },
 
     {
       title: "Last Action Date",
       dataIndex: "LastDate",
       key: "Last Action Date",
-      width: "130px",
+      width: "100px",
     },
   ];
 

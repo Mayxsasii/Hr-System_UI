@@ -2,19 +2,14 @@ import React from "react";
 import {
   Input,
   Card,
-  Checkbox,
   Select,
   Radio,
   DatePicker,
   Button,
-  Spin,
-  Flex,
 } from "antd";
 const { TextArea } = Input;
 import dayjs from "dayjs";
-// import "../RefferenceLetter.css";
 
-import Swal from "sweetalert2";
 import { fn_NewEmployeeCard } from "./fn_NewEmployeeCard";
 const RefferenceLetterMasterList = ({}) => {
   const {

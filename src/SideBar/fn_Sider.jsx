@@ -24,6 +24,7 @@ function fn_Sider() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  
   useEffect(() => {
     const currentPath = location.pathname;
     console.log(currentPath, "currentPath", menuData);
@@ -39,7 +40,6 @@ function fn_Sider() {
   }, []);
 
   const GetMenu = async () => {
-    console.log(ROLL, "roll");
     await axios
       .post("/api/common/GetMenu", {
         Roll: ROLL==null ? "":ROLL,

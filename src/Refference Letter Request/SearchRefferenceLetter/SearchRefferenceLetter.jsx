@@ -270,7 +270,7 @@ const SearchManPower = () => {
           bordered
           pagination={{ pageSize: 5 }}
           size="middle"
-          scroll={{ x: "max-content" }}
+          // scroll={{ x: "max-content" }}
           className="tb_letter"
         />
       </div>

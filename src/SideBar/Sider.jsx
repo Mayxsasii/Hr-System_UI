@@ -1,4 +1,4 @@
-import React from "react";
+
 import {
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
@@ -24,7 +24,6 @@ const CustomSider = () => {
       style={{
         overflowY: "auto",
         height: "97vh",
-
         position: "sticky",
         top: 10,
         backgroundColor: "#51ada8", 
@@ -55,7 +54,7 @@ const CustomSider = () => {
         <Menu
           theme="dark"
           mode="inline"
-          style={{ backgroundColor: "#51ada8",color:'#FFFFFF' }}
+          style={{ backgroundColor: "#51ada8", color: '#FFFFFF' }}
           selectedKeys={[selectedKey]}
           onClick={handleMenuClick}
         >

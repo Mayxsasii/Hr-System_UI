@@ -171,13 +171,13 @@ function fn_SearchEmpcard() {
         hideLoading();
         return;
       } else {
-        console.log("eeeeeee", userlogin);
+        console.log("eeeeeee", SL_Status);
         await axios
           .post("/api/EmployeeCard/GetSearchRequestEmployeeCard", {
             factory: SL_Factory ? `'${SL_Factory}'` : null,
             req_no_from: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
             req_no_to: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
-            req_date_from: txt_ReqNoTo ? `'${DateFrom}'` : null,
+            req_date_from: DateFrom ? `'${DateFrom}'` : null,
             req_date_to: DateTo ? `'${DateTo}'` : null,
             req_by: txt_ReqBy ? `'${txt_ReqBy}'` : null,
             approveby: null,
@@ -191,12 +191,14 @@ function fn_SearchEmpcard() {
                 : null,
             status:
               Path == "HrActionEmployeeCard"
-                ? Array.isArray(SL_Status) && SL_Status.length > 0
-                  ? SL_Status
+                ? (Array.isArray(SL_Status) && SL_Status.length > 0) ||
+                  SL_Status != null
+                  ? [SL_Status]
                   : ["CD0103", "CD0104"]
                 : Path == "EmployeeCardMasterList"
-                ? Array.isArray(SL_Status) && SL_Status.length > 0
-                  ? SL_Status
+                ? (Array.isArray(SL_Status) && SL_Status.length > 0) ||
+                  SL_Status != null
+                  ? [SL_Status]
                   : [
                       "CD0101",
                       "CD0102",
@@ -213,6 +215,7 @@ function fn_SearchEmpcard() {
             console.log("SearchApprove", res.data);
             if (res.data.length === 0) {
               Swal.fire({ icon: "warning", title: "Not Found Data!" });
+              setDataSearch([]);
             } else {
               setDataSearch(res.data);
             }
@@ -225,7 +228,7 @@ function fn_SearchEmpcard() {
           factory: SL_Factory ? `'${SL_Factory}'` : null,
           req_no_from: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
           req_no_to: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
-          req_date_from: txt_ReqNoTo ? `'${DateFrom}'` : null,
+          req_date_from: DateFrom ? `'${DateFrom}'` : null,
           req_date_to: DateTo ? `'${DateTo}'` : null,
           req_by: txt_ReqBy ? `'${txt_ReqBy}'` : null,
           reason:
@@ -243,6 +246,7 @@ function fn_SearchEmpcard() {
           console.log("SearchApprove", res.data);
           if (res.data.length === 0) {
             Swal.fire({ icon: "warning", title: "Not Found Data!" });
+            setDataSearch([]);
           } else {
             setDataSearch(res.data);
           }
@@ -265,7 +269,7 @@ function fn_SearchEmpcard() {
     }
     if (Path != "ApproveEmployeeCard") {
       setSL_Status(null);
-    }                                       
+    }
   };
 
   const columns = [
@@ -340,7 +344,7 @@ function fn_SearchEmpcard() {
       dataIndex: "RequestBy",
       width: "230px",
       key: "Request By",
-       className: "scrollable-columnLetter",
+      className: "scrollable-columnLetter",
       render: (text, record, index) => {
         return <div>{text}</div>;
       },
@@ -359,22 +363,13 @@ function fn_SearchEmpcard() {
       width: "100px",
       render: (text, record, index) => {
         console.log(text, "Statussssss", record);
-        if (
-          record.status == "CD0102" ||
-          record.status == "CD0103"
-        ) {
+        if (record.status == "CD0102" || record.status == "CD0103") {
           return <Tag color="warning">{text}</Tag>;
         } else if (record.status == "CD0104") {
           return <Tag color="processing">{text}</Tag>;
-        } else if (
-          record.status == "CD0107" ||
-          record.status == "CD0108"
-        ) {
+        } else if (record.status == "CD0107" || record.status == "CD0108") {
           return <Tag color="success">{text}</Tag>;
-        } else if (
-          record.status == "CD0109" ||
-          record.status == "CD0190"
-        ) {
+        } else if (record.status == "CD0109" || record.status == "CD0190") {
           return <Tag color="red">{text}</Tag>;
         } else return <Tag color="default">{text}</Tag>;
       },

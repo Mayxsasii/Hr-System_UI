@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { theme } from "antd";
-
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useLoading } from "../../loading/fn_loading";
-import { useLocation, useNavigate } from "react-router-dom";
-import status from "daisyui/components/status";
+import { useLocation } from "react-router-dom";
 
 function fn_NewEmployeeCard() {
   const { showLoading, hideLoading } = useLoading();
   const location = useLocation();
   const url = window.location.href;
   const Path = url.split("/").pop().split("?")[0];
-  console.log(Path, "Pathhhhh");
   const queryParams = new URLSearchParams(location.search);
   const ReqNo = queryParams.get("ReqNo");
   const today = new Date();
-
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
   ).padStart(2, "0")}/${today.getFullYear()}`; //DD/MM/YYYY
@@ -36,7 +31,7 @@ function fn_NewEmployeeCard() {
     txt_ReqStatusValue: "CD0101",
     txt_ReqStatusDesc: "Create",
     txt_ReqbyID: "",
-    txt_Userlogin: "",
+    // txt_Userlogin: "",
     txt_ReqbyName: "",
     txt_Factory: "",
     txt_FactoryValue: "",
@@ -52,6 +47,9 @@ function fn_NewEmployeeCard() {
     Date_DayWork: [],
     Date_DayWork2: [],
     txt_Remark: "",
+    // txt_Sendate: DateToday,
+    // txt_last_By:'',
+    // txt_
 
     //step2.2
     Sl_Supervisor: null,
@@ -228,7 +226,7 @@ function fn_NewEmployeeCard() {
         console.log(res.data, "GetDataPerson");
 
         if (res.data.length === 0) {
-          handleChange("txt_Userlogin", "");
+          // handleChange("txt_Userlogin", "");
           handleChange("txt_ReqbyID", "");
           handleChange("txt_ReqbyName", "");
           handleChange("txt_Factory", "");
@@ -245,24 +243,24 @@ function fn_NewEmployeeCard() {
           hideLoading();
         } else {
           if (res.data[0].dept == "") {
-          handleChange("txt_Userlogin", "");
-          // handleChange("txt_ReqbyID", "");
-          handleChange("txt_ReqbyName", "");
-          handleChange("txt_Factory", "");
-          handleChange("txt_FactoryValue", "");
-          handleChange("txt_Department", "");
-          handleChange("txt_EmpType", "");
-          handleChange("txt_JoinDate", "");
-          handleChange("txt_JobGrade", "");
-          handleChange("txt_Email", "");
+            // handleChange("txt_Userlogin", "");
+            // handleChange("txt_ReqbyID", "");
+            handleChange("txt_ReqbyName", "");
+            handleChange("txt_Factory", "");
+            handleChange("txt_FactoryValue", "");
+            handleChange("txt_Department", "");
+            handleChange("txt_EmpType", "");
+            handleChange("txt_JoinDate", "");
+            handleChange("txt_JobGrade", "");
+            handleChange("txt_Email", "");
             Swal.fire({
               icon: "warning",
               text: "This Employee code cannot be approved",
               title: "Please Contact HR Admin!",
             });
-            return ;
+            return;
           }
-          handleChange("txt_Userlogin", res.data[0].User);
+          // handleChange("txt_Userlogin", res.data[0].User);
           handleChange("txt_ReqbyName", res.data[0].name_surname);
           handleChange("txt_Factory", res.data[0].factory);
           handleChange("txt_FactoryValue", res.data[0].factory_code);
@@ -481,11 +479,9 @@ function fn_NewEmployeeCard() {
       });
 
     showLoading("กำลังบันทึกข้อมูล...");
-
     await axios
       .post("/api/EmployeeCard/InsNewEmpcard", {
         req_no: GenNo,
-        req_by: formData1.txt_Userlogin,
         ReqBy_id: formData1.txt_ReqbyID,
         factory: formData1.txt_FactoryValue,
         req_dept: formData1.txt_Department,
@@ -512,6 +508,7 @@ function fn_NewEmployeeCard() {
           console.log(res.data, "InsworkDay");
         });
     }
+    await DatamailSend(GenNo);
     hideLoading();
     Swal.fire({
       icon: "success",
@@ -553,12 +550,17 @@ function fn_NewEmployeeCard() {
       .then((res) => {
         console.log(res.data, "UpdateApproveSv");
       });
+    console.log("Rd_SupervisorApprove0", formData1.Rd_SupervisorApprove);
+    if (formData1.Rd_SupervisorApprove == "A") {
+      console.log("Rd_SupervisorApprove1", formData1.Rd_SupervisorApprove);
+      await DatamailSend(formData1.txt_ReqNo);
+    }
     hideLoading();
     Swal.fire({
       icon: "success",
       title: "Submit Success",
     }).then(async () => {
-      window.location.href = "/HrSystem/ApproveEmployeeCard";
+      // window.location.href = "/HrSystem/ApproveEmployeeCard";
     });
   };
 
@@ -603,6 +605,7 @@ function fn_NewEmployeeCard() {
             return;
           }
         }
+
         if (formData1.txt_RecriveById == "") {
           Swal.fire({
             icon: "warning",
@@ -693,9 +696,13 @@ function fn_NewEmployeeCard() {
         title: "Save Success",
       }).then(async () => {
         // window.location.href = "/HrSystem/HrActionEmployeeCard";
+        if (formData1.txt_ReqStatusValue == "CD0103") {
+          await DatamailSend(formData1.txt_ReqNo);
+        }
       });
       return;
     } else {
+      await DatamailSend(formData1.txt_ReqNo);
       Swal.fire({
         icon: "success",
         title: "Submit Success",
@@ -710,7 +717,7 @@ function fn_NewEmployeeCard() {
     console.log(status, "Bt_Reset");
     if (status == "CD0101") {
       handleChange("txt_ReqbyID", "");
-      handleChange("txt_Userlogin", "");
+      // handleChange("txt_Userlogin", "");
       handleChange("txt_ReqbyName", "");
       handleChange("txt_Factory", "");
       handleChange("txt_FactoryValue", "");
@@ -751,6 +758,339 @@ function fn_NewEmployeeCard() {
       handleChange("Sl_PaymentStatus", null);
       handleChange("txt_PaymentStatusOther", "");
     }
+  };
+
+  const DatamailSend = async (ReqNo) => {
+    console.log("GetEmailSend0", ReqNo);
+    let status = formData1.txt_ReqStatusValue;
+    let Usermail = [];
+    let Dear = "";
+    let Subject = "";
+    if (status == "CD0101") {
+      Subject = `Please Approve Letter Request : (${ReqNo})`;
+      Dear = `Khun ${formData1.Sl_Supervisor}  (Supervisor up)`;
+      await axios
+        .post("/api/Common/GetEmailUser", {
+          user: formData1.Sl_Supervisor,
+          formenu: "EMP CARD",
+        })
+        .then((res) => {
+          console.log("GetEmailSend", res.data);
+          if (res.data.length > 0) {
+            Usermail = res.data;
+          }
+        });
+    } else if (status == "CD0102") {
+      Subject = `Please Approve Letter Request : (${ReqNo})`;
+      Dear = "HR Staff";
+      await axios
+        .post("/api/Common/GetEmailHrStaff", {
+          Fac: formData1.txt_FactoryValue,
+          formenu: "EMP CARD",
+        })
+        .then((res) => {
+          console.log(res.data, "GetEmailHrStaff");
+          Usermail = res.data;
+        });
+    } else if (status == "CD0103" || status == "CD0104") {
+      Dear = `All Concern`;
+      await axios
+        .post("/api/Common/GetEmailUser", {
+          user: formData1.Sl_Supervisor,
+          formenu: "EMP CARD",
+        })
+        .then((res) => {
+          console.log("GetEmailSend", res.data);
+          if (res.data.length > 0) {
+            Usermail = res.data;
+          }
+        });
+      if (status == "CD0103") {
+        Subject = `Letter Request : (${ReqNo}) On Process`;
+      } else {
+        if (formData1.Rd_HRStatus == "CD0104") {
+          Subject = `Letter Request : (${ReqNo}) On Process`;
+        } else if (formData1.Rd_HRStatus == "CD0107") {
+          Subject = `Letter Request : (${ReqNo}) Close`;
+        } else if (formData1.Rd_HRStatus == "CD0108") {
+          Subject = `Letter Request : (${ReqNo}) Closed by condition`;
+        }
+      }
+    }
+
+    Usermail.forEach((user) => {
+      let fomathtml = fomatmail(Dear, ReqNo);
+      console.log(user.User, "DatamailSend", user.Email);
+      console.log("fomathtml", fomathtml);
+      SendEmail(Subject, fomathtml, user.Email);
+    });
+  };
+
+  const SendEmail = async (strSubject, fomathtml, Email) => {
+    await axios
+      .post("/api/Common/EmailSend", {
+        strSubject: strSubject,
+        strEmailFormat: fomathtml,
+        strEmail: Email,
+      })
+      .then((res) => {
+        console.log(res.data, "EmailSend");
+      });
+  };
+
+  const fomatmail = (Dear, ReqNo) => {
+    // let ReqNo = formData1.txt_ReqNo;
+    let status = "";
+    let comment = "";
+    if (formData1.txt_ReqStatusValue === "CD0101") {
+      status = "Wait Supervisor up Approve";
+    } else if (formData1.txt_ReqStatusValue === "CD0102") {
+      status = "Wait HR Staff Action";
+      comment = formData1.txt_SupervisorComment;
+    } else if (
+      formData1.txt_ReqStatusValue === "CD0103" ||
+      formData1.txt_ReqStatusValue === "CD0104"
+    ) {
+      status = "On Process";
+      comment = formData1.txt_HrComment;
+      if (formData1.Rd_HRStatus === "CD0104") {
+        status = "On Process";
+      } else if (formData1.Rd_HRStatus === "CD0107") {
+        status = "Closed";
+      } else if (formData1.Rd_HRStatus === "CD0108") {
+        status = "Closed by HR condition";
+      }
+    }
+
+    const formattedRemark = formData1.txt_Remark.replace(/(.{60})/g, "$1<br>");
+    let strEmailFormat = "";
+    if (formData1.txt_ReqStatusValue === "CD0101") {
+      strEmailFormat = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f9;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #dddddd; background-color: #ffffff;">
+        <!-- Header -->
+        <tr>
+        <td align="center" bgcolor="#578FCA" style="padding: 20px; color: #ffffff; font-size: 24px; font-weight: bold;">
+                                HR Online System Notification
+        </td>
+        </tr>
+        <!-- Content -->
+        <tr>
+        <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+        <p>Dear ${Dear} ,</p>
+        <p>
+                                  This Request creates as follow ${formData1.txt_ReqbyName}
+        </p>
+        <!-- Details -->
+        <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
+        <tr>
+        <td  style="font-size: 20px; color: #555555; font-weight: bold;width:120px " colspan="2" >
+        <p><strong>รายละเอียด :</strong></p>
+        </td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;width:120px ">System :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Employee Card</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${ReqNo}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Factory}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Department}</td>
+        </tr>
+
+        
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqbyName}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqDate}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqbyName}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqDate}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left; ">
+            ${formattedRemark}
+        </td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${status}</td>
+        </tr>
+        </table>
+        <p>
+                                    กรุณาตรวจสอบข้อมูลผ่านระบบของคุณ และดำเนินการต่อให้เรียบร้อย
+        </p>
+        <!-- Button -->
+        <table align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
+        <tr>
+        <td align="center" bgcolor="#578FCA" style="padding: 12px 25px; border-radius: 5px;">
+        <a href="http://10.17.100.183:4006/HrSystem/Home" style="text-decoration: none; color: #ffffff; font-size: 16px; font-weight: bold; display: inline-block;">
+                                ตรวจสอบรายการ
+        </a>
+        </td>
+        </tr>
+        </table>
+        </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+        <td align="center" bgcolor="#e4e4e7" style="padding: 15px; font-size: 12px; color: #777777;">
+                                                    Best Regards,<br/>
+                                © 2025 Fujikura Electronics (Thailand) Ltd. All rights reserved.
+        </td>
+        </tr>
+        </table>
+        </body>
+        </html>`;
+    } else {
+      strEmailFormat = ` <!DOCTYPE html>
+        <html lang="en">
+                <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f9;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #dddddd; background-color: #ffffff;">
+        <!-- Header -->
+        <tr>
+        <td align="center" bgcolor="#578FCA" style="padding: 20px; color: #ffffff; font-size: 24px; font-weight: bold;">
+                                HR Online System Notification
+        </td>
+        </tr>
+        <!-- Content -->
+        <tr>
+        <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+        <p>Dear ${Dear} ,</p>
+        <p>
+                                  This Request creates as follow ${
+                                    formData1.txt_ReqbyName
+                                  }
+        </p>
+        <!-- Details -->
+        <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
+        <tr>
+        <td  style="font-size: 20px; color: #555555; font-weight: bold;width:120px " colspan="2" >
+        <p><strong>รายละเอียด :</strong></p>
+        </td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;width:120px ">System :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Employee Card</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${ReqNo}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Factory
+        }</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Department
+        }</td>
+        </tr>
+
+        
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqbyName
+        }</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqDate
+        }</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqbyName
+        }</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqDate
+        }</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left; ">
+            ${formattedRemark}
+        </td>
+        </tr>
+
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${User}</td>
+        </tr>
+
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${DateToday}</td>
+        </tr>
+
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          comment || ""
+        }</td>
+        </tr>
+
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${status}</td>
+        </tr>
+
+        </table>
+        <p>
+                                    กรุณาตรวจสอบข้อมูลผ่านระบบของคุณ และดำเนินการต่อให้เรียบร้อย
+        </p>
+        <!-- Button -->
+        <table align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
+        <tr>
+        <td align="center" bgcolor="#578FCA" style="padding: 12px 25px; border-radius: 5px;">
+        <a href="http://10.17.100.183:4006/HrSystem/Home" style="text-decoration: none; color: #ffffff; font-size: 16px; font-weight: bold; display: inline-block;">
+                                ตรวจสอบรายการ
+        </a>
+        </td>
+        </tr>
+        </table>
+        </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+        <td align="center" bgcolor="#e4e4e7" style="padding: 15px; font-size: 12px; color: #777777;">
+                                                    Best Regards,<br/>
+                                © 2025 Fujikura Electronics (Thailand) Ltd. All rights reserved.
+        </td>
+        </tr>
+        </table>
+        </body>
+        </html>`;
+    }
+
+    return strEmailFormat;
   };
 
   return {
