@@ -805,7 +805,6 @@ function fn_ManPower() {
 
       const resData = response.data[0];
       if (!resData) {
-        console.error("No data found");
         return;
       }
 
@@ -873,7 +872,6 @@ function fn_ManPower() {
 
 
       if (!resData || resData.length === 0) {
-        console.error("No data found");
         return;
       }
 

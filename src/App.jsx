@@ -21,6 +21,7 @@ import LetterList from "./Refference Letter Request/RefferenceLetterMasterList/R
 import SearchEmpcard from "./Employee Card Request/SearchEmpCard/SearchEmpcard";
 import NewEmpCard from "./Employee Card Request/New Employee Card/NewEmployeeCard";
 import MasterListEmpCard from "./Employee Card Request/Master list Employee Card/MasterListEmployeeCard";
+import SearchSafetyShoes from "./Safety Shoes Request/Search Safety Shoes/SearchSafetyShoesRequest";
 import { LoadingProvider } from "./loading/fn_loading";
 
 const { Content } = Layout;
@@ -134,6 +135,12 @@ const App = () => {
             <Route
               path="/HrSystem/MasterListEmployeeCard"
               element={<ProtectedRoute element={<MasterListEmpCard />} />}
+            />
+
+            {/* ----------EmpCaard------------------ */}
+             <Route
+              path="/HrSystem/SearchSafetyShoes"
+              element={<ProtectedRoute element={<SearchSafetyShoes />} />}
             />
           </Routes>
         </AppLayout>

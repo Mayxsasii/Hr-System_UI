@@ -71,8 +71,7 @@ const SearchManPower = () => {
         }}
       >
         <p style={{ margin: 0, fontSize: "20px", fontWeight: "bold" }}>
-          <SearchOutlined style={{ marginRight: "8px" }} />
-          {TitlePage}
+        🔍 {TitlePage}
         </p>
       </div>
 

@@ -13,7 +13,6 @@ function fn_ForApprove(
   setDisable,
   setCurrent
 ) {
-  console.log(formData1, "fn_ForApprove");
   const { datauser } = fn_Header();
   const userlogin = localStorage.getItem("username");
   const { showLoading, hideLoading } = useLoading();
@@ -38,7 +37,6 @@ function fn_ForApprove(
     await axios
       .post("/api/RequestManPower/GetFactory", { User_login: userlogin || "" })
       .then((res) => {
-        console.log(res.data, "GetFactory");
         setFactory(res.data);
       });
   };
@@ -54,7 +52,6 @@ function fn_ForApprove(
         Sl_Department: formData1.SL_Department,
       })
       .then((res) => {
-        console.log(res.data, "GetDepartmentManager");
         if (res.data.length > 0) {
           setDepartmentManager(res.data);
         }
@@ -68,7 +65,6 @@ function fn_ForApprove(
         Sl_Department: formData1.SL_Department,
       })
       .then((res) => {
-        console.log(res.data, "GetFMGM");
         if (res.data.length > 0) {
           setFMGM(res.data);
         }
@@ -82,7 +78,6 @@ function fn_ForApprove(
         Sl_Department: formData1.SL_Department,
       })
       .then((res) => {
-        console.log(res.data, "GetHrManager");
         if (res.data.length > 0) {
           setHrManager(res.data);
         }
@@ -119,7 +114,6 @@ function fn_ForApprove(
         SL_Position
       } = formData1;
 
-      console.log("กำลัง SaveDraft");
       await axios
         .post("/api/RequestManPower/DelDataPersonDetail", {
           ReqNo: txt_ReqNo,
@@ -188,7 +182,6 @@ function fn_ForApprove(
             formData1.Person_Sub[i].Education.length > 0
           ) {
             for (let j = 0; j < formData1.Person_Sub[i].Education.length; j++) {
-              console.log("Rec_id,", Rec_id);
               await axios
                 .post("/api/RequestManPower/InsPersonDetail", {
                   ReqNo: txt_ReqNo,
@@ -404,7 +397,6 @@ function fn_ForApprove(
       }
 
       const TargetDate = moment(Date_Target, "DD/MM/YYYY").format("YYYY-MM-DD");
-      console.log(TargetDate, "TargetDate");
       await axios
         .post("/api/RequestManPower/SaveDraft", {
           ReqNo: txt_ReqNo,
@@ -433,15 +425,13 @@ function fn_ForApprove(
           Position: SL_Position || "",
         })
         .then((res) => {
-          console.log(res.data, "SaveDraft999");
-        });
+         });
       Swal.fire({
         icon: "success",
         title: "Save Success",
       }).then(() => {});
     } catch (error) {
       Swal.fire({ icon: "error", title: "Error", text: error.message });
-      console.error(error, "SaveDraft888");
       hideLoading();
     }
 
@@ -1380,6 +1370,7 @@ function fn_ForApprove(
     let Position = `${formData1.SL_Position} ${
       formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional
     } PERSON`;
+    const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");
     if (status === "MR0101") {
       strEmailFormat = `
         <!DOCTYPE html>
@@ -1564,7 +1555,7 @@ function fn_ForApprove(
         </tr>
                             <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Comment}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formattedComment||''}</td>
         </tr>
                   <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>

@@ -161,7 +161,7 @@ const RefferenceLetterMasterList = ({}) => {
                 />
               </td>
             </tr>
-            {console.log("formData1", formData1)}
+            
             <tr>
               <td align="right">
                 <label>Email :</label>
@@ -245,7 +245,7 @@ const RefferenceLetterMasterList = ({}) => {
                     const formatted = dates.map((date) =>
                       date.format("YYYY-MM-DD")
                     );
-                    console.log("วันที่ที่เก็บ:", formatted);
+              
                     handleChange("Date_DayWork", formatted); // เก็บเป็น string[]
                   }}
                   maxTagCount="responsive"

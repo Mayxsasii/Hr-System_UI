@@ -237,6 +237,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
     let Position = `${formData1.SL_Position} ${
       formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional
     } PERSON`;
+    const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");
     strEmailFormat = `   <!DOCTYPE html>
         <html lang="en">
         
@@ -335,7 +336,7 @@ function fn_HrStarffAction(formData1, setFormData1) {
                             <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
         <td style="font-size: 14px; color: #333333; text-align: left;">${
-          formData1.txt_HrComment || ""
+          formattedComment|| ""
         }</td>
         </tr>
                   <tr>

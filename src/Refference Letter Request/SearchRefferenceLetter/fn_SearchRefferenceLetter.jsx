@@ -132,90 +132,98 @@ function fn_SearchRefferenceLetter() {
   };
 
   const bt_Search = async () => {
-    setDataSearch([]);
-    showLoading("กำลังค้นหา...");
-    if (Path == "ApproveRefferenceLetter") {
-      await axios
-        .post("/api/RefferenceLetter/SearchLetter", {
-          dept:
-            SL_Department != null && SL_Department.length > 0
-              ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
-              : null,
-          Fac: SL_Factory ? `'${SL_Factory}'` : null,
-          reqfrom: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
-          reqto: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
-          datefrom: txt_ReqNoTo ? `'${DateFrom}'` : null,
-          dateto: DateTo ? `'${DateTo}'` : null,
-          reqby: txt_ReqBy ? `'${txt_ReqBy}'` : null,
-          approveby: userlogin ? `'${userlogin}'` : null,
-          type:
-            SL_Letter != null && SL_Letter.length > 0
-              ? `array[${SL_Letter.map((Letter) => `'${Letter}'`).join(",")}]`
-              : null,
-          status: ["LT0102"],
-        })
-        .then((res) => {
-          setDataSearch(res.data);
-        });
-    } else {
-      if (
-        SL_Factory == null &&
-        SL_Department == null &&
-        txt_ReqBy == "" &&
-        txt_ReqNoFrom == "" &&
-        txt_ReqNoTo == "" &&
-        SL_Letter == null &&
-        DateTo == null &&
-        DateFrom == null &&
-        SL_Status == null
-      ) {
-        Swal.fire({ icon: "warning", title: "Please fill in the information" });
-        hideLoading();
-        return;
-      }
+    try {
+      setDataSearch([]);
+      showLoading("กำลังค้นหา...");
+      if (Path == "ApproveRefferenceLetter") {
+        await axios
+          .post("/api/RefferenceLetter/SearchLetter", {
+            dept:
+              SL_Department != null && SL_Department.length > 0
+                ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
+                : null,
+            Fac: SL_Factory ? `'${SL_Factory}'` : null,
+            reqfrom: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
+            reqto: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
+            datefrom: txt_ReqNoTo ? `'${DateFrom}'` : null,
+            dateto: DateTo ? `'${DateTo}'` : null,
+            reqby: txt_ReqBy ? `'${txt_ReqBy}'` : null,
+            approveby: userlogin ? `'${userlogin}'` : null,
+            type:
+              SL_Letter != null && SL_Letter.length > 0
+                ? `array[${SL_Letter.map((Letter) => `'${Letter}'`).join(",")}]`
+                : null,
+            status: ["LT0102"],
+          })
+          .then((res) => {
+            setDataSearch(res.data);
+          });
+      } else {
+        if (
+          SL_Factory == null &&
+          SL_Department == null &&
+          txt_ReqBy == "" &&
+          txt_ReqNoFrom == "" &&
+          txt_ReqNoTo == "" &&
+          SL_Letter == null &&
+          DateTo == null &&
+          DateFrom == null &&
+          SL_Status == null
+        ) {
+          Swal.fire({
+            icon: "warning",
+            title: "Please fill in the information",
+          });
+          hideLoading();
+          return;
+        }
 
-      await axios
-        .post("/api/RefferenceLetter/SearchLetter", {
-          dept:
-            SL_Department != null && SL_Department.length > 0
-              ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
-              : null,
-          Fac: SL_Factory ? `'${SL_Factory}'` : null,
-          reqfrom: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
-          reqto: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
-          datefrom: DateFrom ? `'${DateFrom}'` : null,
-          dateto: DateTo ? `'${DateTo}'` : null,
-          reqby: txt_ReqBy ? `'${txt_ReqBy}'` : null,
-          approveby: null,
-          type:
-            SL_Letter != null && SL_Letter.length > 0
-              ? `array[${SL_Letter.map((Letter) => `'${Letter}'`).join(",")}]`
-              : null,
-          status:
-            Path == "HrActionRefferenceLetter"
-              ? Array.isArray(SL_Status) && SL_Status.length > 0
-                ? SL_Status
-                : ["LT0103", "LT0104"]
-              : Path == "RefferenceLetterMasterList"
-              ? Array.isArray(SL_Status) && SL_Status.length > 0
-                ? SL_Status
-                : [
-                    "LT0101",
-                    "LT0102",
-                    "LT0103",
-                    "LT0104",
-                    "LT0107",
-                    "LT0109",
-                    "LT0190",
-                    "LT0108",
-                  ]
-              : [],
-        })
-        .then((res) => {
-          setDataSearch(res.data);
-        });
+        await axios
+          .post("/api/RefferenceLetter/SearchLetter", {
+            dept:
+              SL_Department != null && SL_Department.length > 0
+                ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
+                : null,
+            Fac: SL_Factory ? `'${SL_Factory}'` : null,
+            reqfrom: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
+            reqto: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
+            datefrom: DateFrom ? `'${DateFrom}'` : null,
+            dateto: DateTo ? `'${DateTo}'` : null,
+            reqby: txt_ReqBy ? `'${txt_ReqBy}'` : null,
+            approveby: null,
+            type:
+              SL_Letter != null && SL_Letter.length > 0
+                ? `array[${SL_Letter.map((Letter) => `'${Letter}'`).join(",")}]`
+                : null,
+            status:
+              Path == "HrActionRefferenceLetter"
+                ? Array.isArray(SL_Status) && SL_Status.length > 0
+                  ? SL_Status
+                  : ["LT0103", "LT0104"]
+                : Path == "RefferenceLetterMasterList"
+                ? Array.isArray(SL_Status) && SL_Status.length > 0
+                  ? SL_Status
+                  : [
+                      "LT0101",
+                      "LT0102",
+                      "LT0103",
+                      "LT0104",
+                      "LT0107",
+                      "LT0109",
+                      "LT0190",
+                      "LT0108",
+                    ]
+                : [],
+          })
+          .then((res) => {
+            setDataSearch(res.data);
+          });
+      }
+      hideLoading();
+    } catch (error) {
+      Swal.fire({ icon: "warning", title: error });
+      hideLoading();
     }
-    hideLoading();
   };
 
   const bt_Reset = () => {

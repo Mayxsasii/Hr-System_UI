@@ -12,7 +12,6 @@ function fn_SearchEmpcard() {
   const url = window.location.href;
   const Path = url.split("/").pop();
   const userlogin = localStorage.getItem("username");
-  console.log("userlogin", userlogin);
   const ROLL = localStorage.getItem("ROLL");
   const { showLoading, hideLoading } = useLoading();
 
@@ -63,7 +62,7 @@ function fn_SearchEmpcard() {
   //         User_login: userlogin || "",
   //       })
   //       .then((res) => {
-  //         console.log(res.data, "GetLetterTypeSearch");
+
   //         setLetterType(res.data);
   //       });
   //   };
@@ -75,7 +74,6 @@ function fn_SearchEmpcard() {
         Roll: ROLL || "",
       })
       .then((res) => {
-        console.log(res.data, "GetFactory");
         setFactory(res.data);
         if (Path == "HrActionEmployeeCard") {
           setSL_Factory(res.data[0].value);
@@ -97,7 +95,6 @@ function fn_SearchEmpcard() {
             : [],
       })
       .then((res) => {
-        console.log(res.data, "GetStatus");
         if (Path == "ApproveEmployeeCard") {
           setSL_Status(res.data[0].value);
         }
@@ -106,20 +103,17 @@ function fn_SearchEmpcard() {
   };
 
   const GetDepartment = async () => {
-    console.log("111111111", userlogin);
     await axios
       .post("/api/EmployeeCard/GetDeptApproveCard", {
         User_login: userlogin || "",
       })
       .then((res) => {
-        console.log(res.data, "GetDepartmentApprove");
         setDepartment(res.data);
       });
   };
 
   const GetReason = async () => {
     await axios.post("/api/EmployeeCard/GetReason", {}).then((res) => {
-      console.log(res.data, "GetReason");
       setReason(res.data);
     });
   };
@@ -130,7 +124,6 @@ function fn_SearchEmpcard() {
         Fac: value || "",
       })
       .then((res) => {
-        console.log(res.data, "GetDeptallFac");
         setDepartment(res.data);
       });
   };
@@ -151,27 +144,82 @@ function fn_SearchEmpcard() {
   };
 
   const bt_Search = async () => {
-    showLoading("");
-    if (Path != "ApproveEmployeeCard") {
-      if (
-        SL_Factory == null &&
-        SL_Department == null &&
-        SL_Reason == null &&
-        SL_Status == null &&
-        txt_ReqNoFrom == "" &&
-        txt_ReqNoTo == "" &&
-        txt_ReqBy == "" &&
-        DateFrom == null &&
-        DateTo == null
-      ) {
-        Swal.fire({
-          icon: "warning",
-          title: "Please fill in the information",
-        });
+    try {
+      showLoading("");
+      
+      if (Path != "ApproveEmployeeCard") {
+        if (
+          SL_Factory == null &&
+          SL_Department == null &&
+          SL_Reason == null &&
+          SL_Status == null &&
+          txt_ReqNoFrom == "" &&
+          txt_ReqNoTo == "" &&
+          txt_ReqBy == "" &&
+          DateFrom == null &&
+          DateTo == null
+        ) {
+          Swal.fire({
+            icon: "warning",
+            title: "Please fill in the information",
+          });
+          hideLoading();
+          return;
+        } else {
+          await axios
+            .post("/api/EmployeeCard/GetSearchRequestEmployeeCard", {
+              factory: SL_Factory ? `'${SL_Factory}'` : null,
+              req_no_from: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
+              req_no_to: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
+              req_date_from: DateFrom ? `'${DateFrom}'` : null,
+              req_date_to: DateTo ? `'${DateTo}'` : null,
+              req_by: txt_ReqBy ? `'${txt_ReqBy}'` : null,
+              approveby: null,
+              reason:
+                SL_Reason != null && SL_Reason.length > 0
+                  ? `array[${SL_Reason.map((reason) => `'${reason}'`).join(
+                      ","
+                    )}]`
+                  : null,
+              dept:
+                SL_Department != null && SL_Department.length > 0
+                  ? `array[${SL_Department.map((dept) => `'${dept}'`).join(
+                      ","
+                    )}]`
+                  : null,
+              status:
+                Path == "HrActionEmployeeCard"
+                  ? (Array.isArray(SL_Status) && SL_Status.length > 0) ||
+                    SL_Status != null
+                    ? [SL_Status]
+                    : ["CD0103", "CD0104"]
+                  : Path == "EmployeeCardMasterList"
+                  ? (Array.isArray(SL_Status) && SL_Status.length > 0) ||
+                    SL_Status != null
+                    ? [SL_Status]
+                    : [
+                        "CD0101",
+                        "CD0102",
+                        "CD0103",
+                        "CD0104",
+                        "CD0107",
+                        "CD0108",
+                        "CD0109",
+                        "CD0190",
+                      ]
+                  : [],
+            })
+            .then((res) => {
+              if (res.data.length === 0) {
+                Swal.fire({ icon: "warning", title: "Not Found Data!" });
+                setDataSearch([]);
+              } else {
+                setDataSearch(res.data);
+              }
+            });
+        }
         hideLoading();
-        return;
       } else {
-        console.log("eeeeeee", SL_Status);
         await axios
           .post("/api/EmployeeCard/GetSearchRequestEmployeeCard", {
             factory: SL_Factory ? `'${SL_Factory}'` : null,
@@ -180,7 +228,6 @@ function fn_SearchEmpcard() {
             req_date_from: DateFrom ? `'${DateFrom}'` : null,
             req_date_to: DateTo ? `'${DateTo}'` : null,
             req_by: txt_ReqBy ? `'${txt_ReqBy}'` : null,
-            approveby: null,
             reason:
               SL_Reason != null && SL_Reason.length > 0
                 ? `array[${SL_Reason.map((reason) => `'${reason}'`).join(",")}]`
@@ -189,30 +236,10 @@ function fn_SearchEmpcard() {
               SL_Department != null && SL_Department.length > 0
                 ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
                 : null,
-            status:
-              Path == "HrActionEmployeeCard"
-                ? (Array.isArray(SL_Status) && SL_Status.length > 0) ||
-                  SL_Status != null
-                  ? [SL_Status]
-                  : ["CD0103", "CD0104"]
-                : Path == "EmployeeCardMasterList"
-                ? (Array.isArray(SL_Status) && SL_Status.length > 0) ||
-                  SL_Status != null
-                  ? [SL_Status]
-                  : [
-                      "CD0101",
-                      "CD0102",
-                      "CD0103",
-                      "CD0104",
-                      "CD0107",
-                      "CD0108",
-                      "CD0109",
-                      "CD0190",
-                    ]
-                : [],
+            status: ["CD0102"],
+            approveby: userlogin ? `'${userlogin}'` : null,
           })
           .then((res) => {
-            console.log("SearchApprove", res.data);
             if (res.data.length === 0) {
               Swal.fire({ icon: "warning", title: "Not Found Data!" });
               setDataSearch([]);
@@ -220,37 +247,10 @@ function fn_SearchEmpcard() {
               setDataSearch(res.data);
             }
           });
+        hideLoading();
       }
-      hideLoading();
-    } else {
-      await axios
-        .post("/api/EmployeeCard/GetSearchRequestEmployeeCard", {
-          factory: SL_Factory ? `'${SL_Factory}'` : null,
-          req_no_from: txt_ReqNoFrom ? `'${txt_ReqNoFrom}'` : null,
-          req_no_to: txt_ReqNoTo ? `'${txt_ReqNoTo}'` : null,
-          req_date_from: DateFrom ? `'${DateFrom}'` : null,
-          req_date_to: DateTo ? `'${DateTo}'` : null,
-          req_by: txt_ReqBy ? `'${txt_ReqBy}'` : null,
-          reason:
-            SL_Reason != null && SL_Reason.length > 0
-              ? `array[${SL_Reason.map((reason) => `'${reason}'`).join(",")}]`
-              : null,
-          dept:
-            SL_Department != null && SL_Department.length > 0
-              ? `array[${SL_Department.map((dept) => `'${dept}'`).join(",")}]`
-              : null,
-          status: ["CD0102"],
-          approveby: userlogin ? `'${userlogin}'` : null,
-        })
-        .then((res) => {
-          console.log("SearchApprove", res.data);
-          if (res.data.length === 0) {
-            Swal.fire({ icon: "warning", title: "Not Found Data!" });
-            setDataSearch([]);
-          } else {
-            setDataSearch(res.data);
-          }
-        });
+    } catch (error) {
+      Swal.fire({ icon: "warning", title: error });
       hideLoading();
     }
   };
@@ -362,7 +362,6 @@ function fn_SearchEmpcard() {
       key: "Status",
       width: "100px",
       render: (text, record, index) => {
-        console.log(text, "Statussssss", record);
         if (record.status == "CD0102" || record.status == "CD0103") {
           return <Tag color="warning">{text}</Tag>;
         } else if (record.status == "CD0104") {

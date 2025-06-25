@@ -355,7 +355,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       ? formData1.Date_Target.split("-").reverse().join("/")
       : "";
     const formattedRemark = formData1.txt_Remark.replace(/(.{60})/g, "$1<br>");
-    let strEmailFormat = "";
+const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");    let strEmailFormat = "";
     if (status === "LT0101") {
       strEmailFormat = `
                <!DOCTYPE html>
@@ -535,7 +535,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
         </tr>
                             <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Comment||''}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formattedComment||''}</td>
         </tr>
                   <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>

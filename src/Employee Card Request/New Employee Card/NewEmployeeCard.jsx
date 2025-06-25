@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  Input,
-  Card,
-  Select,
-  Radio,
-  DatePicker,
-  Button,
-} from "antd";
+import { Input, Card, Select, Radio, DatePicker, Button } from "antd";
 const { TextArea } = Input;
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
 
 import { fn_NewEmployeeCard } from "./fn_NewEmployeeCard";
 const RefferenceLetterMasterList = ({}) => {
@@ -164,7 +158,6 @@ const RefferenceLetterMasterList = ({}) => {
                 />
               </td>
             </tr>
-            {console.log("formData1", formData1)}
             <tr>
               <td align="right">
                 <label>Email :</label>
@@ -178,14 +171,14 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
 
               <td align="right" style={{ width: "110px" }}>
-                <label>เบอร์ภายใน/Tel :</label>
+                <label>เบอร์ติดต่อ/Tel :</label>
               </td>
               <td>
                 <Input
                   disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
                   onChange={(e) => handleChange("txt_Tel", e.target.value)}
                   value={formData1.txt_Tel}
-                  style={{ width: "80px" }}
+                  style={{ width: "100%" }}
                 />
               </td>
             </tr>
@@ -251,29 +244,50 @@ const RefferenceLetterMasterList = ({}) => {
                 />
               </td>
             </tr>
-            <tr
-              style={{
-                display: !["CD0101"].includes(formData1.txt_ReqStatusValue)
-                  ? "none"
-                  : "",
-              }}
-            >
-              <td colSpan={2} align="right" style={{}}>
-                <label>
-                  ไม่ได้บันทึกเวลาทำงานที่เครื่องบันทึกเวลา/No Record Working
-                  Time :
-                </label>{" "}
+            <tr>
+              <td align="right">
+                <label>การรูดบัตร/Swipe Card:</label>
               </td>
-              <td style={{}} colSpan={7}>
+              <td colSpan={2}>
+                <Radio.Group
+                  name="radiogroup"
+                  disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
+                  value={formData1.Rd_SwipeCard}
+                  onChange={(e) => {
+                    handleChange("Rd_SwipeCard", e.target.value);
+                  }}
+                  options={[
+                    {
+                      value: "Y",
+                      label: "รูดบัตร",
+                    },
+                    {
+                      value: "N",
+                      label: "ไม่ได้รูดบัตร",
+                    },
+                  ]}
+                />
+              </td>
+            </tr>
+
+            <tr
+              style={{ display: formData1.Rd_SwipeCard != "N" ? "none" : "" }}
+            >
+              <td align="right">
+                <label>
+                  วันที่ไม่ได้รูดบัตร(เฉพาะวันทำงาน) :<br />
+                </label>
+              </td>
+              <td colSpan={4}>
                 <DatePicker
                   disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
                   multiple
                   onChange={(dates) => {
-                    const formatted = dates.map((date) =>
-                      date.format("YYYY-MM-DD")
-                    );
-                    console.log("วันที่ที่เก็บ:", formatted);
-                    handleChange("Date_DayWork", formatted); // เก็บเป็น string[]
+                    const formatted =
+                      Array.isArray(dates) && dates.length > 0
+                        ? dates.map((date) => date.format("YYYY-MM-DD"))
+                        : [];
+                    handleChange("Date_DayWork", formatted);
                   }}
                   maxTagCount="responsive"
                   format="DD/MM/YYYY"
@@ -282,29 +296,60 @@ const RefferenceLetterMasterList = ({}) => {
                       dayjs(dateStr, "YYYY-MM-DD")
                     ) || []
                   }
-                  size="middle"
+                  style={{ width: "300px" }}
+                  disabledDate={(current) => {
+                    const today = dayjs().startOf("day");
+                    const yesterday = dayjs().subtract(1, "day").startOf("day");
+                    return (
+                      !current.isSame(today, "day") &&
+                      !current.isSame(yesterday, "day")
+                    );
+                  }}
                 />
               </td>
             </tr>
-            <tr
-              style={{
-                display: ["CD0101"].includes(formData1.txt_ReqStatusValue)
-                  ? "none"
-                  : "",
-              }}
-            >
+            <tr>
               <td align="right">
-                <label>วันที่ไม่ได้รูดบัตร (เฉพาะวันทำงาน):</label>{" "}
+                <label>การรับบัตร/Recrive Card By:</label>
               </td>
-              <td colSpan={9}>
-                <TextArea
-                  disabled
-                  value={formData1.Date_DayWork2}
-                  onChange={(e) => handleChange("Date_DayWork", e.target.value)}
-                  style={{ height: "50px" }}
+              <td colSpan={8}>
+                <Radio.Group
+                  disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
+                  style={{ display: "flex", flexDirection: "column", gap: 4 }}
+                  value={formData1.Rd_RecriveByCard}
+                  onChange={(e) => {
+                    handleChange("Rd_RecriveByCard", e.target.value);
+                  }}
+                  options={[
+                    {
+                      value: "Y",
+                      label: (
+                        <>
+                          รับด้วยตัวเอง
+                          <span style={{ color: "red", marginLeft: 8 }}>
+                            (กรณีพนักงานรับบัตรด้วยตนเอง
+                            ให้นำเงินมาชำระที่ฝ่ายบุคคล)
+                          </span>
+                        </>
+                      ),
+                    },
+                    {
+                      value: "N",
+                      label: (
+                        <>
+                          ฝาก DCC รับบัตร
+                          <span style={{ color: "red", marginLeft: 8 }}>
+                            (กรณีพนักงานฝาก DCC รับบัตร ให้นำเงินมาฝากที่ DCC
+                            ก่อนเวลา 13.30 น.)
+                          </span>
+                        </>
+                      ),
+                    },
+                  ]}
                 />
               </td>
             </tr>
+
             <tr>
               <td align="right">
                 <label>หมายเหตุ/Remark :</label>{" "}
@@ -324,7 +369,9 @@ const RefferenceLetterMasterList = ({}) => {
                 <label style={{ color: "red" }}>
                   *ข้อกำหนด : HR จะทำบัตรหลังเวลา 13.30 น. ของทุกวันทำงาน
                   ดังนั้นหัวหน้างานจะต้องอนุมัติการทำบัตรพนักงานก่อนเวลา 13.00
-                  น.และพนักงานจะต้องมารับบัตรพนักงานหลังเวลา 15.00 น.{" "}
+                  น.และพนักงานจะต้องมารับบัตรพนักงานหลังเวลา 15.00 น. <br />
+                  *ดังนั้นพนักงานจะต้องยื่นเรื่องขอทำบัตรก่อน เวลลา 13.30 น.
+                  หากยื่นหลังจากเวลาที่กำหนดจะได้รับบัตรในวันถัดไป
                 </label>
               </td>
             </tr>
@@ -550,7 +597,6 @@ const RefferenceLetterMasterList = ({}) => {
                 />
               </td>
             </tr>
-            {console.log("formData1", formData1)}
             <tr>
               <td align="right">
                 <label>HR Staff :</label>
@@ -582,7 +628,7 @@ const RefferenceLetterMasterList = ({}) => {
               <td>
                 {" "}
                 <Select
-                  style={{ width: "100%" }}
+                  style={{ width: "100%", minWidth: "450px" }}
                   disabled
                   options={Reason}
                   value={formData1.Sl_Reason}
@@ -617,6 +663,7 @@ const RefferenceLetterMasterList = ({}) => {
                   showSearch
                   style={{
                     width: "100%",
+                    minWidth: "450px",
                   }}
                   disabled={
                     !["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)
@@ -628,19 +675,26 @@ const RefferenceLetterMasterList = ({}) => {
                       .toLowerCase()
                       .includes(input.toLowerCase())
                   }
-                  value={formData1.txt_cause}
+                  value={formData1.Sl_cause}
                   options={Reason}
                   onChange={(value, option) => {
-                    handleChange("txt_cause", value);
+                    console.log(value,'Sl_cause')
+                    handleChange("Sl_cause", value);
 
                     // ตรวจสอบว่ามีค่า expenses ใน option ที่เลือก
                     if (option?.expenses) {
                       handleChange("txt_ExpensesCause", option.expenses);
+                      if(option.expenses>0){
+                       handleChange("Sl_PaymentStatus", 'CD0402');
+                      }else{
+                        handleChange("Sl_PaymentStatus", 'CD0404'); 
+                      }
                     } else {
-                      handleChange("txt_ExpensesCause", "");
+                      handleChange("txt_ExpensesCause", '');
+                       handleChange("Sl_PaymentStatus", 'CD0404'); 
                     }
                     if (value != "CD0208") {
-                      handleChange("txt_CauseOther", "");
+                      handleChange("Sl_causeOther", "");
                     }
                   }}
                 />
@@ -650,14 +704,14 @@ const RefferenceLetterMasterList = ({}) => {
                 <Input
                   style={{ width: "440px" }}
                   disabled={
-                    formData1.txt_cause != "CD0208" ||
+                    formData1.Sl_cause != "CD0208" ||
                     !["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)
                   }
                   placeholder="อื่นๆโปรดระบุ"
                   onChange={(e) =>
-                    handleChange("txt_CauseOther", e.target.value)
+                    handleChange("Sl_causeOther", e.target.value)
                   }
-                  value={formData1.txt_CauseOther}
+                  value={formData1.Sl_causeOther}
                 />
                 <label style={{ marginLeft: "30px" }}>ค่าใช้จ่ายจริง :</label>
                 <Input
@@ -672,6 +726,13 @@ const RefferenceLetterMasterList = ({}) => {
                     // รับเฉพาะตัวเลขเท่านั้น
                     const value = e.target.value.replace(/[^0-9]/g, "");
                     handleChange("txt_ExpensesCause", value);
+                    console.log(value,'mmmmmmc')
+                    if(value==0){
+                        handleChange("Sl_PaymentStatus", 'CD0404');
+                    }else if(value>0){
+                       handleChange("Sl_PaymentStatus", 'CD0402');
+                    }
+                    
                   }}
                   value={formData1.txt_ExpensesCause}
                   inputMode="numeric"
@@ -768,7 +829,7 @@ const RefferenceLetterMasterList = ({}) => {
                   disabled={
                     !["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)
                   }
-                  style={{ width: "120px" }}
+                  style={{ width: "115px" }}
                   value={formData1.txt_RecriveByTel}
                   onChange={(e) =>
                     handleChange("txt_RecriveByTel", e.target.value)
@@ -780,7 +841,7 @@ const RefferenceLetterMasterList = ({}) => {
               <td align="right">
                 <label>Recrive Date :</label>
               </td>
-              <td colSpan={2}>
+              <td colSpan={2} >
                 <Input
                   disabled={
                     !["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)
@@ -795,49 +856,27 @@ const RefferenceLetterMasterList = ({}) => {
                   value={formData1.Date_RecriveDate}
                   min={new Date().toISOString().split("T")[0]} // กำหนดวันที่ขั้นต่ำเป็น
                 />
-                <label style={{ marginLeft: "30px" }}>Payment status : </label>
+                <label style={{ marginLeft: "30px",}}>Payment status : </label>
                 <Select
-                  disabled={
-                    !["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)
-                  }
+                
+                  
                   showSearch
                   style={{
-                    width: "300px",
+                    width: "300px"
                   }}
                   value={formData1.Sl_PaymentStatus}
-                  placeholder="Please Select Payment status"
+                  // placeholder="Please Select Payment status"
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     (option?.label ?? "")
                       .toLowerCase()
                       .includes(input.toLowerCase())
                   }
+                  disabled
                   options={StatusPayment}
-                  // onChange={(value) => {
-                  //   handleChange("Sl_PaymentStatus", value);
-                  // }}
-                  onChange={(value, option) => {
-                    handleChange("Sl_PaymentStatus", value);
-
-                    // ตรวจสอบว่ามีค่า expenses ใน option ที่เลือก
-
-                    if (value != "CD0403") {
-                      handleChange("txt_PaymentStatusOther", "");
-                    }
-                  }}
+                
                 />
-                <Input
-                  disabled={
-                    formData1.Sl_PaymentStatus != "CD0403" ||
-                    !["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)
-                  }
-                  style={{ width: "300px", marginLeft: "5px" }}
-                  placeholder="อื่นๆโปรดระบุ"
-                  value={formData1.txt_PaymentStatusOther}
-                  onChange={(e) =>
-                    handleChange("txt_PaymentStatusOther", e.target.value)
-                  }
-                />
+                
               </td>
             </tr>
           </table>
@@ -854,6 +893,7 @@ const RefferenceLetterMasterList = ({}) => {
           <Button
             color="gold"
             variant="solid"
+            style={{display:formData1.Rd_HRStatus=='CD0107'?'none':''}}
             onClick={() => {
               Bt_SubmitForHr("SaveDraft");
             }}
@@ -874,7 +914,7 @@ const RefferenceLetterMasterList = ({}) => {
             color="red"
             variant="solid"
             style={{ marginLeft: 8 }}
-           onClick={() => Bt_Reset()}
+            onClick={() => Bt_Reset()}
           >
             Reset
           </Button>

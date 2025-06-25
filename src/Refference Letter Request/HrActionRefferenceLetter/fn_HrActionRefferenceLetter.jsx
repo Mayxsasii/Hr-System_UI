@@ -11,7 +11,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
   ).padStart(2, "0")}/${today.getFullYear()}`;
-    const DateToday2 = `${today.getFullYear()}-${String(
+  const DateToday2 = `${today.getFullYear()}-${String(
     today.getMonth() + 1 //YYYY-MM-DD
   ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const userlogin = localStorage.getItem("username");
@@ -113,7 +113,6 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
     let date_submit = null;
     let HrBy = datauser.LOGIN;
     if (save == "Submit") {
-      console.log(formData1,'mmmmmmmmmmmmmm')
       status = formData1.Rd_HRStatus;
       date_submit = DateToday;
       if (formData1.Date_HrConfirmAcDate == null) {
@@ -121,16 +120,16 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           icon: "warning",
           title: "Please Select confim action date",
         });
-        hideLoading()
+        hideLoading();
         return;
       }
-    
+
       if (formData1.txt_RecriveById == "") {
         Swal.fire({
           icon: "warning",
           title: "Please Input Receive By",
         });
-        hideLoading()
+        hideLoading();
         return;
       }
       if (formData1.txt_RecriveByTel == "") {
@@ -138,7 +137,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           icon: "warning",
           title: "Please Input Tel",
         });
-        hideLoading()
+        hideLoading();
         return;
       }
       if (formData1.Date_RecriveDate == null) {
@@ -146,7 +145,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           icon: "warning",
           title: "Please Select Recrive Date",
         });
-        hideLoading()
+        hideLoading();
         return;
       }
     } else if ((save = "SaveDarft")) {
@@ -158,7 +157,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           icon: "warning",
           title: "Please Select Condition Close",
         });
-        hideLoading()
+        hideLoading();
         return;
       } else {
         Condition = formData1.Sl_HrCondion;
@@ -171,7 +170,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
 
     await axios
       .post("/api/RefferenceLetter/UpdateHrStaff", {
-        ReqNo:formData1.txt_ReqNo,
+        ReqNo: formData1.txt_ReqNo,
         status: status,
         rd_status: formData1.Rd_HRStatus,
         sl_condition: Condition,
@@ -193,53 +192,33 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       .then(async (res) => {
         console.log("UpdateHrStaff", res.data);
       });
-      GetDatamailSend(formData1.txt_ReqNo);
-      setTimeout(() => {
-        hideLoading();
-      }, 1000);
-      if(save='Submit'){
-        // window.location.href = "/HrSystem/HrActionRefferenceLetter";
-      }
 
+    hideLoading();
+    if (save == "Submit") {
+      GetDatamailSend(formData1.txt_ReqNo);
+      Swal.fire({
+        icon: "success",
+        title: "Submit Success",
+      }).then(async () => {
+        window.location.href = "/HrSystem/HrActionRefferenceLetter";
+      });
+    } else {
+      if (formData1.txt_ReqStatusValue == "LT0103") {
+        GetDatamailSend(formData1.txt_ReqNo);
+      }
+      Swal.fire({
+        icon: "success",
+        title: "Save Success",
+      });
+    }
   };
 
   const GetDatamailSend = async (ReqNo) => {
-    console.log("GetmailSend", formData1.txt_ReqStatusValue);
-
-    // let ReqNo = formData1.txt_ReqNo;
     let strSubject = "";
     let status = formData1.txt_ReqStatusValue;
     let Usermail = [];
     let Dear = formData1.txt_Userlogin;
-    if (status === "LT0101" || status === "LT0102") {
-      strSubject = `Please Approve Letter Request : (${ReqNo})`;
-      if (status === "LT0101") {
-        Dear = `Khun ${formData1.Sl_Supervisor}  (Supervisor up)`;
-        await axios
-          .post("/api/Common/GetEmailUser", {
-            user: formData1.Sl_Supervisor,
-            formenu: "LETTER",
-          })
-          .then((res) => {
-            console.log("GetEmailSend", res.data);
-            if (res.data.length > 0) {
-              Usermail = res.data;
-            }
-          });
-      }
-      if (status == "LT0102") {
-        Dear = "HR Staff";
-        await axios
-          .post("/api/Common/GetEmailHrStaff", {
-            Fac: formData1.txt_FactoryValue,
-            formenu: "LETTER",
-          })
-          .then((res) => {
-            console.log(res.data, "GetEmailHrStaff");
-            Usermail = res.data;
-          });
-      }
-    } else if (status === "LT0103") {
+    if (status === "LT0103" || status === "LT0104") {
       await axios
         .post("/api/Common/GetEmailUser", {
           user: formData1.Sl_Supervisor,
@@ -252,34 +231,18 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           }
         });
       Dear = `All Concern`;
-      if (formData1.Rd_HRStatus == "LT0104") {
+      if (status === "LT0103") {
         strSubject = `Letter Request : (${ReqNo}) On Process`;
-      } else if (formData1.Rd_HRStatus == "LT0107") {
-        strSubject = `Letter Request : (${ReqNo}) Close`;
-      } else if (formData1.Rd_HRStatus == "LT0108") {
-        strSubject = `Letter Request : (${ReqNo}) Closed by condition`;
-      }
-    } else {
-      await axios
-        .post("/api/Common/GetEmailUser", {
-          user: formData1.Sl_Supervisor,
-          formenu: "LETTER",
-        })
-        .then((res) => {
-          console.log("GetEmailSend", res.data);
-          if (res.data.length > 0) {
-            Usermail = res.data;
-          }
-        });
-      Dear = `All Concern`;
-      if (formData1.Rd_HRStatus == "LT0107") {
-        strSubject = `Letter Request : (${ReqNo}) Close`;
-      } else if (formData1.Rd_HRStatus == "LT0108") {
-        strSubject = `Letter Request : (${ReqNo}) Closed by condition`;
+      } else {
+        if (formData1.Rd_HRStatus == "LT0107") {
+          strSubject = `Letter Request : (${ReqNo}) Close`;
+        } else if (formData1.Rd_HRStatus == "LT0108") {
+          strSubject = `Letter Request : (${ReqNo}) Closed by condition`;
+        }
       }
     }
 
-    const fomathtml = await fomatmail(Dear, ReqNo);
+    const fomathtml = await fomatmail(Dear);
 
     Usermail.forEach((user) => {
       console.log(user.User, "GetEmailSend", user.Email);
@@ -305,13 +268,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
     let status = formData1.txt_ReqStatusValue;
     let statusDesc = "";
     let ActionComment = "";
-    if (status === "LT0101") {
-      statusDesc = "Wait Supervisor up Approve";
-    }
-    if (status === "LT0102") {
-      ActionComment = formData1.txt_SupervisorComment;
-      statusDesc = "Wait HR Staff Action";
-    }
+
     if (status === "LT0103") {
       ActionComment = formData1.txt_HrComment;
       statusDesc = "On Process";
@@ -330,116 +287,18 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
     };
   };
 
-  const fomatmail = async (Dear, ReqNo) => {
+  const fomatmail = async (Dear) => {
     const Datamail = DataSendmail();
     console.log(Datamail, "Datamail");
-    let status = formData1.txt_ReqStatusValue;
     let TargetDate = formData1.Date_Target
       ? formData1.Date_Target.split("-").reverse().join("/")
       : "";
     const formattedRemark = formData1.txt_Remark.replace(/(.{60})/g, "$1<br>");
-    let strEmailFormat = "";
-    if (status === "LT0101") {
-      strEmailFormat = `
-               <!DOCTYPE html>
-        <html lang="en">
-                <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f9;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #dddddd; background-color: #ffffff;">
-        <!-- Header -->
-        <tr>
-        <td align="center" bgcolor="#5F99AE" style="padding: 20px; color: #ffffff; font-size: 24px; font-weight: bold;">
-                                HR Online System Notification
-        </td>
-        </tr>
-        <!-- Content -->
-        <tr>
-        <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
-        <p>Dear Khun ${Dear} ,</p>
-        <p>
-                                  This Request creates as follow ${formData1.txt_Userlogin}
-        </p>
-        <!-- Details -->
-        <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
-        <tr>
-        <td  style="font-size: 20px; color: #555555; font-weight: bold;width:120px " colspan="2" >
-        <p><strong>รายละเอียด :</strong></p>
-        </td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;width:120px ">System :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Refference Letter</td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${ReqNo}</td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Factory}</td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Department}</td>
-        </tr>
-
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Target Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${TargetDate}</td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Userlogin}</td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqDate}</td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Userlogin}</td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Sendate}</td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left; ">
-            ${formattedRemark}
-        </td>
-        </tr>
-        <tr>
-        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Status}</td>
-        </tr>
-        </table>
-        <p>
-                                    กรุณาตรวจสอบข้อมูลผ่านระบบของคุณ และดำเนินการต่อให้เรียบร้อย
-        </p>
-        <!-- Button -->
-        <table align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
-        <tr>
-        <td align="center" bgcolor="#5F99AE" style="padding: 12px 25px; border-radius: 5px;">
-        <a href="http://10.17.100.183:4006/HrSystem/Home" style="text-decoration: none; color: #ffffff; font-size: 16px; font-weight: bold; display: inline-block;">
-                                ตรวจสอบรายการ
-        </a>
-        </td>
-        </tr>
-        </table>
-        </td>
-        </tr>
-        <!-- Footer -->
-        <tr>
-        <td align="center" bgcolor="#e4e4e7" style="padding: 15px; font-size: 12px; color: #777777;">
-                                                    Best Regards,<br/>
-                                © 2025 Fujikura Electronics (Thailand) Ltd. All rights reserved.
-        </td>
-        </tr>
-        </table>
-        </body>
-        </html>`;
-    } else {
-      strEmailFormat = `
+    const formattedComment = (Datamail.Comment || "").replace(
+      /(.{60})/g,
+      "$1<br>"
+    );
+    let strEmailFormat = `
       <!DOCTYPE html>
         <html lang="en">
         
@@ -456,7 +315,9 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
         <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
         <p>Dear ${Dear} ,</p>
         <p>
-                                  This Request creates as follow ${formData1.txt_Userlogin}
+                                  This Request creates as follow ${
+                                    formData1.txt_Userlogin
+                                  }
         </p>
         <!-- Details -->
         <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
@@ -471,15 +332,21 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqNo}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqNo
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Factory}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Factory
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Department}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Department
+        }</td>
         </tr>
 
         <tr>
@@ -488,19 +355,27 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Userlogin}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Userlogin
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqDate}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqDate
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Userlogin}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Userlogin
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_SendDate}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqDate
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
@@ -518,11 +393,15 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
         </tr>
                             <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Comment}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formattedComment || ""
+        }</td>
         </tr>
                   <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Status}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          Datamail.Status
+        }</td>
         </tr>
         </table>
         <p>
@@ -551,7 +430,6 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
         </body>
         </html>
       `;
-    }
     return strEmailFormat;
   };
 
@@ -564,19 +442,19 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
   };
 
   const Reset = () => {
-    handleChange("Rd_HRStatus", 'LT0104');
+    handleChange("Rd_HRStatus", "LT0104");
     handleChange("Sl_HrCondion", null);
     handleChange("Date_HrConfirmAcDate", DateToday2);
     handleChange("txt_HrComment", null);
-    handleChange("txt_RecriveById", '');
-    handleChange("txt_RecriveByName", '');
-    handleChange("txt_RecriveByJobGrade", '');
-    handleChange("txt_RecriveByDepartment", '');
-    handleChange("txt_RecriveByEmail", '');
-    handleChange("txt_RecriveByTel", '');
+    handleChange("txt_RecriveById", "");
+    handleChange("txt_RecriveByName", "");
+    handleChange("txt_RecriveByJobGrade", "");
+    handleChange("txt_RecriveByDepartment", "");
+    handleChange("txt_RecriveByEmail", "");
+    handleChange("txt_RecriveByTel", "");
     handleChange("Date_RecriveDate", DateToday2);
-  }
-  
+  };
+
   return {
     Condition,
     datauser,
@@ -584,7 +462,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
     handleChange,
     GetDataPerson,
     Save,
-    Reset
+    Reset,
   };
 }
 
