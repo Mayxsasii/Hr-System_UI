@@ -1071,6 +1071,9 @@ function fn_NewEmployeeCard() {
     return strEmailFormat;
   };
 
+
+
+
   return {
     formData1,
     handleChange,
@@ -1085,6 +1088,7 @@ function fn_NewEmployeeCard() {
     Bt_SubmitForHr,
     handleStatus,
     Bt_Reset,
+    
   };
 }
 

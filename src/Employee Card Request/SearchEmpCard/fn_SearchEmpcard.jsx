@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import ImgViewFile from "../../assets/search.png";
 import ImgApprove from "../../assets/approved.png";
 import { Tag } from "antd";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import Swal from "sweetalert2";
 
 function fn_SearchEmpcard() {
@@ -146,7 +148,7 @@ function fn_SearchEmpcard() {
   const bt_Search = async () => {
     try {
       showLoading("");
-      
+
       if (Path != "ApproveEmployeeCard") {
         if (
           SL_Factory == null &&
@@ -390,6 +392,90 @@ function fn_SearchEmpcard() {
     },
   ];
 
+  const exportToExcel = async () => {
+    if (dataSearch.length <= 0) {
+       Swal.fire({
+            icon: "warning",
+            title: "No Data Export !",
+          });
+      return;
+    }
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("EmployeeCard");
+    sheet.properties.defaultRowHeight = 20;
+
+    // ตัดคอลัมน์แรกออก
+    const columnMappings = columns.slice(1).map((col, idx) => ({
+      header: col.title,
+      key: col.dataIndex || `col${idx}`,
+      style: { alignment: { horizontal: "center" } },
+    }));
+
+    sheet.columns = columnMappings;
+
+    // กรณีไม่มีข้อมูล
+    const data = dataSearch.length > 0 ? dataSearch : [{}];
+
+    // เพิ่มข้อมูลลง sheet
+    data.forEach((row, idx) => {
+      const rowData = {};
+      columnMappings.forEach((col) => {
+        rowData[col.key] = row[col.key] ?? "";
+      });
+      sheet.addRow(rowData);
+    });
+
+    // Style header: ตัวหนา พื้นหลังสีฟ้า + เส้นตาราง
+    const firstRow = sheet.getRow(1);
+    firstRow.eachCell({ includeEmpty: true }, (cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "4F9EDB" }, // สีฟ้า
+      };
+      cell.font = {
+        name: "Roboto",
+        size: 11,
+        bold: true,
+        color: { argb: "FFFFFF" }, // ตัวอักษรขาว
+      };
+      cell.alignment = { horizontal: "center", vertical: "middle" };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+
+    // ใส่เส้นตารางให้ทุก cell
+    sheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+      row.eachCell({ includeEmpty: true }, (cell) => {
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      });
+    });
+
+    // ปรับความกว้างอัตโนมัติ
+    sheet.columns.forEach((column) => {
+      let maxWidth = column.header ? String(column.header).length : 10;
+      sheet.eachRow((row, rowNumber) => {
+        const cellValue = String(row.getCell(column.key).value || "");
+        maxWidth = Math.max(maxWidth, cellValue.length);
+      });
+      column.width = maxWidth + 2;
+    });
+
+    // สร้างไฟล์
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: "application/octet-stream" });
+    saveAs(blob, "Employee Card Request.xlsx");
+  };
+
   return {
     Factory,
     SL_Factory,
@@ -419,6 +505,8 @@ function fn_SearchEmpcard() {
     bt_Search,
     columns,
     dataSearch,
+    exportToExcel,
+    ROLL
   };
 }
 

@@ -31,7 +31,7 @@ const Step3 = ({
         HR Staff Action
       </p>
       <table style={{ width: "100%" }}>
-        <tr>
+        {/* <tr>
           <td align="right" style={{ width: "150px" }}>
             <label>Status :</label>
           </td>
@@ -137,7 +137,7 @@ const Step3 = ({
               maxLength={2000}
             />
           </td>
-        </tr>
+        </tr> */}
         <tr>
           <td align="right">
             <label>Receive By :</label>

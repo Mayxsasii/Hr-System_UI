@@ -20,10 +20,10 @@ function fn_RefferenceLetter() {
       title: "Letter Type/For Approve",
       content: (props) => <Step2 {...props} />,
     },
-    {
-      title: "HR Staff Action",
-      content: (props) => <Step3 {...props} />,
-    },
+    // {
+    //   title: "HR Staff Action",
+    //   content: (props) => <Step3 {...props} />,
+    // },
   ];
   const { showLoading, hideLoading } = useLoading();
   const location = useLocation();
@@ -60,6 +60,8 @@ function fn_RefferenceLetter() {
     txt_Sendate: DateToday,
     //step2.1
     CB_letterType: [],
+    txt_LetterThai: '0',
+    txt_LetterEng: '0',
     Date_Resignation: null,
     txt_LetterOther: "",
     txt_Remark: "",
@@ -189,6 +191,15 @@ function fn_RefferenceLetter() {
           if (res.data[i].LetterType == "LT0205") {
             handleChange("txt_LetterOther", res.data[i].LetterDetail);
           }
+           if (res.data[i].LetterType == "LT0201") {
+            if (res.data[i].Thai) {
+              handleChange("txt_LetterThai", res.data[i].Thai);
+            }
+            if (res.data[i].Eng) {
+              handleChange("txt_LetterEng", res.data[i].Eng);
+            }
+            
+          }
         }
         handleChange("CB_letterType", data);
       });
@@ -251,10 +262,17 @@ function fn_RefferenceLetter() {
       });
       return false;
     }
-    if (formData1.Date_Target == "") {
+    if (formData1.Date_Target == null) {
       Swal.fire({
         icon: "error",
         title: "Please Select Target Date",
+      });
+      return false;
+    }
+      if (formData1.txt_Tel == "") {
+      Swal.fire({
+        icon: "error",
+        title: "Please Input Tel",
       });
       return false;
     }

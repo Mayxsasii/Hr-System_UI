@@ -162,6 +162,9 @@ function fn_Sider() {
     else if (selectedMenu.MENU_NAME === "Employee Card Master List") {
       window.location.href = "/HrSystem/EmployeeCardMasterList";
     }
+    else if (selectedMenu.MENU_NAME === "Receive Refference Letter") {
+      window.location.href = "/HrSystem/RefferenceLetterReceive";
+    }
     
   };
 

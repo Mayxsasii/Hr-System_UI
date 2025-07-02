@@ -10,6 +10,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
     SendApprove,
     Bt_Submit,
     Bt_Reset,
+    HandleChange_CheckBoxLetter,
   } = fn_ApproveRefferenceLetter(formData1, setFormData1);
 
   return (
@@ -45,14 +46,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
           value={formData1.CB_letterType || []}
           disabled={formData1.txt_ReqStatusValue != "LT0101"}
           onChange={(checkedValues) => {
-            console.log("CB", checkedValues);
-            handleChange("CB_letterType", checkedValues);
-            if (!checkedValues.includes("LT0203")) {
-              handleChange("Date_Resignation", null);
-            }
-            if (!checkedValues.includes("LT0205")) {
-              handleChange("txt_LetterOther", "");
-            }
+            HandleChange_CheckBoxLetter(checkedValues);
           }}
         >
           {options.map((option) => (
@@ -97,6 +91,34 @@ const Step2 = ({ formData1, setFormData1 }) => {
                         handleChange("txt_LetterOther", e.target.value)
                       }
                     />
+                  )}
+                  {option.value === "LT0201" && (
+                    <>
+                      <label style={{ marginLeft: "40px" }}>ภาษาไทย</label>
+                      <Input
+                        type="text"
+                        disabled={formData1.txt_ReqStatusValue != "LT0101"}
+                        style={{ marginLeft: "10px", width: "40px" }}
+                        value={formData1.txt_LetterThai}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/[^0-9]/g, "");
+                          handleChange("txt_LetterThai", value);
+                        }}
+                      />
+                      <label style={{ marginLeft: "10px" }}>ฉบับ</label>
+                      <label style={{ marginLeft: "40px" }}>ภาษาอังกฤษ</label>
+                      <Input
+                        type="text"
+                        disabled={formData1.txt_ReqStatusValue != "LT0101"}
+                        style={{ marginLeft: "10px", width: "40px" }}
+                        value={formData1.txt_LetterEng}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/[^0-9]/g, "");
+                          handleChange("txt_LetterEng", value);
+                        }}
+                      />
+                      <label style={{ marginLeft: "10px" }}>ฉบับ</label>
+                    </>
                   )}
                 </>
               )}
@@ -243,7 +265,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
         {" "}
         {console.log(formData1, "formmmm")}
         <Button
-         variant="solid"
+          variant="solid"
           color="cyan"
           style={{
             display: formData1.txt_ReqStatusValue === "LT0102" ? "" : "none",
@@ -253,7 +275,7 @@ const Step2 = ({ formData1, setFormData1 }) => {
           Submit
         </Button>{" "}
         <Button
-         variant="solid"
+          variant="solid"
           color="cyan"
           onClick={() => SendApprove()}
           style={{

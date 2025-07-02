@@ -2,8 +2,8 @@ import React from "react";
 import { Form, Input, Button, Table, Select } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import "../EmpCard.css"; // เชื่อมโยงไฟล์ CSS
+import ImgExcel from "../../assets/excel.png";
 import { fn_SearchEmpcard } from "./fn_SearchEmpcard";
-const { Option } = Select;
 
 const SearchEmpCard = () => {
   const {
@@ -34,28 +34,10 @@ const SearchEmpCard = () => {
     bt_Reset,
     bt_Search,
     columns,
-    dataSearch
+    dataSearch,
+    exportToExcel,
+    ROLL,
   } = fn_SearchEmpcard();
-  // const columns = [
-  //   { title: "Employee ID", dataIndex: "employeeId", key: "employeeId" },
-  //   { title: "First Name", dataIndex: "firstName", key: "firstName" },
-  //   { title: "Last Name", dataIndex: "lastName", key: "lastName" },
-  //   { title: "Department", dataIndex: "department", key: "department" },
-  //   { title: "Position", dataIndex: "position", key: "position" },
-  //   { title: "Status", dataIndex: "status", key: "status" },
-  // ];
-
-  // const data = [
-  //   {
-  //     key: "1",
-  //     employeeId: "123",
-  //     firstName: "John",
-  //     lastName: "Doe",
-  //     department: "IT",
-  //     position: "Developer",
-  //     status: "Active",
-  //   },
-  // ];
 
   return (
     <div
@@ -245,7 +227,6 @@ const SearchEmpCard = () => {
         </table>
       </div>
 
-      {/* Employee Data Table */}
       <div
         style={{
           marginTop: "20px",
@@ -255,6 +236,20 @@ const SearchEmpCard = () => {
           boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
         }}
       >
+        <div
+          style={{
+            display: String(ROLL).split(",").includes("'248'")
+              ? "Flex"
+              : "none",
+            justifyContent: "flex-end",
+            marginBottom: "10px",
+          }}
+        >
+          <Button onClick={exportToExcel}>
+            <img src={ImgExcel} alt="Export" style={{ width: "16px" }} />
+            Export
+          </Button>
+        </div>
         <Table
           columns={columns}
           dataSource={dataSearch}

@@ -1,11 +1,23 @@
- import React from "react";
-import { Checkbox, Input, Button, Select, DatePicker, Table } from "antd";
+import React, { useState, useEffect } from "react";
+import {
+  Checkbox,
+  Input,
+  Button,
+  Select,
+  DatePicker,
+  Table,
+  Modal,
+  Radio,
+} from "antd";
 import {
   SearchOutlined,
   PlusOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
+const { TextArea } = Input;
 import ImgExcel from "../../assets/excel.png";
+import ImgClose from "../../assets/approved (1).png";
+import ImgView from "../../assets/search-list.png";
 import { fn_SearchRefferenceLetter } from "./fn_SearchRefferenceLetter.jsx";
 
 const SearchManPower = () => {
@@ -37,7 +49,20 @@ const SearchManPower = () => {
     bt_Reset,
     LetterType,
     setSL_Letter,
-    SL_Letter
+    SL_Letter,
+    rowSelection,
+    isModalOpen,
+    handleOpenModal,
+    handleCloseModal,
+    Condition,
+    userlogin,
+    DateToday,
+    DataModal,
+    handleChange,
+    Bt_SubmitHr,
+    Bt_ResetHr,
+    GetDataPerson,
+    Bt_SubmitReceive,
   } = fn_SearchRefferenceLetter();
 
   return (
@@ -84,7 +109,7 @@ const SearchManPower = () => {
               <td style={{ width: "220px" }}>
                 <Select
                   showSearch
-                  disabled={Path=='HrActionRefferenceLetter'}
+                  disabled={Path == "HrActionRefferenceLetter"}
                   value={SL_Factory}
                   style={{
                     width: "100%",
@@ -184,7 +209,6 @@ const SearchManPower = () => {
               </td>
               <td style={{ textAlign: "right" }}>To :</td>
               <td style={{}}>
-     
                 <Input
                   type="date"
                   style={{ width: "100%" }}
@@ -194,10 +218,9 @@ const SearchManPower = () => {
               </td>
             </tr>
             <tr>
-            <td style={{ textAlign: "right" }}>สถานะ/Request Status :</td>
+              <td style={{ textAlign: "right" }}>สถานะ/Request Status :</td>
               <td style={{}}>
-               
-              <Select
+                <Select
                   showSearch
                   mode="multiple"
                   maxTagCount={"responsive"}
@@ -219,16 +242,16 @@ const SearchManPower = () => {
                 />
               </td>
               {/* align={{alignItems:Path=='ApproveRefferenceLetter'?'':'center'}} */}
-              <td colSpan={6}  >
+              <td colSpan={6}>
                 <Button
                   type="primary"
                   icon={<SearchOutlined />}
-                  style={{ marginRight: "10px",marginLeft:'15px'}}
+                  style={{ marginRight: "10px", marginLeft: "15px" }}
                   onClick={() => bt_Search()}
                 >
                   Search
                 </Button>
-          
+
                 <Button
                   type="primary"
                   danger
@@ -253,17 +276,66 @@ const SearchManPower = () => {
       >
         <div
           style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: "10px",
+            display: Path != "ApproveRefferenceLetter" ? "flex" : "none",
+            // border: "1px solid red",
+            gap: 8,
+            marginBottom: 10,
           }}
         >
-          <Button>
-            <img src={ImgExcel} alt="Export" style={{ width: "16px" }} />
-            Export
-          </Button>
+          <div style={{ width: "50%" }}>
+            <Button
+              style={{
+                display: Path == "HrActionRefferenceLetter" ? "flex" : "none",
+                alignItems: "center",
+                gap: 6,
+                background: "rgb(188, 226, 187)",
+                border: "1px solid rgb(186, 202, 192)",
+                fontWeight: 500,
+                color: "#333",
+              }}
+              onClick={handleOpenModal}
+            >
+              <img
+                src={ImgClose}
+                alt="Close"
+                style={{ width: 24, marginRight: 2 }}
+              />
+              For Close
+            </Button>
+          </div>
+          <div
+            style={{
+              width: "50%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Button
+              type="primary"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                background: "#4F9EDB",
+                border: "none",
+                fontWeight: 500,
+              }}
+            >
+              <img
+                src={ImgExcel}
+                alt="Export"
+                style={{ width: 20, marginRight: 4 }}
+              />
+              Export
+            </Button>
+          </div>
         </div>
         <Table
+          rowSelection={
+            Path === "HrActionRefferenceLetter"
+              ? { type: "checkbox", ...rowSelection }
+              : undefined
+          }
           columns={columns}
           dataSource={dataSearch}
           bordered
@@ -271,7 +343,306 @@ const SearchManPower = () => {
           size="middle"
           // scroll={{ x: "max-content" }}
           className="tb_letter"
+          rowKey="ReqNo"
         />
+        <Modal
+          width={800}
+          open={isModalOpen}
+          onCancel={handleCloseModal}
+          onOk={handleCloseModal}
+          title={
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span>
+                {Path === "RefferenceLetterReceive"
+                  ? "Refference Letter Receive"
+                  : "Hr Staff Action For Close"}
+              </span>
+              {/* <img
+                src={ImgView}
+                alt="View"
+                // onClick={() => handleEdit(ReqNo)}
+                style={{
+                  width: 28,
+                  height: 28,
+                  cursor: "pointer",
+                  display: Path == "HrActionRefferenceLetter" ? "none" : "",
+                }}
+              /> */}
+            </div>
+          }
+          footer={null}
+          maskClosable={false}
+        >
+          <div style={{ padding: 5 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 16,
+              }}
+            >
+              <label
+                style={{ width: 100, textAlign: "right", marginRight: 12 }}
+              >
+                Status :
+              </label>
+              <Radio.Group
+                name="radiogroup"
+                value={DataModal.Rd_Status}
+                disabled={Path != "HrActionRefferenceLetter"}
+                onChange={(e) => {
+                  handleChange("Rd_Status", e.target.value);
+                  if (e.target.value == "LT0107") {
+                    handleChange("Sl_ConditonClose", null);
+                  }
+                }}
+                options={[
+                  { value: "LT0107", label: "Close" },
+                  { value: "LT0108", label: "Close by condition" },
+                ]}
+              />
+              <Select
+                showSearch
+                disabled={
+                  DataModal.Rd_Status != "LT0108" ||
+                  Path != "HrActionRefferenceLetter"
+                }
+                style={{
+                  width: 360,
+                  marginLeft: 0,
+                }}
+                placeholder="Please Select Condition"
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                value={DataModal.Sl_ConditonClose}
+                options={Condition}
+                onChange={(value) => {
+                  handleChange("Sl_ConditonClose", value);
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 16,
+              }}
+            >
+              <label
+                style={{ width: 100, textAlign: "right", marginRight: 12 }}
+              >
+                HR Staff :
+              </label>
+              <Input
+                style={{ width: 220, marginRight: 16 }}
+                disabled
+                value={DataModal.txt_HrBy}
+              />
+              <label
+                style={{ width: 100, textAlign: "right", marginRight: 12 }}
+              >
+                Action Date :
+              </label>
+              <Input
+                disabled
+                style={{ width: 230 }}
+                value={DataModal.txt_HrActionDate}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 16,
+              }}
+            >
+              <label
+                style={{ width: 100, textAlign: "right", marginRight: 12 }}
+              >
+                HR confirm action date :
+              </label>
+              <Input
+                type="date"
+                style={{ width: 220 }}
+                disabled={Path!= "HrActionRefferenceLetter"}
+                min={new Date().toISOString().split("T")[0]}
+                value={DataModal.Date_HrConfirm}
+                onChange={(e) => handleChange("Date_HrConfirm", e.target.value)}
+              />
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                marginBottom: 16,
+              }}
+            >
+              <label
+                style={{
+                  width: 100,
+                  textAlign: "right",
+                  marginRight: 12,
+                  marginTop: 4,
+                }}
+              >
+                Comment :
+              </label>
+              <TextArea
+                style={{ width: 580 }}
+                maxLength={2000}
+                rows={3}
+                disabled={Path != "HrActionRefferenceLetter"}
+                value={DataModal.txt_HrComment}
+                onChange={(e) => handleChange("txt_HrComment", e.target.value)}
+              />
+            </div>
+            <div
+              style={{
+                display: Path == "HrActionRefferenceLetter" ? "none" : "",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  marginBottom: 16,
+                }}
+              >
+                <label
+                  style={{
+                    width: 100,
+                    textAlign: "right",
+                    marginRight: 12,
+                    marginTop: 4,
+                  }}
+                >
+                  Receive By :
+                </label>
+                <Input
+                  value={DataModal.txt_ReceiveById}
+                  onChange={(e) =>
+                    handleChange("txt_ReceiveById", e.target.value)
+                  }
+                  onBlur={(e) => GetDataPerson(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.target.blur();
+                      GetDataPerson(DataModal.txt_ReceiveById);
+                    }
+                  }}
+                  style={{ width: "100px" }}
+                />{" "}
+                <Input
+                  style={{ width: "400px", marginLeft: "10px" }}
+                  value={DataModal.txt_ReceiveName}
+                  disabled
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: 16,
+                }}
+              >
+                <label
+                  style={{
+                    width: 100,
+                    textAlign: "right",
+                    marginRight: 12,
+                    marginTop: 4,
+                  }}
+                >
+                  Job Grade :
+                </label>
+                <Input
+                  style={{ width: "100px" }}
+                  value={DataModal.txt_ReceiveJobGrade}
+                  disabled
+                />
+                <label style={{ marginLeft: "10px" }}>Department :</label>
+                <Input
+                  style={{ width: "100px", marginLeft: "10px" }}
+                  value={DataModal.txt_ReceiveDept}
+                  disabled
+                />
+                <label style={{ marginLeft: "10px" }}>Tel :</label>
+                <Input
+                  style={{ width: "120px", marginLeft: "10px" }}
+                  value={DataModal.txt_ReceiveTel}
+                  onChange={(e) =>
+                    handleChange("txt_ReceiveTel", e.target.value)
+                  }
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  marginBottom: 16,
+                }}
+              >
+                <label
+                  style={{
+                    width: 100,
+                    textAlign: "right",
+                    marginRight: 12,
+                    marginTop: 4,
+                  }}
+                >
+                  E-mail :
+                </label>
+                <Input
+                  style={{ width: "300px" }}
+                  value={DataModal.txt_ReceiveEmail}
+                  onChange={(e) =>
+                    handleChange("txt_ReceiveEmail", e.target.value)
+                  }
+                />
+                <label
+                  style={{
+                    width: 90,
+                    textAlign: "right",
+                    marginRight: 10,
+                    marginTop: 4,
+                  }}
+                >
+                  Recrive Date :
+                </label>
+                <Input
+                  type="date"
+                  style={{
+                    width: "180px",
+                  }}
+                  value={DataModal.Date_RecriveDate}
+                  onChange={(e) =>
+                    handleChange("Date_RecriveDate", e.target.value)
+                  }
+                  min={new Date().toISOString().split("T")[0]} // กำหนดวันที่ขั้นต่ำเป็น
+                />
+              </div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "center", gap: 8 }}>
+              <Button
+                type="primary"
+                onClick={
+                  Path == "RefferenceLetterReceive"
+                    ? Bt_SubmitReceive
+                    : Bt_SubmitHr
+                }
+              >
+                Submit
+              </Button>
+              <Button onClick={Bt_ResetHr}> Reset</Button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   );

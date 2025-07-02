@@ -115,6 +115,11 @@ const App = () => {
               element={<ProtectedRoute element={<RefferenceLetter />} />}
             />
 
+             <Route
+              path="/HrSystem/RefferenceLetterReceive"
+              element={<ProtectedRoute element={<SearchRefferenceLetter />} />}
+            />
+
             {/* ----------EmpCaard------------------ */}
             <Route
               path="/HrSystem/ApproveEmployeeCard"

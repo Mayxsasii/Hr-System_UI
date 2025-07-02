@@ -6,13 +6,17 @@ import { useLoading } from "../../loading/fn_loading";
 function fn_ApproveRefferenceLetter(formData1, setFormData1) {
   const { showLoading, hideLoading } = useLoading();
   const [Supervisor, setSupervisor] = useState([]);
-    const [options, setoptions] = useState([]);
+  const [options, setoptions] = useState([]);
   const today = new Date();
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
     today.getMonth() + 1
   ).padStart(2, "0")}/${today.getFullYear()}`;
   const userlogin = localStorage.getItem("username");
-
+  const typeGH_Bank = [
+    "PMG,Permanent Management",
+    "PFF,Permanent Expatiate/Foreigner",
+    "PM,Permanent Monthly/Foreigner",
+  ];
   useEffect(() => {
     GetSupervisor();
     GetOptionLetter();
@@ -21,7 +25,6 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
   const handleChange = (field, value) => {
     setFormData1((prev) => ({ ...prev, [field]: value }));
   };
-
 
   const GetSupervisor = async () => {
     await axios
@@ -34,7 +37,29 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       });
   };
 
-    const GetOptionLetter = async () => {
+  const HandleChange_CheckBoxLetter = async (checkedValues) => {
+    console.log("CB", checkedValues);
+    if (checkedValues.includes("LT0204")) {
+      if (typeGH_Bank.some((type) => formData1.txt_EmpType.includes(type))) {
+        handleChange("CB_letterType", checkedValues);
+      } else {
+        Swal.fire({
+          icon: "warning",
+          title: "Unable to request documents",
+        });
+        return;
+      }
+    }
+    handleChange("CB_letterType", checkedValues);
+    if (!checkedValues.includes("LT0203")) {
+      handleChange("Date_Resignation", null);
+    }
+    if (!checkedValues.includes("LT0205")) {
+      handleChange("txt_LetterOther", "");
+    }
+  };
+
+  const GetOptionLetter = async () => {
     await axios
       .post("/api/RefferenceLetter/GetOptionLetter", {})
       .then((res) => {
@@ -44,112 +69,146 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
   };
 
   const SendApprove = async () => {
-    showLoading("กำลังบันทึกข้อมูล...");
-    if (formData1.CB_letterType.length == 0) {
-      Swal.fire({
-        icon: "warning",
-        title: "Please Select Letter Type",
-      });
-      hideLoading();
-      return;
-    } else {
-      if (formData1.CB_letterType.includes("LT0203")) {
-        if (formData1.Date_Resignation == null) {
-          Swal.fire({
-            icon: "warning",
-            title: "Please Select Resignation Date",
-          });
-          hideLoading();
-          return;
+    try {
+      showLoading("กำลังบันทึกข้อมูล...");
+      if (formData1.CB_letterType.length == 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "Please Select Letter Type",
+        });
+        hideLoading();
+        return;
+      } else {
+        if (formData1.CB_letterType.includes("LT0201")) {
+          if (
+            formData1.txt_LetterThai == "0" &&
+            formData1.txt_LetterEng == "0"
+          ) {
+            Swal.fire({
+              icon: "warning",
+              text: "Please Input Number of documents required (Thai/English)",
+            });
+            hideLoading();
+            return;
+          }
+        }
+
+        if (formData1.CB_letterType.includes("LT0203")) {
+          if (formData1.Date_Resignation == null) {
+            Swal.fire({
+              icon: "warning",
+              title: "Please Select Resignation Date",
+            });
+            hideLoading();
+            return;
+          }
+        }
+        if (formData1.CB_letterType.includes("LT0205")) {
+          if (formData1.txt_LetterOther == "") {
+            Swal.fire({
+              icon: "warning",
+              title: "Please Input Required documents",
+            });
+            hideLoading();
+            return;
+          }
         }
       }
-      if (formData1.CB_letterType.includes("LT0205")) {
-        if (formData1.txt_LetterOther == "") {
-          Swal.fire({
-            icon: "warning",
-            title: "Please Input Required documents",
-          });
-          hideLoading();
-          return;
-        }
+
+      if (formData1.Sl_Supervisor == null) {
+        Swal.fire({
+          icon: "warning",
+          title: "Please Select Supervisor Up",
+        });
+        hideLoading();
+        return;
       }
-    }
 
-    if (formData1.Sl_Supervisor == null) {
-      Swal.fire({
-        icon: "warning",
-        title: "Please Select Supervisor Up",
-      });
-      hideLoading();
-      return;
-    }
-
-    let ReqNo = "";
-    await axios
-      .post("/api/RefferenceLetter/GenReqNo", {
-        FacValue: formData1.txt_FactoryValue,
-        FacDesc: formData1.txt_Factory,
-      })
-      .then((res) => {
-        console.log(res.data, "GenReqNo");
-        ReqNo = res.data[0].ReqNo;
-        handleChange("txt_ReqNo", ReqNo);
-      });
-
-    await axios
-      .post("/api/RefferenceLetter/InsSendSubmit", {
-        ReqNo: ReqNo,
-        Fac_value: formData1.txt_FactoryValue,
-        Stats_value: formData1.txt_ReqStatusValue,
-        ReqBy: formData1.txt_ReqbyID,
-        Dept: formData1.txt_Department,
-        Tel: formData1.txt_Tel,
-        Email: formData1.txt_Email,
-        TargetDate: formData1.Date_Target
-          ? new Date(formData1.Date_Target).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })
-          : "",
-        Remark: formData1.txt_Remark,
-        Supervisor: formData1.Sl_Supervisor || "",
-        User: formData1.txt_Userlogin,
-      })
-      .then((res) => {
-        console.log(res.data, "InsSendSubmit");
-      });
-
-    for (let i = 0; i < formData1.CB_letterType.length; i++) {
-      let detail = "";
-      console.log("formData1.CB_letterType[i]", formData1.CB_letterType[i]);
-      if (formData1.CB_letterType[i] == "LT0203") {
-        let date = formData1.Date_Resignation;
-        const formattedDate = date ? date.split("-").reverse().join("/") : "";
-        detail = formattedDate;
-      } else if (formData1.CB_letterType[i] == "LT0205") {
-        detail = formData1.txt_LetterOther;
-      }
-      console.log(detail, "hhhhhhh", formData1.CB_letterType[i]);
+      let ReqNo = "";
       await axios
-        .post("/api/RefferenceLetter/InsSendSubmit2", {
-          ReqNo: ReqNo,
-          letter_type: formData1.CB_letterType[i] || "",
-          detail: detail || "",
-          ReqBy: formData1.txt_ReqbyID || "",
+        .post("/api/RefferenceLetter/GenReqNo", {
+          FacValue: formData1.txt_FactoryValue,
+          FacDesc: formData1.txt_Factory,
         })
         .then((res) => {
-          console.log(res.data, "InsSendSubmit2");
+          console.log(res.data, "GenReqNo");
+          ReqNo = res.data[0].ReqNo;
+          handleChange("txt_ReqNo", ReqNo);
         });
+
+      await axios
+        .post("/api/RefferenceLetter/InsSendSubmit", {
+          ReqNo: ReqNo,
+          Fac_value: formData1.txt_FactoryValue,
+          Stats_value: formData1.txt_ReqStatusValue,
+          ReqBy: formData1.txt_ReqbyID,
+          Dept: formData1.txt_Department,
+          Tel: formData1.txt_Tel,
+          Email: formData1.txt_Email,
+          TargetDate: formData1.Date_Target
+            ? new Date(formData1.Date_Target).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })
+            : "",
+          Remark: formData1.txt_Remark,
+          Supervisor: formData1.Sl_Supervisor || "",
+          User: formData1.txt_Userlogin,
+        })
+        .then((res) => {
+          console.log(res.data, "InsSendSubmit");
+        });
+
+      for (let i = 0; i < formData1.CB_letterType.length; i++) {
+        let detail = "";
+        console.log("formData1.CB_letterType[i]", formData1.CB_letterType[i]);
+        if (formData1.CB_letterType[i] == "LT0203") {
+          let date = formData1.Date_Resignation;
+          const formattedDate = date ? date.split("-").reverse().join("/") : "";
+          detail = formattedDate;
+        } else if (formData1.CB_letterType[i] == "LT0205") {
+          detail = formData1.txt_LetterOther;
+        }
+        console.log(detail, "hhhhhhh", formData1.CB_letterType[i]);
+        await axios
+          .post("/api/RefferenceLetter/InsSendSubmit2", {
+            ReqNo: ReqNo,
+            letter_type: formData1.CB_letterType[i] || "",
+            detail: detail || "",
+            ReqBy: formData1.txt_ReqbyID || "",
+            Thai:
+              formData1.CB_letterType[i] == "LT0201" &&
+              formData1.txt_LetterThai > 0
+                ? formData1.txt_LetterThai
+                : null,
+            Eng:
+              formData1.CB_letterType[i] == "LT0201" &&
+              formData1.txt_LetterEng > 0
+                ? formData1.txt_LetterEng
+                : null,
+          })
+          .then((res) => {
+            console.log(res.data, "InsSendSubmit2");
+          });
+      }
+      await GetDatamailSend(ReqNo);
+      Swal.fire({
+        icon: "success",
+        title: "Save Success",
+      }).then(() => {
+        window.location.href = "/HrSystem/Home";
+      });
+      hideLoading();
+    } catch (error) {
+      console.error("Error in SendApprove:", error);
+      Swal.fire({
+        icon: "error",
+        title: "An error occurred while processing your request.",
+      });
+      hideLoading();
+      return;
     }
-    await GetDatamailSend(ReqNo);
-    Swal.fire({
-      icon: "success",
-      title: "Save Success",
-    }).then(() => {
-      window.location.href = "/HrSystem/Home";
-    });
-    hideLoading();
   };
 
   const Bt_Submit = async () => {
@@ -355,7 +414,11 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       ? formData1.Date_Target.split("-").reverse().join("/")
       : "";
     const formattedRemark = formData1.txt_Remark.replace(/(.{60})/g, "$1<br>");
-const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");    let strEmailFormat = "";
+    const formattedComment = (Datamail.Comment || "").replace(
+      /(.{60})/g,
+      "$1<br>"
+    );
+    let strEmailFormat = "";
     if (status === "LT0101") {
       strEmailFormat = `
                <!DOCTYPE html>
@@ -473,7 +536,9 @@ const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");
         <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
         <p>Dear ${Dear} ,</p>
         <p>
-                                  This Request creates as follow ${formData1.txt_Userlogin}
+                                  This Request creates as follow ${
+                                    formData1.txt_Userlogin
+                                  }
         </p>
         <!-- Details -->
         <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
@@ -488,15 +553,21 @@ const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqNo}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqNo
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Factory}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Factory
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Department}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Department
+        }</td>
         </tr>
 
         <tr>
@@ -505,19 +576,27 @@ const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Userlogin}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Userlogin
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqDate}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqDate
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_Userlogin}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_Userlogin
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_SendDate}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_SendDate
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
@@ -535,11 +614,15 @@ const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");
         </tr>
                             <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formattedComment||''}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formattedComment || ""
+        }</td>
         </tr>
                   <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Status}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          Datamail.Status
+        }</td>
         </tr>
         </table>
         <p>
@@ -579,6 +662,7 @@ const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");
     SendApprove,
     Bt_Submit,
     Bt_Reset,
+    HandleChange_CheckBoxLetter,
   };
 }
 

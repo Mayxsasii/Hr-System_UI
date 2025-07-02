@@ -99,7 +99,7 @@
 
   .scrollable-columnLetter {
     /* border: 1px solid #ddd; */
-    max-width: 300px;
+    max-width: 200px;
     overflow-x: auto;
     white-space: nowrap;
     /* text-align: left; */
