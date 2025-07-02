@@ -167,14 +167,14 @@ const RefferenceLetterMasterList = ({}) => {
                 />
               </td>
               <td align="right">
-                <label>เบอร์ภายใน/Tel :</label>
+                <label>เบอร์โทร/Tel :</label>
               </td>
               <td>
                 <Input
                   disabled
-                  placeholder="เบอร์ภายใน/Tel :"
+                  placeholder="เบอร์โทร/Tel :"
                   value={formData1.txt_Tel}
-                  style={{ width: "80px" }}
+                  style={{ width: "130px" }}
                 />
               </td>
             </tr>
@@ -225,6 +225,26 @@ const RefferenceLetterMasterList = ({}) => {
                         placeholder="กรุณากรอกชื่อเอกสารที่ต้องการ"
                         value={formData1.txt_LetterOther}
                       />
+                    )}
+                    {option.value === "LT0201" && (
+                      <>
+                        <label style={{ marginLeft: "40px" }}>ภาษาไทย</label>
+                        <Input
+                          type="text"
+                          disabled
+                          style={{ marginLeft: "10px", width: "40px" }}
+                          value={formData1.txt_LetterThai}
+                        />
+                        <label style={{ marginLeft: "10px" }}>ฉบับ</label>
+                        <label style={{ marginLeft: "40px" }}>ภาษาอังกฤษ</label>
+                        <Input
+                          type="text"
+                          disabled
+                          style={{ marginLeft: "10px", width: "40px" }}
+                          value={formData1.txt_LetterEng}
+                        />
+                        <label style={{ marginLeft: "10px" }}>ฉบับ</label>
+                      </>
                     )}
                   </>
                 )}
@@ -337,7 +357,7 @@ const RefferenceLetterMasterList = ({}) => {
           }}
         >
           <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
-            HR Staff Action
+            For HR Staff Action
           </legend>
           <table style={{ width: "100%" }}>
             <tr>
@@ -351,10 +371,6 @@ const RefferenceLetterMasterList = ({}) => {
                   disabled
                   value={formData1.Rd_HRStatus}
                   options={[
-                    {
-                      value: "LT0104",
-                      label: "On Process",
-                    },
                     {
                       value: "LT0107",
                       label: "Close",
@@ -433,6 +449,20 @@ const RefferenceLetterMasterList = ({}) => {
                 <TextArea value={formData1.txt_HrComment} disabled />
               </td>
             </tr>
+          </table>
+        </fieldset>
+        <br />
+        <fieldset
+          style={{
+            border: "1px solid #ccc",
+            padding: "16px",
+            borderRadius: "8px",
+          }}
+        >
+          <legend style={{ fontSize: "16px", fontWeight: "bold" }}>
+            For Receive
+          </legend>
+          <table style={{ width: "100%" }}>
             <tr>
               <td align="right">
                 <label>Receive By :</label>
@@ -456,7 +486,7 @@ const RefferenceLetterMasterList = ({}) => {
                   value={formData1.txt_RecriveByJobGrade}
                   disabled
                 />
-                <label style={{ marginLeft: "50px", marginRight: "5px" }}>
+                <label style={{ marginLeft: "90px", marginRight: "5px" }}>
                   Department :
                 </label>
                 <Input
@@ -470,7 +500,7 @@ const RefferenceLetterMasterList = ({}) => {
               <td align="right">
                 <labe>Email :</labe>
               </td>
-              <td colSpan={2}>
+              <td colSpan={2} style={{}}>
                 <Input
                   style={{ width: "505px" }}
                   value={formData1.txt_RecriveByEmail}
@@ -480,21 +510,16 @@ const RefferenceLetterMasterList = ({}) => {
                   Tel :
                 </label>
                 <Input
-                  style={{ width: "120px" }}
+                  style={{ width: "130px" }}
                   value={formData1.txt_RecriveByTel}
                   disabled
                 />
-              </td>
-            </tr>
-            <tr>
-              <td align="right">
-                <label>Recrive Date :</label>
-              </td>
-              <td colSpan={2}>
+                <label style={{ marginLeft: "30px" }}>Recrive Date :</label>
                 <Input
                   type="date"
                   style={{
-                    width: "300px",
+                    marginLeft: "5px",
+                    width: "200px",
                   }}
                   disabled
                   value={formData1.Date_RecriveDate}

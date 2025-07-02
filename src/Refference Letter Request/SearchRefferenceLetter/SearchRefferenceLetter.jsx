@@ -63,6 +63,8 @@ const SearchManPower = () => {
     Bt_ResetHr,
     GetDataPerson,
     Bt_SubmitReceive,
+    ROLL,exportToExcel
+    
   } = fn_SearchRefferenceLetter();
 
   return (
@@ -311,10 +313,14 @@ const SearchManPower = () => {
             }}
           >
             <Button
+            onClick={exportToExcel}
               type="primary"
               style={{
                 display: "flex",
                 alignItems: "center",
+                display: String(ROLL).split(",").includes("'246'")
+              ? "Flex"
+              : "none",
                 gap: 6,
                 background: "#4F9EDB",
                 border: "none",
