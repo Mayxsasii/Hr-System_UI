@@ -1,20 +1,8 @@
 import React from "react";
-import {
-  Input,
-  Card,
-  Checkbox,
-  Select,
-  Radio,
-  DatePicker,
-  Button,
-  Spin,
-  Flex,
-} from "antd";
+import { Input, Card, Select, Radio, DatePicker, Button } from "antd";
 const { TextArea } = Input;
 import dayjs from "dayjs";
-// import "../RefferenceLetter.css";
 
-import Swal from "sweetalert2";
 import { fn_NewEmployeeCard } from "../New Employee Card/fn_NewEmployeeCard";
 const RefferenceLetterMasterList = ({}) => {
   const {
@@ -31,7 +19,8 @@ const RefferenceLetterMasterList = ({}) => {
     Condition,
     StatusPayment,
     Bt_SubmitForHr,
-    handleStatus
+    handleStatus,
+    Bt_Reset,
   } = fn_NewEmployeeCard();
 
   return (
@@ -104,12 +93,7 @@ const RefferenceLetterMasterList = ({}) => {
                 <label>ผู้ขอ/Requested By:</label>
               </td>
               <td>
-                <Input
-                 disabled
-                  value={formData1.txt_ReqbyID}
-                  placeholder="กรุณากรอก ID Code"
-                 
-                />
+                <Input disabled value={formData1.txt_ReqbyID} />
               </td>
               <td colSpan={2}>
                 <Input value={formData1.txt_ReqbyName} disabled />
@@ -161,28 +145,22 @@ const RefferenceLetterMasterList = ({}) => {
                 />
               </td>
             </tr>
-            
             <tr>
               <td align="right">
                 <label>Email :</label>
               </td>
               <td colSpan={3}>
-                <Input
-                 disabled
-                  value={formData1.txt_Email}
-                 
-                />
+                <Input disabled value={formData1.txt_Email} />
               </td>
 
               <td align="right" style={{ width: "110px" }}>
-                <label>เบอร์ภายใน/Tel :</label>
+                <label>เบอร์ติดต่อ/Tel :</label>
               </td>
               <td>
                 <Input
-               disabled
-                 
+                  disabled
                   value={formData1.txt_Tel}
-                  style={{ width: "80px" }}
+                  style={{ width: "100%" }}
                 />
               </td>
             </tr>
@@ -192,22 +170,19 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={3}>
                 <Select
-                 disabled
-                  showSearch
+                  disabled
                   style={{
                     width: "100%",
                   }}
-                  placeholder="Please Select Condition"
-                 
+                  optionFilterProp="children"
                   value={formData1.Sl_Reason}
                   options={Reason}
-                 
                 />
               </td>
 
               <td colSpan={3}>
                 <Input
-                 disabled
+                  disabled
                   value={formData1.txt_ReasonOther}
                   style={{ width: "100%" }}
                   placeholder="อื่นๆโปรดระบุ"
@@ -224,62 +199,106 @@ const RefferenceLetterMasterList = ({}) => {
                 />
               </td>
             </tr>
-            {/* <tr
-              style={{
-                display: !["CD0101"].includes(formData1.txt_ReqStatusValue)
-                  ? "none"
-                  : "",
-              }}
-            >
-              <td colSpan={2} align="right" style={{}}>
-                <label>
-                  ไม่ได้บันทึกเวลาทำงานที่เครื่องบันทึกเวลา/No Record Working
-                  Time :
-                </label>{" "}
+            <tr>
+              <td align="right">
+                <label>การรูดบัตร/Swipe Card:</label>
               </td>
-              <td style={{}} colSpan={7}>
+              <td colSpan={2}>
+                <Radio.Group
+                  name="radiogroup"
+                  disabled
+                  value={formData1.Rd_SwipeCard}
+                  options={[
+                    {
+                      value: "Y",
+                      label: "รูดบัตร",
+                    },
+                    {
+                      value: "N",
+                      label: "ไม่ได้รูดบัตร",
+                    },
+                  ]}
+                />
+              </td>
+            </tr>
+
+            <tr
+              style={{ display: formData1.Rd_SwipeCard != "N" ? "none" : "" }}
+            >
+              <td align="right">
+                <label>
+                  วันที่ไม่ได้รูดบัตร(เฉพาะวันทำงาน) :<br />
+                </label>
+              </td>
+              <td colSpan={4}>
                 <DatePicker
-                  disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
+                  disabled
                   multiple
-                  onChange={(dates) => {
-                    const formatted = dates.map((date) =>
-                      date.format("YYYY-MM-DD")
-                    );
-              
-                    handleChange("Date_DayWork", formatted); // เก็บเป็น string[]
-                  }}
-                  maxTagCount="responsive"
+                  // maxTagCount="responsive"
                   format="DD/MM/YYYY"
                   value={
                     formData1.Date_DayWork?.map((dateStr) =>
                       dayjs(dateStr, "YYYY-MM-DD")
                     ) || []
                   }
-                  size="middle"
-                />
-              </td>
-            </tr> */}
-            <tr
-              
-            >
-              <td align="right">
-                <label>วันที่ไม่ได้รูดบัตร (เฉพาะวันทำงาน):</label>{" "}
-              </td>
-              <td colSpan={9}>
-                <TextArea
-                  disabled
-                  value={formData1.Date_DayWork2}
-                  style={{ height: "50px" }}
+                  style={{ width: "300px" }}
+                  // disabledDate={(current) => {
+                  //   const today = dayjs().startOf("day");
+                  //   const yesterday = dayjs().subtract(1, "day").startOf("day");
+                  //   return (
+                  //     !current.isSame(today, "day") &&
+                  //     !current.isSame(yesterday, "day")
+                  //   );
+                  // }}
                 />
               </td>
             </tr>
+            <tr>
+              <td align="right">
+                <label>การรับบัตร/Recrive Card By:</label>
+              </td>
+              <td colSpan={8}>
+                <Radio.Group
+                  disabled
+                  style={{ display: "flex", flexDirection: "column", gap: 4 }}
+                  value={formData1.Rd_RecriveByCard}
+                  options={[
+                    {
+                      value: "Y",
+                      label: (
+                        <>
+                          รับด้วยตัวเอง
+                          <span style={{ color: "red", marginLeft: 8 }}>
+                            (กรณีพนักงานรับบัตรด้วยตนเอง
+                            ให้นำเงินมาชำระที่ฝ่ายบุคคล)
+                          </span>
+                        </>
+                      ),
+                    },
+                    {
+                      value: "N",
+                      label: (
+                        <>
+                          ฝาก DCC รับบัตร
+                          <span style={{ color: "red", marginLeft: 8 }}>
+                            (กรณีพนักงานฝาก DCC รับบัตร ให้นำเงินมาฝากที่ DCC
+                            ก่อนเวลา 13.30 น.)
+                          </span>
+                        </>
+                      ),
+                    },
+                  ]}
+                />
+              </td>
+            </tr>
+
             <tr>
               <td align="right">
                 <label>หมายเหตุ/Remark :</label>{" "}
               </td>
               <td colSpan={9}>
                 <TextArea
-                 disabled
+                  disabled
                   value={formData1.txt_Remark}
                   style={{ height: "50px" }}
                 />
@@ -291,7 +310,9 @@ const RefferenceLetterMasterList = ({}) => {
                 <label style={{ color: "red" }}>
                   *ข้อกำหนด : HR จะทำบัตรหลังเวลา 13.30 น. ของทุกวันทำงาน
                   ดังนั้นหัวหน้างานจะต้องอนุมัติการทำบัตรพนักงานก่อนเวลา 13.00
-                  น.และพนักงานจะต้องมารับบัตรพนักงานหลังเวลา 15.00 น.{" "}
+                  น.และพนักงานจะต้องมารับบัตรพนักงานหลังเวลา 15.00 น. <br />
+                  *ดังนั้นพนักงานจะต้องยื่นเรื่องขอทำบัตรก่อน เวลลา 13.30 น.
+                  หากยื่นหลังจากเวลาที่กำหนดจะได้รับบัตรในวันถัดไป
                 </label>
               </td>
             </tr>
@@ -301,6 +322,7 @@ const RefferenceLetterMasterList = ({}) => {
 
         <fieldset
           style={{
+            display: formData1.txt_ReqbyName == "" ? "none" : "",
             border: "1px solid #ccc",
             padding: "16px",
             borderRadius: "8px",
@@ -316,22 +338,23 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td style={{ width: "300px" }}>
                 <Select
-                 disabled
-                  
+                  disabled
                   value={formData1.Sl_Supervisor}
                   style={{ width: "300px" }}
-                
                   options={supervisor}
-                  
                 />
               </td>
               <td style={{ textAlign: "center" }}>
                 {" "}
                 <Radio.Group
-                 disabled
+                  // style={{
+                  //   display:
+                  //     formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                  // }}
+                  disabled
                   name="radiogroup"
                   value={formData1.Rd_SupervisorApprove}
-                    options={[
+                  options={[
                     {
                       value: "A",
                       label: "Approve",
@@ -346,7 +369,10 @@ const RefferenceLetterMasterList = ({}) => {
               <td style={{ width: "90px", textAlign: "right" }}>
                 <div>
                   <label
-                   
+                  // style={{
+                  //   display:
+                  //     formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                  // }}
                   >
                     Action Date:
                   </label>
@@ -355,7 +381,10 @@ const RefferenceLetterMasterList = ({}) => {
               <td style={{ width: "300px" }}>
                 <Input
                   disabled
-                 
+                  // style={{
+                  //   display:
+                  //     formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                  // }}
                   value={formData1.Date_SupervisorActionDate}
                 />
               </td>
@@ -365,7 +394,10 @@ const RefferenceLetterMasterList = ({}) => {
                 <div>
                   {" "}
                   <label
-                  
+                  // style={{
+                  //   display:
+                  //     formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                  // }}
                   >
                     Comment :
                   </label>
@@ -373,20 +405,25 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={4}>
                 <Input
-               disabled
-                  
+                  disabled
+                  // style={{
+                  //   display:
+                  //     formData1.txt_ReqStatusValue == "CD0101" ? "none" : "",
+                  // }}
                   value={formData1.txt_SupervisorComment}
-                
                 />
               </td>
             </tr>
           </table>
         </fieldset>
-       
         <br />
         <fieldset
           style={{
-          
+            // display: ["CD0103", "CD0104", "CD0107", "CD0108"].includes(
+            //   formData1.txt_ReqStatusValue
+            // )
+            //   ? ""
+            //   : "none",
             border: "1px solid #ccc",
             padding: "16px",
             borderRadius: "8px",
@@ -402,11 +439,10 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={2}>
                 <Radio.Group
-             disabled
+                  disabled
                   style={{ marginLeft: "5px" }}
                   name="radiogroup"
                   value={formData1.Rd_HRStatus}
-                
                   options={[
                     {
                       value: "CD0104",
@@ -423,17 +459,15 @@ const RefferenceLetterMasterList = ({}) => {
                   ]}
                 />
                 <Select
-                disabled
+                  disabled
                   showSearch
                   style={{
                     width: "300px",
-                    
                     // display: formData1.Rd_HRStatus == "CD0108" ? "" : "none",
                   }}
                   placeholder="Please Select Condition For Close"
                   options={Condition}
                   value={formData1.Sl_HrCondion}
-                  
                 />
               </td>
             </tr>
@@ -468,7 +502,7 @@ const RefferenceLetterMasterList = ({}) => {
               <td>
                 {" "}
                 <Select
-                  style={{ width: "100%" }}
+                  style={{ width: "100%", minWidth: "450px" }}
                   disabled
                   options={Reason}
                   value={formData1.Sl_Reason}
@@ -500,34 +534,31 @@ const RefferenceLetterMasterList = ({}) => {
               <td>
                 {" "}
                 <Select
-                  
+                  showSearch
                   style={{
                     width: "100%",
+                    minWidth: "450px",
                   }}
                   disabled
-                  value={formData1.txt_cause}
+                  value={formData1.Sl_cause}
                   options={Reason}
-                 
                 />
               </td>
               <td>
                 {" "}
                 <Input
-             
                   style={{ width: "440px" }}
                   disabled
                   placeholder="อื่นๆโปรดระบุ"
-                  
-                  value={formData1.txt_CauseOther}
+                  value={formData1.Sl_causeOther}
                 />
                 <label style={{ marginLeft: "30px" }}>ค่าใช้จ่ายจริง :</label>
                 <Input
-                disabled
+                  disabled
                   style={{
                     width: "70px",
                     marginLeft: "5px",
                   }}
-                  
                   value={formData1.txt_ExpensesCause}
                 />
               </td>
@@ -540,7 +571,6 @@ const RefferenceLetterMasterList = ({}) => {
                 <TextArea
                   disabled
                   value={formData1.txt_HrComment}
-                 
                   maxLength={2000}
                 />
               </td>
@@ -551,10 +581,8 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={2}>
                 <Input
-                disabled
                   value={formData1.txt_RecriveById}
-                  
-                 
+                  disabled
                   style={{ width: "100px" }}
                 />{" "}
                 <Input
@@ -589,16 +617,14 @@ const RefferenceLetterMasterList = ({}) => {
                   disabled
                   style={{ width: "505px" }}
                   value={formData1.txt_RecriveByEmail}
-                 
                 />{" "}
                 <label style={{ marginLeft: "80px", marginRight: "5px" }}>
                   Tel :
                 </label>
                 <Input
                   disabled
-                  style={{ width: "120px" }}
+                  style={{ width: "115px" }}
                   value={formData1.txt_RecriveByTel}
-                 
                 />
               </td>
             </tr>
@@ -613,34 +639,22 @@ const RefferenceLetterMasterList = ({}) => {
                   style={{
                     width: "300px",
                   }}
-                 
                   value={formData1.Date_RecriveDate}
-                
+                  // min={new Date().toISOString().split("T")[0]} // กำหนดวันที่ขั้นต่ำเป็น
                 />
                 <label style={{ marginLeft: "30px" }}>Payment status : </label>
                 <Select
-                    disabled
-                  
                   style={{
                     width: "300px",
                   }}
                   value={formData1.Sl_PaymentStatus}
-               
+                  disabled
                   options={StatusPayment}
-       
-                />
-                <Input
-                 disabled
-                  style={{ width: "300px", marginLeft: "5px" }}
-                  placeholder="อื่นๆโปรดระบุ"
-                  value={formData1.txt_PaymentStatusOther}
-                  
                 />
               </td>
             </tr>
           </table>
         </fieldset>
-
       </Card>
     </div>
   );

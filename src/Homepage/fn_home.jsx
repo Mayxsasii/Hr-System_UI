@@ -60,6 +60,9 @@ function fn_home() {
     if (Page == "C") {
       window.location.href = "/HrSystem/NewRefferenceLetter";
     }
+     if (Page == "R") {
+      window.location.href = "/HrSystem/RefferenceLetterReceive";
+    }
     if(Count>0){
       if(Page == "A"){
         window.location.href = "/HrSystem/ApproveRefferenceLetter";

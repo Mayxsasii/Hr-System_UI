@@ -56,22 +56,13 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td>
                 {" "}
-                <Input
-                  value={formData1.txt_ReqNo}
-                  disabled
-                  onChange={(e) => handleChange("txt_ReqNo", e.target.value)}
-                />
+                <Input value={formData1.txt_ReqNo} disabled />
               </td>
               <td align="right">
                 <label>Request Date:</label>
               </td>
               <td>
-                <Input
-                  value={formData1.txt_ReqDate}
-                  disabled
-                  // value={formData1.txt_ReqNo}
-                  // onChange={(e) => handleChange("txt_ReqDate", e.target.value)}
-                />
+                <Input value={formData1.txt_ReqDate} disabled />
               </td>
               <td align="right">
                 <label>Request Status:</label>
@@ -81,9 +72,6 @@ const RefferenceLetterMasterList = ({}) => {
                   value={formData1.txt_ReqStatusDesc}
                   // style={{ width: "300px" }}
                   disabled
-                  onChange={(e) =>
-                    handleChange("txt_ReqStatusDesc", e.target.value)
-                  }
                 />
               </td>
             </tr>
@@ -287,16 +275,8 @@ const RefferenceLetterMasterList = ({}) => {
               <td style={{ width: "300px" }}>
                 <Select
                   disabled
-                  showSearch
                   value={formData1.Sl_Supervisor}
                   style={{ width: "300px" }}
-                  placeholder="Select Department Manager"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
                   options={Supervisor}
                 />
               </td>
@@ -390,13 +370,6 @@ const RefferenceLetterMasterList = ({}) => {
                     width: "300px",
                     display: formData1.Rd_HRStatus == "LT0108" ? "" : "none",
                   }}
-                  placeholder="Please Select Condition"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
                   options={Condition}
                   disabled
                 />

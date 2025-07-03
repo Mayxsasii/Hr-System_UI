@@ -289,6 +289,34 @@ const Login = () => {
                 {Letter[1]?.WaitHRStaff || 0}
               </p>
             </div>
+
+               {/* Wait Receive  */}
+            <div
+              className="Home_Status"
+              style={{
+                background: "#FFF3E0", // สีเขียวอ่อน
+                borderLeft: "10px solid #F57C00", // สีเขียวเข้ม
+              }}
+              onClick={() => GoPathLetter("R", '')}
+            >
+              <p
+                className="P_Title_Status"
+                style={{
+                  color: "#F57C00",
+                }}
+              >
+                Wait Receive
+              </p>
+              <p
+                className="P_Count_Status"
+                style={{
+                  color: "#F57C00",
+                  border: "2px solid #F57C00",
+                }}
+              >
+                <ArrowRightOutlined />
+              </p>
+            </div>
           </div>
         </div>
         {/* content3 */}
