@@ -97,6 +97,7 @@ const Step3 = ({ formData1, setFormData1,Disable,setDisable,setCurrent }) => {
           </td>
         </tr>
         <tr>
+         
           <td style={{ textAlign: "right" }}>
             <div
               style={{ display: formData1.ID_Status == "MR0101" ? "none" : "" }}
@@ -118,7 +119,9 @@ const Step3 = ({ formData1, setFormData1,Disable,setDisable,setCurrent }) => {
             />
           </td>
         </tr>
-        <tr></tr>
+        <tr style={{width:'100%', border:'1px solid red'}}>
+          <td style={{  borderBottom:'1px solid red',padding:'10px '}} colSpan={5}></td>
+        </tr>
         <tr>
           <td style={{ textAlign: "right" }}>FM/GM:</td>
           <td>
@@ -203,6 +206,172 @@ const Step3 = ({ formData1, setFormData1,Disable,setDisable,setCurrent }) => {
         </tr>
         <tr></tr>
         <tr>
+          <td style={{ textAlign: "right" }}>HR Manager:</td>
+          <td>
+            <Select
+            disabled={Disable.SL_HRManager}
+              showSearch
+              value={formData1.SL_HRManager}
+              style={{ width: "300px" }}
+              placeholder="Select HR Manager"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={HrManager}
+              onChange={(value) => {
+                handleChange("SL_HRManager", value);
+              }}
+            />
+          </td>
+          <td style={{ textAlign: "center" }}>
+            {" "}
+            <Radio.Group
+            disabled={Disable.CB_HRManagerApprove}
+              style={{   display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "", }}
+              name="radiogroup"
+              value={formData1.CB_HRManagerApprove}
+              onChange={(e) => {
+                handleChange("CB_HRManagerApprove", e.target.value);
+              }}
+              options={[
+                {
+                  value: "A",
+                  label: "Approve",
+                },
+                {
+                  value: "R",
+                  label: "Reject",
+                },
+              ]}
+            />
+          </td>
+          <td style={{ textAlign: "right" }}>
+            <div
+              style={{   display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "", }}
+            >
+              Action Date:
+            </div>
+          </td>
+          <td>
+            <Input
+              disabled
+              style={{
+                width: "300px",
+                display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "",
+              }}
+              value={formData1.Date_HRManager}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td style={{ textAlign: "right" }}>
+            <div
+              style={{   display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "", }}
+            >
+              Comment:
+            </div>
+          </td>
+          <td colSpan={4}>
+            <Input
+            disabled={Disable.txt_CommentHRManager}
+              style={{
+                width: "1200px",
+                display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "",
+              }}
+              value={formData1.txt_CommentHRManager}
+              onChange={(e) => {
+                handleChange("txt_CommentHRManager", e.target.value);
+              }}
+            />
+          </td>
+        </tr>
+                <tr>
+          <td style={{ textAlign: "right" }}>HR Manager:</td>
+          <td>
+            <Select
+            disabled={Disable.SL_HRManager}
+              showSearch
+              value={formData1.SL_HRManager}
+              style={{ width: "300px" }}
+              placeholder="Select HR Manager"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={HrManager}
+              onChange={(value) => {
+                handleChange("SL_HRManager", value);
+              }}
+            />
+          </td>
+          <td style={{ textAlign: "center" }}>
+            {" "}
+            <Radio.Group
+            disabled={Disable.CB_HRManagerApprove}
+              style={{   display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "", }}
+              name="radiogroup"
+              value={formData1.CB_HRManagerApprove}
+              onChange={(e) => {
+                handleChange("CB_HRManagerApprove", e.target.value);
+              }}
+              options={[
+                {
+                  value: "A",
+                  label: "Approve",
+                },
+                {
+                  value: "R",
+                  label: "Reject",
+                },
+              ]}
+            />
+          </td>
+          <td style={{ textAlign: "right" }}>
+            <div
+              style={{   display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "", }}
+            >
+              Action Date:
+            </div>
+          </td>
+          <td>
+            <Input
+              disabled
+              style={{
+                width: "300px",
+                display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "",
+              }}
+              value={formData1.Date_HRManager}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td style={{ textAlign: "right" }}>
+            <div
+              style={{   display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "", }}
+            >
+              Comment:
+            </div>
+          </td>
+          <td colSpan={4}>
+            <Input
+            disabled={Disable.txt_CommentHRManager}
+              style={{
+                width: "1200px",
+                display: ["MR0101", "MR0102","MR0103","MR0129","MR0139"].includes(formData1.ID_Status) ? "none" : "",
+              }}
+              value={formData1.txt_CommentHRManager}
+              onChange={(e) => {
+                handleChange("txt_CommentHRManager", e.target.value);
+              }}
+            />
+          </td>
+        </tr>
+                <tr>
           <td style={{ textAlign: "right" }}>HR Manager:</td>
           <td>
             <Select

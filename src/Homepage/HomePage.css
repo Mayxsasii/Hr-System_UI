@@ -24,10 +24,12 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 20px;
+  /* padding: 20px; */
   font-size: 18px;
   color: #333;
   gap: 10px;
+  max-height: 383px;           /* กำหนดความสูงสูงสุด */
+  overflow-y: auto;       
 }
 
 .Home_Page {
@@ -45,6 +47,42 @@
   gap: 10px;
   padding-bottom: 10px;
   width: 100%;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+  
+  
+}
+
+.Title_card::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 0;
+  height: 2px;
+  /* background: #3F7D58;  */
+  border-radius: 2px;
+  z-index: 1;
+} 
+.Title_card.green::after {
+  background: #3F7D58;
+}
+.Title_card.orange::after {
+  background: #F57C00;
+}
+.Title_card.blue::after {
+  background: #0288D1;
+}
+.Title_card.purple::after {
+  background: #6A1B9A;
+}
+.Title_card.red::after {
+  background: #D32F2F;
 }
 
 .Img_Card {
@@ -75,6 +113,9 @@
     gap: 10px;
     width: 100%;
     font-size: 14px;
+     padding-left: 20px;
+  padding-right: 25px;
+  padding-bottom: 15px;
 
   }
 

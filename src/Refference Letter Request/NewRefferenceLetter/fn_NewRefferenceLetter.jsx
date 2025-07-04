@@ -28,7 +28,7 @@ function fn_NewRefferenceLetter(formData1, setFormData1, Disable, setDisable) {
           handleChange("txt_Email", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!",
+            title: "User not found!/ไม่พบพนักงาน",
             // text: "User not found!",
           });
         } else {

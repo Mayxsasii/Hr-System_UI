@@ -120,6 +120,34 @@ const Step2 = ({ formData1, setFormData1 }) => {
                       <label style={{ marginLeft: "10px" }}>ฉบับ</label>
                     </>
                   )}
+                  {option.value === "LT0202" && (
+                    <>
+                      <label style={{ marginLeft: "30px" }}>ภาษาไทย</label>
+                      <Input
+                        type="text"
+                        disabled={formData1.txt_ReqStatusValue != "LT0101"}
+                        style={{ marginLeft: "10px", width: "40px" }}
+                        value={formData1.txt_WorkCerThai}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/[^0-9]/g, "");
+                          handleChange("txt_WorkCerThai", value);
+                        }}
+                      />
+                      <label style={{ marginLeft: "10px" }}>ฉบับ</label>
+                      <label style={{ marginLeft: "40px" }}>ภาษาอังกฤษ</label>
+                      <Input
+                        type="text"
+                        disabled={formData1.txt_ReqStatusValue != "LT0101"}
+                        style={{ marginLeft: "10px", width: "40px" }}
+                        value={formData1.txt_WorkCerEng}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/[^0-9]/g, "");
+                          handleChange("txt_WorkCerEng", value);
+                        }}
+                      />
+                      <label style={{ marginLeft: "10px" }}>ฉบับ</label>
+                    </>
+                  )}
                 </>
               )}
             </div>

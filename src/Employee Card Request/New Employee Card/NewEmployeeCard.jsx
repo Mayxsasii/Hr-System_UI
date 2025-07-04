@@ -246,7 +246,11 @@ const RefferenceLetterMasterList = ({}) => {
             </tr>
             <tr>
               <td align="right">
-                <label>การรูดบัตร/Swipe Card:</label>
+                <label>
+                  {" "}
+                  การบันทึกเวลาการทำงาน :<br />
+                  Recording working time
+                </label>
               </td>
               <td colSpan={2}>
                 <Radio.Group
@@ -259,11 +263,11 @@ const RefferenceLetterMasterList = ({}) => {
                   options={[
                     {
                       value: "Y",
-                      label: "รูดบัตร",
+                      label: "บันทึกเวลาการทำงาน",
                     },
                     {
                       value: "N",
-                      label: "ไม่ได้รูดบัตร",
+                      label: "ไม่ได้บันทึกเวลาการทำงาน",
                     },
                   ]}
                 />
@@ -310,7 +314,7 @@ const RefferenceLetterMasterList = ({}) => {
             </tr>
             <tr>
               <td align="right">
-                <label>การรับบัตร/Recrive Card By:</label>
+                <label>การรับบัตร/Receive Card By:</label>
               </td>
               <td colSpan={8}>
                 <Radio.Group
@@ -367,11 +371,14 @@ const RefferenceLetterMasterList = ({}) => {
             <tr>
               <td colSpan={9}>
                 <label style={{ color: "red" }}>
-                  *ข้อกำหนด : HR จะทำบัตรหลังเวลา 13.30 น. ของทุกวันทำงาน
-                  ดังนั้นหัวหน้างานจะต้องอนุมัติการทำบัตรพนักงานก่อนเวลา 13.00
-                  น.และพนักงานจะต้องมารับบัตรพนักงานหลังเวลา 15.00 น. <br />
-                  *ดังนั้นพนักงานจะต้องยื่นเรื่องขอทำบัตรก่อน เวลลา 13.30 น.
-                  หากยื่นหลังจากเวลาที่กำหนดจะได้รับบัตรในวันถัดไป
+                  <b>ข้อกำหนด :</b> <br />
+                  1. HR จะทำบัตรตั้งแต่เวลา 13:30 น. ของทุกวัน
+                  พนักงานสามารถมารับบัตรได้ตั้งแต่เวลา 15:00 น. <br />
+                  2.
+                  พนักงานต้องยื่นเรื่องขอทำบัตรและได้รับการอนุมัติจากหัวหน้างานก่อนเวลา
+                  13:30 น. <br />
+                  3. หากพนักงานยื่นเรื่องขอทำบัตรหลังเวลา 13:30 น.
+                  พนักงานจะได้รับบัตรในวันถัดไป
                 </label>
               </td>
             </tr>
@@ -678,20 +685,20 @@ const RefferenceLetterMasterList = ({}) => {
                   value={formData1.Sl_cause}
                   options={Reason}
                   onChange={(value, option) => {
-                    console.log(value,'Sl_cause')
+                    console.log(value, "Sl_cause");
                     handleChange("Sl_cause", value);
 
                     // ตรวจสอบว่ามีค่า expenses ใน option ที่เลือก
                     if (option?.expenses) {
                       handleChange("txt_ExpensesCause", option.expenses);
-                      if(option.expenses>0){
-                       handleChange("Sl_PaymentStatus", 'CD0402');
-                      }else{
-                        handleChange("Sl_PaymentStatus", 'CD0404'); 
+                      if (option.expenses > 0) {
+                        handleChange("Sl_PaymentStatus", "CD0402");
+                      } else {
+                        handleChange("Sl_PaymentStatus", "CD0404");
                       }
                     } else {
-                      handleChange("txt_ExpensesCause", '');
-                       handleChange("Sl_PaymentStatus", 'CD0404'); 
+                      handleChange("txt_ExpensesCause", "");
+                      handleChange("Sl_PaymentStatus", "CD0404");
                     }
                     if (value != "CD0208") {
                       handleChange("Sl_causeOther", "");
@@ -726,13 +733,12 @@ const RefferenceLetterMasterList = ({}) => {
                     // รับเฉพาะตัวเลขเท่านั้น
                     const value = e.target.value.replace(/[^0-9]/g, "");
                     handleChange("txt_ExpensesCause", value);
-                    console.log(value,'mmmmmmc')
-                    if(value==0){
-                        handleChange("Sl_PaymentStatus", 'CD0404');
-                    }else if(value>0){
-                       handleChange("Sl_PaymentStatus", 'CD0402');
+                    console.log(value, "mmmmmmc");
+                    if (value == 0) {
+                      handleChange("Sl_PaymentStatus", "CD0404");
+                    } else if (value > 0) {
+                      handleChange("Sl_PaymentStatus", "CD0402");
                     }
-                    
                   }}
                   value={formData1.txt_ExpensesCause}
                   inputMode="numeric"
@@ -839,9 +845,9 @@ const RefferenceLetterMasterList = ({}) => {
             </tr>
             <tr>
               <td align="right">
-                <label>Recrive Date :</label>
+                <label>Receive Date :</label>
               </td>
-              <td colSpan={2} >
+              <td colSpan={2}>
                 <Input
                   disabled={
                     !["CD0103", "CD0104"].includes(formData1.txt_ReqStatusValue)
@@ -856,13 +862,11 @@ const RefferenceLetterMasterList = ({}) => {
                   value={formData1.Date_RecriveDate}
                   min={new Date().toISOString().split("T")[0]} // กำหนดวันที่ขั้นต่ำเป็น
                 />
-                <label style={{ marginLeft: "30px",}}>Payment status : </label>
+                <label style={{ marginLeft: "30px" }}>Payment status : </label>
                 <Select
-                
-                  
                   showSearch
                   style={{
-                    width: "300px"
+                    width: "300px",
                   }}
                   value={formData1.Sl_PaymentStatus}
                   // placeholder="Please Select Payment status"
@@ -874,9 +878,7 @@ const RefferenceLetterMasterList = ({}) => {
                   }
                   disabled
                   options={StatusPayment}
-                
                 />
-                
               </td>
             </tr>
           </table>
@@ -893,7 +895,7 @@ const RefferenceLetterMasterList = ({}) => {
           <Button
             color="gold"
             variant="solid"
-            style={{display:formData1.Rd_HRStatus=='CD0107'?'none':''}}
+            style={{ display: formData1.Rd_HRStatus == "CD0107" ? "none" : "" }}
             onClick={() => {
               Bt_SubmitForHr("SaveDraft");
             }}

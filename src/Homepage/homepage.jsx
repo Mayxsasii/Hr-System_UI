@@ -10,19 +10,29 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import "./HomePage.css";
 
 const Login = () => {
-  const { ManPower, GoPathManPower, GoPathLetter, Letter, GoPathEmpCard, EmpCard } = fn_home();
+  const {
+    ManPower,
+    GoPathManPower,
+    GoPathLetter,
+    Letter,
+    GoPathEmpCard,
+    EmpCard
+  } = fn_home();
 
   return (
     <div>
       <div className="Home_Page">
         <div className="card_HomePage">
           <div
-            className="Title_card"
+            className="Title_card green"
             style={{
-              borderBottom: "2px solid #3F7D58",
+              // borderBottom: "2px solid #3F7D58",
+            
             }}
           >
+
             <img src={ImgHR1} alt="Hiring" className="Img_Card" />
+            
             <div className="Div_Span">
               <span
                 className="Font_Title"
@@ -36,8 +46,11 @@ const Login = () => {
                 Total {ManPower[5]?.Total || 0} Request
               </span>
             </div>
+        
           </div>
+           
           <div className="Div_Status">
+            
             <div
               className="Home_Status"
               style={{
@@ -117,6 +130,58 @@ const Login = () => {
                 {ManPower[2]?.WaitFMGMApprove || 0}
               </p>
             </div>
+            <div
+              className="Home_Status"
+              style={{
+                background: "#E3FCEF",
+                borderLeft: "10px solid #2E7D32",
+              }}
+              onClick={() => GoPathManPower("2", ManPower[2]?.WaitFMGMApprove)}
+            >
+              <p
+                className="P_Title_Status"
+                style={{
+                  color: "#2E7D32",
+                }}
+              >
+                Wait Chief Operating Officer
+              </p>
+              <p
+                className="P_Count_Status"
+                style={{
+                  color: "#2E7D32",
+                  border: "2px solid #2E7D32",
+                }}
+              >
+                {ManPower[2]?.WaitFMGMApprove || 0}
+              </p>
+            </div>
+            <div
+              className="Home_Status"
+              style={{
+                background: "#E3FCEF",
+                borderLeft: "10px solid #2E7D32",
+              }}
+              onClick={() => GoPathManPower("2", ManPower[2]?.WaitFMGMApprove)}
+            >
+              <p
+                className="P_Title_Status"
+                style={{
+                  color: "#2E7D32",
+                }}
+              >
+                Wait President & CEO
+              </p>
+              <p
+                className="P_Count_Status"
+                style={{
+                  color: "#2E7D32",
+                  border: "2px solid #2E7D32",
+                }}
+              >
+                {ManPower[2]?.WaitFMGMApprove || 0}
+              </p>
+            </div>
 
             <div
               className="Home_Status"
@@ -179,10 +244,8 @@ const Login = () => {
         <div className="card_HomePage">
           {/* Header Section */}
           <div
-            className="Title_card"
-            style={{
-              borderBottom: "2px solid #F57C00",
-            }}
+            className="Title_card orange"
+           
           >
             <img src={ImgHR2} alt="Hiring" className="Img_Card" />
             <div className="Div_Span">
@@ -290,14 +353,14 @@ const Login = () => {
               </p>
             </div>
 
-               {/* Wait Receive  */}
+            {/* Wait Receive  */}
             <div
               className="Home_Status"
               style={{
                 background: "#FFF3E0", // สีเขียวอ่อน
                 borderLeft: "10px solid #F57C00", // สีเขียวเข้ม
               }}
-              onClick={() => GoPathLetter("R", '')}
+              onClick={() => GoPathLetter("R", "")}
             >
               <p
                 className="P_Title_Status"
@@ -323,10 +386,8 @@ const Login = () => {
         <div className="card_HomePage">
           {/* Header Section */}
           <div
-            className="Title_card"
-            style={{
-              borderBottom: "2px solid #0288D1",
-            }}
+            className="Title_card blue"
+            
           >
             <img src={ImgHR3} alt="Hiring" className="Img_Card" />
             <div className="Div_Span">
@@ -338,7 +399,9 @@ const Login = () => {
               >
                 Employee Card Request
               </span>
-              <span className="Font_Count">Total  {EmpCard[2]?.Total||0} Request</span>
+              <span className="Font_Count">
+                Total {EmpCard[2]?.Total || 0} Request
+              </span>
             </div>
           </div>
 
@@ -351,7 +414,7 @@ const Login = () => {
                 background: "#E3F2FD", // สีเขียวอ่อน
                 borderLeft: "10px solid #0288D1", // สีเขียวเข้ม
               }}
-               onClick={() => GoPathEmpCard("C", "")}
+              onClick={() => GoPathEmpCard("C", "")}
             >
               <p
                 className="P_Title_Status"
@@ -378,7 +441,7 @@ const Login = () => {
                 background: "#E3F2FD", // สีเขียวอ่อน
                 borderLeft: "10px solid #0288D1", // สีเขียวเข้ม
               }}
-               onClick={() => GoPathEmpCard("A", EmpCard[0]?.WaitSVApprove || 0)}
+              onClick={() => GoPathEmpCard("A", EmpCard[0]?.WaitSVApprove || 0)}
             >
               <p
                 className="P_Title_Status"
@@ -395,7 +458,7 @@ const Login = () => {
                   border: "2px solid #0288D1",
                 }}
               >
-               {EmpCard[0]?.WaitSVApprove || 0} 
+                {EmpCard[0]?.WaitSVApprove || 0}
               </p>
             </div>
 
@@ -422,7 +485,7 @@ const Login = () => {
                   border: "2px solid #0288D1",
                 }}
               >
-                {EmpCard[1]?.WaitHRStaff||0}
+                {EmpCard[1]?.WaitHRStaff || 0}
               </p>
             </div>
           </div>
@@ -431,10 +494,8 @@ const Login = () => {
         <div className="card_HomePage">
           {/* Header Section */}
           <div
-            className="Title_card"
-            style={{
-              borderBottom: "2px solid #6A1B9A",
-            }}
+            className="Title_card purple"
+           
           >
             <img src={ImgHR4} alt="Hiring" className="Img_Card" />
             <div className="Div_Span">
@@ -568,10 +629,8 @@ const Login = () => {
         <div className="card_HomePage">
           {/* Header Section */}
           <div
-            className="Title_card"
-            style={{
-              borderBottom: "2px solid #D32F2F",
-            }}
+            className="Title_card red"
+           
           >
             <img src={ImgHR5} alt="Hiring" className="Img_Card" />
             <div className="Div_Span">

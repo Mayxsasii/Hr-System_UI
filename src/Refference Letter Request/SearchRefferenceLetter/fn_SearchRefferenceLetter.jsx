@@ -203,7 +203,7 @@ function fn_SearchRefferenceLetter() {
             if (res.data.length > 0) {
               setDataSearch(res.data);
             } else {
-              Swal.fire({ icon: "warning", title: "Not Found Data!" });
+              Swal.fire({ icon: "warning", title: "Not Found Data!/ไม่พบข้อมูล" });
             }
           });
       } else if (Path == "RefferenceLetterReceive") {
@@ -220,7 +220,7 @@ function fn_SearchRefferenceLetter() {
         ) {
           Swal.fire({
             icon: "warning",
-            title: "Please fill in the information",
+            title: "Please fill in the information/กรุณากรอกข้อมูลเพื่อค้นหา",
           });
           hideLoading();
           return;
@@ -250,7 +250,7 @@ function fn_SearchRefferenceLetter() {
               console.log(res.data, "SearchLetter");
               setDataSearch(res.data);
             } else {
-              Swal.fire({ icon: "warning", title: "Not Found Data!" });
+              Swal.fire({ icon: "warning", title: "Not Found Data!/ไม่พบข้อมูล" });
             }
           });
       } else {
@@ -267,7 +267,7 @@ function fn_SearchRefferenceLetter() {
         ) {
           Swal.fire({
             icon: "warning",
-            title: "Please fill in the information",
+            title: "Please fill in the information/กรุณากรอกข้อมูลเพื่อค้นหา",
           });
           hideLoading();
           return;
@@ -315,7 +315,7 @@ function fn_SearchRefferenceLetter() {
             if (res.data.length > 0) {
               setDataSearch(res.data);
             } else {
-              Swal.fire({ icon: "warning", title: "Not Found Data!" });
+              Swal.fire({ icon: "warning", title: "Not Found Data!/ไม่พบข้อมูล" });
             }
           });
       }
@@ -352,7 +352,7 @@ function fn_SearchRefferenceLetter() {
   const handleOpenModal = () => {
     console.log(selectedRowKeys);
     if (selectedRowKeys.length <= 0) {
-      Swal.fire({ icon: "warning", title: "Please Select For Close" });
+      Swal.fire({ icon: "warning", title: "Please Select For Close/กรุณาเลือกข้อมูลที่ต้องการปิด" });
       return;
     }
     setIsModalOpen(true);
@@ -411,7 +411,7 @@ function fn_SearchRefferenceLetter() {
           handleChange("txt_UserLogin", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!",
+            title: "User not found!/ไม่พบข้อมูลพนักงาน",
           });
         } else {
           handleChange("txt_ReceiveName", res.data[0].name_surname);
@@ -430,7 +430,7 @@ function fn_SearchRefferenceLetter() {
         if (DataModal.Sl_ConditonClose == null) {
           Swal.fire({
             icon: "warning",
-            text: "Please Select Condition For Close",
+            text: "Please Select Condition For Close/โปรดเลือกเงื่อนไขในการปิด",
           });
           return;
         }
@@ -438,7 +438,7 @@ function fn_SearchRefferenceLetter() {
       if (DataModal.Date_HrConfirm == null) {
         Swal.fire({
           icon: "warning",
-          text: "Please Select HR confirm action date",
+          text: "Please Select HR confirm action date/โปรดเลือกวันที่ยืนยันการดำเนินการ",
         });
         return;
       }
@@ -489,28 +489,28 @@ function fn_SearchRefferenceLetter() {
       if (DataModal.txt_ReceiveById == "") {
         Swal.fire({
           icon: "warning",
-          text: "Please Input Receive By",
+          text: "Please Input Receive By/โปรดกรอกรหัสพนักงานผู้รับเอกสาร",
         });
         return;
       }
       if (DataModal.txt_ReceiveTel == "") {
         Swal.fire({
           icon: "warning",
-          text: "Please Input Receive Tel",
+          text: "Please Input Receive Tel/กรุณากรอกเบอร์โทรศัพท์",
         });
         return;
       }
       if (DataModal.txt_ReceiveEmail == "") {
         Swal.fire({
           icon: "warning",
-          text: "Please Input Receive Email",
+          text: "Please Input Receive Email/กรุณากรอกอีเมล",
         });
         return;
       }
       if (DataModal.Date_RecriveDate == null) {
         Swal.fire({
           icon: "warning",
-          text: "Please Select Recrive Date",
+          text: "Please Select Recrive Date/โปรดเลือกวันที่รับเอกสาร",
         });
         return;
       }
@@ -556,7 +556,7 @@ function fn_SearchRefferenceLetter() {
     if (dataSearch.length <= 0) {
       Swal.fire({
         icon: "warning",
-        title: "No Data Export !",
+        title: "No Data Export !/ไม่พบข้อมูล!",
       });
       return;
     }

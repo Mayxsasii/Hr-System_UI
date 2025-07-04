@@ -54,7 +54,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
         Swal.fire({
           icon: "warning",
           title: "Cannot be closed",
-          text: `Please input Data for close`,
+          text: `Please input Data for close/กรุณากรอกข้อมูลเพื่อปิด`,
         });
       } else {
         handleChange("Rd_HRStatus", selectedValue);
@@ -88,7 +88,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           handleChange("txt_RecriveByEmail", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!",
+            title: "User not found!/ไม่พบพนักงงาน",
           });
         } else {
           handleChange("txt_RecriveByName", res.data[0].name_surname);
@@ -118,7 +118,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.Date_HrConfirmAcDate == null) {
         Swal.fire({
           icon: "warning",
-          title: "Please Select confim action date",
+          title: "Please Select confim action date/โปรดเลือกวันที่ยืนยันการดำเนินการ",
         });
         hideLoading();
         return;
@@ -127,7 +127,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.txt_RecriveById == "") {
         Swal.fire({
           icon: "warning",
-          title: "Please Input Receive By",
+          title: "Please Input Receive By/กรุณากรอกรหัสพนักงานผู้รับ",
         });
         hideLoading();
         return;
@@ -135,7 +135,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.txt_RecriveByTel == "") {
         Swal.fire({
           icon: "warning",
-          title: "Please Input Tel",
+          title: "Please Input Tel/กรุณากรอกเบอร์โทรศัพท์",
         });
         hideLoading();
         return;
@@ -143,7 +143,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.Date_RecriveDate == null) {
         Swal.fire({
           icon: "warning",
-          title: "Please Select Recrive Date",
+          title: "Please Select Recrive Date/กรุณาเลือกวันที่รับเอกสาร",
         });
         hideLoading();
         return;
@@ -155,7 +155,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.Sl_HrCondion == "") {
         Swal.fire({
           icon: "warning",
-          title: "Please Select Condition Close",
+          title: "Please Select Condition Close/กรุณาเลือกเงื่อนไขการปิด",
         });
         hideLoading();
         return;

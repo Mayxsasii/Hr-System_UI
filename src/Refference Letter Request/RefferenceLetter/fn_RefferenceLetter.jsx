@@ -62,6 +62,8 @@ function fn_RefferenceLetter() {
     CB_letterType: [],
     txt_LetterThai: '0',
     txt_LetterEng: '0',
+    txt_WorkCerThai: '0',
+    txt_WorkCerEng: '0',
     Date_Resignation: null,
     txt_LetterOther: "",
     txt_Remark: "",
@@ -244,35 +246,29 @@ function fn_RefferenceLetter() {
     if (formData1.txt_ReqbyID == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Requested By",
+        title: "Please Input Requested By/กรุณากรอก ID พนักงาน",
       });
       return false;
     }
     if (formData1.txt_Email == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Email",
+        title: "Please Input Email/กรุณากรอกอีเมล",
       });
       return false;
     }
     if (formData1.Date_Target == null) {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Target Date",
+        title: "Please Select Target Date/กรุณาเลือกวันทีต้เองการรับเอกสาร",
       });
       return false;
     }
-    if (formData1.Date_Target == null) {
-      Swal.fire({
-        icon: "error",
-        title: "Please Select Target Date",
-      });
-      return false;
-    }
+   
       if (formData1.txt_Tel == "") {
       Swal.fire({
         icon: "error",
-        title: "Please Input Tel",
+        title: "Please Input Tel/กรุณากรอกเบอร์โทรศัพท์",
       });
       return false;
     }
@@ -290,7 +286,7 @@ function fn_RefferenceLetter() {
         if (res.data.length <= 0) {
           Swal.fire({
             icon: "error",
-            title: "For HR Staff Only",
+            title: "For HR Staff Only/สำหรับ HR Staff เท่านั้น",
           });
           check = false;
         }

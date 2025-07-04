@@ -193,7 +193,7 @@ const Step1 = ({
             />
           </td>
           <td align="right">
-            <label>เบอร์ภายใน/Tel :</label>
+            <label>เบอร์ติดต่อ/Tel :</label>
           </td>
           <td>
             <Input

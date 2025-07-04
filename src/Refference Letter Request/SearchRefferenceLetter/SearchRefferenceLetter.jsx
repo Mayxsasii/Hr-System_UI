@@ -618,7 +618,7 @@ const SearchManPower = () => {
                     marginTop: 4,
                   }}
                 >
-                  Recrive Date :
+                  Receive Date :
                 </label>
                 <Input
                   type="date"

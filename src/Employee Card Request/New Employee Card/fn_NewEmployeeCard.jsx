@@ -230,7 +230,7 @@ function fn_NewEmployeeCard() {
           handleChange("txt_Email", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!",
+            title: "User not found!/ไม่พบข้อมูลพนักงาน",
           });
           hideLoading();
         } else {
@@ -247,8 +247,8 @@ function fn_NewEmployeeCard() {
             handleChange("txt_Email", "");
             Swal.fire({
               icon: "warning",
-              text: "This Employee code cannot be approved",
-              title: "Please Contact HR Admin!",
+              text: "This Employee code cannot be approved/รหัสพนักงานนี้ไม่สามารถขออนุมัติได้",
+              title: "Please Contact HR Admin!/กรุณาติดต่อ HR Admin",
             });
             return;
           }
@@ -283,7 +283,7 @@ function fn_NewEmployeeCard() {
           handleChange("txt_RecriveByEmail", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!",
+            title: "User not found!/ไม่พบข้อมูลพนักงาน",
           });
           hideLoading();
         } else {
@@ -346,7 +346,7 @@ function fn_NewEmployeeCard() {
         Swal.fire({
           icon: "warning",
           title: "Cannot be closed",
-          text: `Please input Data for close`,
+          text: `Please input Data for close/กรุณากรอกข้อมูลเพื่อปิด`,
         });
         handleChange("Rd_HRStatus", "CD0104");
         return;
@@ -357,7 +357,7 @@ function fn_NewEmployeeCard() {
         Swal.fire({
           icon: "warning",
           title: "Cannot be closed",
-          text: `Please input Data for close`,
+          text: `Please input Data for close/กรุณากรอกข้อมูลเพื่อปิด`,
         });
         handleChange("Rd_HRStatus", "CD0104");
         return;
@@ -371,7 +371,7 @@ function fn_NewEmployeeCard() {
         Swal.fire({
           icon: "warning",
           title: "Cannot be closed",
-          text: `Please input Data for close`,
+          text: `Please input Data for close/กรุณากรอกข้อมูลเพื่อปิด`,
         });
         handleChange("Rd_HRStatus", "CD0104");
         return;
@@ -388,28 +388,28 @@ function fn_NewEmployeeCard() {
     if (!formData1.txt_ReqbyID) {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Request By!",
+        title: "Please Input Request By!/กรุณากรอกรหัสพนักงาน",
       });
       return;
     }
     if (formData1.txt_Email == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Email!",
+        title: "Please Input Email!/กรุณากรอกอีเมล",
       });
       return;
     }
     if (formData1.txt_Tel == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Tel",
+        title: "Please Input Tel/กรุณากรอกเบอร์",
       });
       return;
     }
     if (formData1.Sl_Reason == null) {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Reason!",
+        title: "Please Select Reason!/กรุณาเลือกเหตุผล",
       });
       return;
     }
@@ -417,7 +417,7 @@ function fn_NewEmployeeCard() {
       if (formData1.txt_ReasonOther == "") {
         Swal.fire({
           icon: "warning",
-          title: "Please Input Reason Other!",
+          title: "Please Input Reason Other!/กรุณากรอกเหตุผลอื่นๆ",
         });
         return;
       }
@@ -425,7 +425,7 @@ function fn_NewEmployeeCard() {
     if (formData1.Rd_SwipeCard == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Swipe Card!",
+        title: "Please Select Recording working time!/กรุณาเลือกการบันทึกเวลาการทำงาน!",
       });
       return;
     } else {
@@ -433,7 +433,7 @@ function fn_NewEmployeeCard() {
         if (formData1.Date_DayWork == "" || formData1.Date_DayWork == []) {
           Swal.fire({
             icon: "warning",
-            title: "กรุณาเลือกวันที่ไม่ได้รูดบัตร!",
+            title: "กรุณาเลือกวันที่ไม่ได้บันทึกเวลาการทำงาน!",
           });
           return;
         }
@@ -442,14 +442,14 @@ function fn_NewEmployeeCard() {
     if (formData1.Rd_RecriveByCard == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Recrive Card By!",
+        title: "Please Select Recrive Card By!/กรุณาเลือกการผู้บัตร!",
       });
       return;
     }
     if (formData1.Sl_Supervisor == null) {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Supervisor Up!",
+        title: "Please Select Supervisor Up!/กรุณาเลือกหัวหน้างาน!",
       });
       return;
     }
@@ -508,7 +508,7 @@ function fn_NewEmployeeCard() {
     if (formData1.Rd_SupervisorApprove == "") {
       Swal.fire({
         icon: "warning",
-        text: "Please Select Reject Or Approve!",
+        text: "Please Select Reject Or Approve!/กรุณาเลือกการอนุมัติ!",
       });
       hideLoading();
       return;
@@ -517,7 +517,7 @@ function fn_NewEmployeeCard() {
       if (formData1.txt_SupervisorComment == "") {
         Swal.fire({
           icon: "warning",
-          text: "Please Input Comment!",
+          text: "Please Input Comment!/กรุณากรอกความคิดเห็น!",
         });
         hideLoading();
         return;
