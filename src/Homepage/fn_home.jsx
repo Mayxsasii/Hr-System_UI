@@ -58,17 +58,17 @@ function fn_home() {
   };
   const GoPathLetter = (Page,Count) => {
     if (Page == "C") {
-      window.location.href = "/HrSystem/NewRefferenceLetter";
+      window.location.href = "/HrSystem/NewReferenceLetter";
     }
      if (Page == "R") {
-      window.location.href = "/HrSystem/RefferenceLetterReceive";
+      window.location.href = "/HrSystem/ReferenceLetterReceive";
     }
     if(Count>0){
       if(Page == "A"){
-        window.location.href = "/HrSystem/ApproveRefferenceLetter";
+        window.location.href = "/HrSystem/ApproveReferenceLetter";
       }
       if(Page == "H"){
-        window.location.href = "/HrSystem/HrActionRefferenceLetter";
+        window.location.href = "/HrSystem/HrActionReferenceLetter";
       }
     }
   };

@@ -255,7 +255,7 @@ const RefferenceLetterMasterList = ({}) => {
             </tr>
             <tr>
               <td align="right">
-                <label>การรับบัตร/Recrive Card By:</label>
+                <label>การรับบัตร/Receive Card By:</label>
               </td>
               <td colSpan={8}>
                 <Radio.Group
@@ -630,7 +630,7 @@ const RefferenceLetterMasterList = ({}) => {
             </tr>
             <tr>
               <td align="right">
-                <label>Recrive Date :</label>
+                <label>Receive Date :</label>
               </td>
               <td colSpan={2}>
                 <Input

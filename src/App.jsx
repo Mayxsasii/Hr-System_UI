@@ -95,28 +95,28 @@ const App = () => {
 
             {/* ----------Letter------------------ */}
             <Route
-              path="/HrSystem/ApproveRefferenceLetter"
+              path="/HrSystem/ApproveReferenceLetter"
               element={<ProtectedRoute element={<SearchRefferenceLetter />} />}
             />
             <Route
-              path="/HrSystem/HrActionRefferenceLetter"
+              path="/HrSystem/HrActionReferenceLetter"
               element={<ProtectedRoute element={<SearchRefferenceLetter />} />}
             />
             <Route
-              path="/HrSystem/ViewRefferenceLetterList"
+              path="/HrSystem/ViewReferenceLetterList"
               element={<ProtectedRoute element={<LetterList />} />}
             />
             <Route
-              path="/HrSystem/RefferenceLetterMasterList"
+              path="/HrSystem/ReferenceLetterMasterList"
               element={<ProtectedRoute element={<SearchRefferenceLetter />} />}
             />
             <Route
-              path="/HrSystem/NewRefferenceLetter"
+              path="/HrSystem/NewReferenceLetter"
               element={<ProtectedRoute element={<RefferenceLetter />} />}
             />
 
              <Route
-              path="/HrSystem/RefferenceLetterReceive"
+              path="/HrSystem/ReferenceLetterReceive"
               element={<ProtectedRoute element={<SearchRefferenceLetter />} />}
             />
 

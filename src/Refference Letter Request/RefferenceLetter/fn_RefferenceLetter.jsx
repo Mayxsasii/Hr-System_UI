@@ -13,7 +13,7 @@ import { Await, useLocation } from "react-router-dom";
 function fn_RefferenceLetter() {
   const steps = [
     {
-      title: "New Refference Letter Request",
+      title: "New Reference Letter Request",
       content: (props) => <Step1 {...props} />,
     },
     {
@@ -60,10 +60,10 @@ function fn_RefferenceLetter() {
     txt_Sendate: DateToday,
     //step2.1
     CB_letterType: [],
-    txt_LetterThai: '0',
-    txt_LetterEng: '0',
-    txt_WorkCerThai: '0',
-    txt_WorkCerEng: '0',
+    txt_LetterThai: "0",
+    txt_LetterEng: "0",
+    txt_WorkCerThai: "0",
+    txt_WorkCerEng: "0",
     Date_Resignation: null,
     txt_LetterOther: "",
     txt_Remark: "",
@@ -159,7 +159,6 @@ function fn_RefferenceLetter() {
             fomatdate(data.Hr_ConfirmAcDate)
           );
         } else {
-          
           handleChange("Date_HrConfirmAcDate", fomatdate(DateToday));
         }
 
@@ -169,7 +168,7 @@ function fn_RefferenceLetter() {
         // handleChange("Sl_HrCondion", data.Hr_Condition);
         handleChange("txt_RecriveByEmail", data.Hr_ResiveEmail || "");
         handleChange("txt_RecriveByTel", data.Hr_ResiveTel || "");
-      
+
         if (data.Hr_ResiveDate != null) {
           handleChange("Date_RecriveDate", fomatdate(data.Hr_ResiveDate));
         } else {
@@ -193,14 +192,21 @@ function fn_RefferenceLetter() {
           if (res.data[i].LetterType == "LT0205") {
             handleChange("txt_LetterOther", res.data[i].LetterDetail);
           }
-           if (res.data[i].LetterType == "LT0201") {
+          if (res.data[i].LetterType == "LT0201") {
             if (res.data[i].Thai) {
               handleChange("txt_LetterThai", res.data[i].Thai);
             }
             if (res.data[i].Eng) {
               handleChange("txt_LetterEng", res.data[i].Eng);
             }
-            
+          }
+          if (res.data[i].LetterType == "LT0202") {
+            if (res.data[i].Thai) {
+              handleChange("txt_WorkCerThai", res.data[i].Thai);
+            }
+            if (res.data[i].Eng) {
+              handleChange("txt_WorkCerEng", res.data[i].Eng);
+            }
           }
         }
         handleChange("CB_letterType", data);
@@ -246,29 +252,29 @@ function fn_RefferenceLetter() {
     if (formData1.txt_ReqbyID == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Requested By/กรุณากรอก ID พนักงาน",
+        text: "Please Input Requested By/กรุณากรอก ID พนักงาน",
       });
       return false;
     }
     if (formData1.txt_Email == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Email/กรุณากรอกอีเมล",
+        text: "Please Input Email/กรุณากรอกอีเมล",
       });
       return false;
     }
     if (formData1.Date_Target == null) {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Target Date/กรุณาเลือกวันทีต้เองการรับเอกสาร",
+        text: "Please Select Target Date/กรุณาเลือกวันทีต้เองการรับเอกสาร",
       });
       return false;
     }
-   
-      if (formData1.txt_Tel == "") {
+
+    if (formData1.txt_Tel == "") {
       Swal.fire({
         icon: "error",
-        title: "Please Input Tel/กรุณากรอกเบอร์โทรศัพท์",
+        text: "Please Input Tel/กรุณากรอกเบอร์โทรศัพท์",
       });
       return false;
     }
@@ -286,7 +292,7 @@ function fn_RefferenceLetter() {
         if (res.data.length <= 0) {
           Swal.fire({
             icon: "error",
-            title: "For HR Staff Only/สำหรับ HR Staff เท่านั้น",
+            text: "For HR Staff Only/สำหรับ HR Staff เท่านั้น",
           });
           check = false;
         }

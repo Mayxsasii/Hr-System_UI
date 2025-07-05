@@ -80,7 +80,7 @@ function fn_NewEmployeeCard() {
     GetPaymentStatus();
     FetchData();
   }, []);
-  
+
   useEffect(() => {
     if (Path != "MasterListEmployeeCard") {
       if (
@@ -174,19 +174,19 @@ function fn_NewEmployeeCard() {
           handleChange("txt_SupervisorComment", res.data[0].Ap_Comment);
         }
         //----Hr
-        handleChange("Rd_HRStatus", res.data[0].HR_Rd_Status );
+        handleChange("Rd_HRStatus", res.data[0].HR_Rd_Status);
         handleChange("Sl_HrCondion", res.data[0].HR_Condition || null);
         handleChange("Sl_cause", res.data[0].HR_Reason || null);
-        handleChange("Sl_causeOther", res.data[0].HR_Reason_other||'');
-        handleChange("txt_ExpensesCause", res.data[0].HR_cost||'');
-        handleChange("txt_HrComment", res.data[0].HR_Comment||'');
-        handleChange("txt_RecriveById", res.data[0].HR_Receive_By||'');
+        handleChange("Sl_causeOther", res.data[0].HR_Reason_other || "");
+        handleChange("txt_ExpensesCause", res.data[0].HR_cost || "");
+        handleChange("txt_HrComment", res.data[0].HR_Comment || "");
+        handleChange("txt_RecriveById", res.data[0].HR_Receive_By || "");
         if (res.data[0].HR_Receive_By) {
           await GetDataPersonForHr(res.data[0].HR_Receive_By);
         }
         //
-        handleChange("txt_RecriveByEmail", res.data[0].HR_Receive_Email||'');
-        handleChange("txt_RecriveByTel", res.data[0].HR_Receive_Tel||'');
+        handleChange("txt_RecriveByEmail", res.data[0].HR_Receive_Email || "");
+        handleChange("txt_RecriveByTel", res.data[0].HR_Receive_Tel || "");
         if (res.data[0].HR_Receive_Date) {
           handleChange("Date_RecriveDate", res.data[0].HR_Receive_Date);
         }
@@ -203,9 +203,8 @@ function fn_NewEmployeeCard() {
         Req_No: ReqNo || "",
       })
       .then(async (res) => {
-        
-        let data = []
-         data = res.data.map((item) => item.WorkDay);
+        let data = [];
+        data = res.data.map((item) => item.WorkDay);
         handleChange("Date_DayWork", data);
       });
   };
@@ -230,7 +229,7 @@ function fn_NewEmployeeCard() {
           handleChange("txt_Email", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!/ไม่พบข้อมูลพนักงาน",
+            text: "User not found!/ไม่พบข้อมูลพนักงาน",
           });
           hideLoading();
         } else {
@@ -247,8 +246,8 @@ function fn_NewEmployeeCard() {
             handleChange("txt_Email", "");
             Swal.fire({
               icon: "warning",
-              text: "This Employee code cannot be approved/รหัสพนักงานนี้ไม่สามารถขออนุมัติได้",
-              title: "Please Contact HR Admin!/กรุณาติดต่อ HR Admin",
+              text: "Please Contact HR Admin This Employee code cannot be approved/กรุณาติดต่อ HR Admin รหัสพนักงานนี้ไม่สามารถขออนุมัติได้",
+              // title: "Please Contact HR Admin!/กรุณาติดต่อ HR Admin",
             });
             return;
           }
@@ -283,11 +282,13 @@ function fn_NewEmployeeCard() {
           handleChange("txt_RecriveByEmail", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!/ไม่พบข้อมูลพนักงาน",
+            text: "User not found!/ไม่พบข้อมูลพนักงาน",
           });
           hideLoading();
         } else {
-          handleChange('Sl_PaymentStatus','CD0401')
+          if (formData1.txt_ExpensesCause > 0) {
+            handleChange("Sl_PaymentStatus", "CD0401");
+          }
           handleChange("txt_RecriveByName", res.data[0].name_surname);
           handleChange("txt_RecriveByDepartment", res.data[0].dept);
           handleChange("txt_RecriveByJobGrade", res.data[0].jobgrade);
@@ -388,28 +389,28 @@ function fn_NewEmployeeCard() {
     if (!formData1.txt_ReqbyID) {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Request By!/กรุณากรอกรหัสพนักงาน",
+        text: "Please Input Request By/กรุณากรอกรหัสพนักงาน",
       });
       return;
     }
     if (formData1.txt_Email == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Email!/กรุณากรอกอีเมล",
+        text: "Please Input Email/กรุณากรอกอีเมล",
       });
       return;
     }
     if (formData1.txt_Tel == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Input Tel/กรุณากรอกเบอร์",
+        text: "Please Input Tel/กรุณากรอกเบอร์",
       });
       return;
     }
     if (formData1.Sl_Reason == null) {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Reason!/กรุณาเลือกเหตุผล",
+        text: "Please Select Reason/กรุณาเลือกเหตุผล",
       });
       return;
     }
@@ -417,7 +418,7 @@ function fn_NewEmployeeCard() {
       if (formData1.txt_ReasonOther == "") {
         Swal.fire({
           icon: "warning",
-          title: "Please Input Reason Other!/กรุณากรอกเหตุผลอื่นๆ",
+          text: "Please Input Reason Other/กรุณากรอกเหตุผลอื่นๆ",
         });
         return;
       }
@@ -425,7 +426,7 @@ function fn_NewEmployeeCard() {
     if (formData1.Rd_SwipeCard == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Recording working time!/กรุณาเลือกการบันทึกเวลาการทำงาน!",
+        text: "Please Select Recording working time/กรุณาเลือกการบันทึกเวลาการทำงาน",
       });
       return;
     } else {
@@ -433,7 +434,7 @@ function fn_NewEmployeeCard() {
         if (formData1.Date_DayWork == "" || formData1.Date_DayWork == []) {
           Swal.fire({
             icon: "warning",
-            title: "กรุณาเลือกวันที่ไม่ได้บันทึกเวลาการทำงาน!",
+            text: "กรุณาเลือกวันที่ไม่ได้บันทึกเวลาการทำงาน",
           });
           return;
         }
@@ -442,14 +443,14 @@ function fn_NewEmployeeCard() {
     if (formData1.Rd_RecriveByCard == "") {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Recrive Card By!/กรุณาเลือกการผู้บัตร!",
+        text: "Please Select Receive Card By/กรุณาเลือกการผู้บัตร",
       });
       return;
     }
     if (formData1.Sl_Supervisor == null) {
       Swal.fire({
         icon: "warning",
-        title: "Please Select Supervisor Up!/กรุณาเลือกหัวหน้างาน!",
+        text: "Please Select Supervisor Up/กรุณาเลือกหัวหน้างาน",
       });
       return;
     }
@@ -508,7 +509,7 @@ function fn_NewEmployeeCard() {
     if (formData1.Rd_SupervisorApprove == "") {
       Swal.fire({
         icon: "warning",
-        text: "Please Select Reject Or Approve!/กรุณาเลือกการอนุมัติ!",
+        text: "Please Select Reject Or Approve/กรุณาเลือก Anprove หรือ Reject",
       });
       hideLoading();
       return;
@@ -517,7 +518,7 @@ function fn_NewEmployeeCard() {
       if (formData1.txt_SupervisorComment == "") {
         Swal.fire({
           icon: "warning",
-          text: "Please Input Comment!/กรุณากรอกความคิดเห็น!",
+          text: "Please Input Comment/กรุณากรอกความคิดเห็น",
         });
         hideLoading();
         return;
@@ -555,10 +556,10 @@ function fn_NewEmployeeCard() {
   const Bt_SubmitForHr = async (save) => {
     if (save == "Submit") {
       if (formData1.Rd_HRStatus != "CD0108") {
-        if (formData1.Rd_HRStatus == "") {
+        if (formData1.Rd_HRStatus == "" || formData1.Rd_HRStatus == null) {
           Swal.fire({
             icon: "warning",
-            title: "Please Select Status!",
+            text: "Please Select Status/กรุณาเลือกสถานะ",
           });
           return;
         }
@@ -566,7 +567,7 @@ function fn_NewEmployeeCard() {
           if (formData1.Sl_HrCondion == null) {
             Swal.fire({
               icon: "warning",
-              title: "Please Select Conditon For Close!",
+              text: "Please Select Conditon For Close/กรุณาเลือกเงื่อนไขสำหรับปิด",
             });
             return;
           }
@@ -575,7 +576,7 @@ function fn_NewEmployeeCard() {
         if (formData1.Sl_cause == null) {
           Swal.fire({
             icon: "warning",
-            title: "Please Select Reason!",
+            text: "Please Select Reason/กรุณาเลือกเหตุผล",
           });
           return;
         }
@@ -584,7 +585,7 @@ function fn_NewEmployeeCard() {
           if (formData1.Sl_causeOther == "") {
             Swal.fire({
               icon: "warning",
-              title: "Please Input Reason Other!",
+              text: "Please Input Reason Other/กรุณากรอกเหตุผลอื่น",
             });
             return;
           }
@@ -593,47 +594,47 @@ function fn_NewEmployeeCard() {
         if (formData1.txt_RecriveById == "") {
           Swal.fire({
             icon: "warning",
-            title: "Please Input Recrive By!",
+            text: "Please Input Receive By/กรุณากรอกรหัสพนักงานผู้รับ",
           });
           return;
         }
         if (formData1.txt_RecriveByEmail == "") {
           Swal.fire({
             icon: "warning",
-            title: "Please Input Email!",
+            text: "Please Input Email/กรุณากรอกอีเมล",
           });
           return;
         }
         if (formData1.txt_RecriveByTel == "") {
           Swal.fire({
             icon: "warning",
-            title: "Please Input Tel!",
+            text: "Please Input Tel/กรุณากรอกเบอร์โทรศัพท์",
           });
           return;
         }
         if (formData1.Date_RecriveDate == "") {
           Swal.fire({
             icon: "warning",
-            title: "Please Input Recrive Date!",
+            text: "Please Input Receive Date/กรุณากรอกวันที่รับ",
           });
           return;
         }
-        if (formData1.Sl_PaymentStatus == null) {
-          Swal.fire({
-            icon: "warning",
-            title: "Please Select Payment Status!",
-          });
-          return;
-        }
-        if (formData1.Sl_PaymentStatus == "CD0403") {
-          if (formData1.txt_PaymentStatusOther == "") {
-            Swal.fire({
-              icon: "warning",
-              title: "Please Input Payment Status Other!",
-            });
-            return;
-          }
-        }
+        // if (formData1.Sl_PaymentStatus == null) {
+        //   Swal.fire({
+        //     icon: "warning",
+        //     title: "Please Select Payment Status!",
+        //   });
+        //   return;
+        // }
+        // if (formData1.Sl_PaymentStatus == "CD0403") {
+        //   if (formData1.txt_PaymentStatusOther == "") {
+        //     Swal.fire({
+        //       icon: "warning",
+        //       title: "Please Input Payment Status Other!",
+        //     });
+        //     return;
+        //   }
+        // }
       }
     }
     let StatusNew = "";
@@ -1071,9 +1072,6 @@ function fn_NewEmployeeCard() {
     return strEmailFormat;
   };
 
-
-
-
   return {
     formData1,
     handleChange,
@@ -1088,7 +1086,6 @@ function fn_NewEmployeeCard() {
     Bt_SubmitForHr,
     handleStatus,
     Bt_Reset,
-    
   };
 }
 

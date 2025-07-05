@@ -30,7 +30,7 @@ const Step1 = ({
           fontWeight: "bold",
         }}
       >
-        New Refference Letter Request
+        New Reference Letter Request
         {formData1.txt_ReqNo ? (
           <>
             {" >>"} {formData1.txt_ReqNo}

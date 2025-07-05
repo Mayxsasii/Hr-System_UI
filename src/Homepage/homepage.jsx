@@ -255,7 +255,7 @@ const Login = () => {
                   color: "#F57C00",
                 }}
               >
-                Refference Letter Request
+                Reference Letter Request
               </span>
               <span className="Font_Count">
                 Total {Letter[2]?.Total || 0} Request

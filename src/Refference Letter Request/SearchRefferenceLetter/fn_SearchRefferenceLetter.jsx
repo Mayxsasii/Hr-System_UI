@@ -71,7 +71,7 @@ function fn_SearchRefferenceLetter() {
   useEffect(() => {
     GetFactory();
     GetStatus();
-    if (Path == "ApproveRefferenceLetter") {
+    if (Path == "ApproveReferenceLetter") {
       GetDepartment();
     }
     GetLetter();
@@ -84,14 +84,14 @@ function fn_SearchRefferenceLetter() {
   };
 
   const Title = async () => {
-    if (Path == "ApproveRefferenceLetter") {
-      setTitlePage("Approve Refference Letter");
-    } else if (Path == "HrActionRefferenceLetter") {
-      setTitlePage("Refference Letter Request (HR Staff Action)");
-    } else if (Path == "RefferenceLetterMasterList") {
-      setTitlePage("Refference Letter Master List");
-    } else if (Path == "RefferenceLetterReceive") {
-      setTitlePage("Refference Letter Receive");
+    if (Path == "ApproveReferenceLetter") {
+      setTitlePage("Approve Reference Letter");
+    } else if (Path == "HrActionReferenceLetter") {
+      setTitlePage("Reference Letter Request (HR Staff Action)");
+    } else if (Path == "ReferenceLetterMasterList") {
+      setTitlePage("Reference Letter Master List");
+    } else if (Path == "ReferenceLetterReceive") {
+      setTitlePage("Reference Letter Receive");
     }
   };
 
@@ -113,7 +113,7 @@ function fn_SearchRefferenceLetter() {
       })
       .then((res) => {
         setFactory(res.data);
-        if (Path == "HrActionRefferenceLetter") {
+        if (Path == "HrActionReferenceLetter") {
           setSL_Factory(res.data[0].value);
           GetDeptFac(res.data[0].value);
         }
@@ -124,13 +124,13 @@ function fn_SearchRefferenceLetter() {
     await axios
       .post("/api/RefferenceLetter/GetStatusSearch", {
         type:
-          Path == "ApproveRefferenceLetter"
+          Path == "ApproveReferenceLetter"
             ? ["A"]
-            : Path == "HrActionRefferenceLetter"
+            : Path == "HrActionReferenceLetter"
             ? ["H"]
-            : Path == "RefferenceLetterMasterList"
+            : Path == "ReferenceLetterMasterList"
             ? ["C", "R", "H", "A", "D", "F"]
-            : Path == "RefferenceLetterReceive"
+            : Path == "ReferenceLetterReceive"
             ? ["R"]
             : [],
       })
@@ -161,17 +161,17 @@ function fn_SearchRefferenceLetter() {
 
   const handleFactory = async (value) => {
     setSL_Factory(value);
-    if (Path != "ApproveRefferenceLetter") {
+    if (Path != "ApproveReferenceLetter") {
       await GetDeptFac(value);
     }
   };
 
   const handleEdit = (ReqNo) => {
-    navigate(`/HrSystem/NewRefferenceLetter?ReqNo=${ReqNo}`);
+    navigate(`/HrSystem/NewReferenceLetter?ReqNo=${ReqNo}`);
   };
 
   const handleViewMasterList = (ReqNo) => {
-    navigate(`/HrSystem/ViewRefferenceLetterList?ReqNo=${ReqNo}`);
+    navigate(`/HrSystem/ViewReferenceLetterList?ReqNo=${ReqNo}`);
   };
 
   const bt_Search = async () => {
@@ -179,7 +179,7 @@ function fn_SearchRefferenceLetter() {
       setDataSearch([]);
       setSelectedRowKeys([]);
       showLoading("กำลังค้นหา...");
-      if (Path == "ApproveRefferenceLetter") {
+      if (Path == "ApproveReferenceLetter") {
         await axios
           .post("/api/RefferenceLetter/SearchLetter", {
             dept:
@@ -206,7 +206,7 @@ function fn_SearchRefferenceLetter() {
               Swal.fire({ icon: "warning", title: "Not Found Data!/ไม่พบข้อมูล" });
             }
           });
-      } else if (Path == "RefferenceLetterReceive") {
+      } else if (Path == "ReferenceLetterReceive") {
         if (
           SL_Factory == null &&
           SL_Department == null &&
@@ -220,7 +220,7 @@ function fn_SearchRefferenceLetter() {
         ) {
           Swal.fire({
             icon: "warning",
-            title: "Please fill in the information/กรุณากรอกข้อมูลเพื่อค้นหา",
+            text: "Please fill in the information/กรุณากรอกข้อมูลเพื่อค้นหา",
           });
           hideLoading();
           return;
@@ -267,7 +267,7 @@ function fn_SearchRefferenceLetter() {
         ) {
           Swal.fire({
             icon: "warning",
-            title: "Please fill in the information/กรุณากรอกข้อมูลเพื่อค้นหา",
+            text: "Please fill in the information/กรุณากรอกข้อมูลเพื่อค้นหา",
           });
           hideLoading();
           return;
@@ -291,11 +291,11 @@ function fn_SearchRefferenceLetter() {
                 ? `array[${SL_Letter.map((Letter) => `'${Letter}'`).join(",")}]`
                 : null,
             status:
-              Path == "HrActionRefferenceLetter"
+              Path == "HrActionReferenceLetter"
                 ? Array.isArray(SL_Status) && SL_Status.length > 0
                   ? SL_Status
                   : ["LT0103", "LT0104"]
-                : Path == "RefferenceLetterMasterList"
+                : Path == "ReferenceLetterMasterList"
                 ? Array.isArray(SL_Status) && SL_Status.length > 0
                   ? SL_Status
                   : [
@@ -321,7 +321,7 @@ function fn_SearchRefferenceLetter() {
       }
       hideLoading();
     } catch (error) {
-      Swal.fire({ icon: "warning", title: error });
+      Swal.fire({ icon: "warning", text: error });
       hideLoading();
     }
   };
@@ -344,7 +344,7 @@ function fn_SearchRefferenceLetter() {
     setSL_Letter(null);
     settxt_ReqBy("");
     setSL_Department(null);
-    if (Path != "HrActionRefferenceLetter") {
+    if (Path != "HrActionReferenceLetter") {
       setSL_Factory(null);
     }
   };
@@ -352,7 +352,7 @@ function fn_SearchRefferenceLetter() {
   const handleOpenModal = () => {
     console.log(selectedRowKeys);
     if (selectedRowKeys.length <= 0) {
-      Swal.fire({ icon: "warning", title: "Please Select For Close/กรุณาเลือกข้อมูลที่ต้องการปิด" });
+      Swal.fire({ icon: "warning", text: "Please Select For Close/กรุณาเลือกข้อมูลที่ต้องการปิด" });
       return;
     }
     setIsModalOpen(true);
@@ -390,7 +390,7 @@ function fn_SearchRefferenceLetter() {
       txt_ReceiveEmail: "",
       Date_RecriveDate: DateToday2,
     });
-
+    setSelectedRowKeys([]);
     setIsModalOpen(false);
   };
 
@@ -411,7 +411,7 @@ function fn_SearchRefferenceLetter() {
           handleChange("txt_UserLogin", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!/ไม่พบข้อมูลพนักงาน",
+            text: "User not found!/ไม่พบข้อมูลพนักงาน",
           });
         } else {
           handleChange("txt_ReceiveName", res.data[0].name_surname);
@@ -489,7 +489,7 @@ function fn_SearchRefferenceLetter() {
       if (DataModal.txt_ReceiveById == "") {
         Swal.fire({
           icon: "warning",
-          text: "Please Input Receive By/โปรดกรอกรหัสพนักงานผู้รับเอกสาร",
+          text: "Please Input Receive By ID/กรุณากรอกรหัสพนักงาน",
         });
         return;
       }
@@ -510,7 +510,7 @@ function fn_SearchRefferenceLetter() {
       if (DataModal.Date_RecriveDate == null) {
         Swal.fire({
           icon: "warning",
-          text: "Please Select Recrive Date/โปรดเลือกวันที่รับเอกสาร",
+          text: "Please Select Receive Date/โปรดเลือกวันที่รับเอกสาร",
         });
         return;
       }
@@ -556,7 +556,7 @@ function fn_SearchRefferenceLetter() {
     if (dataSearch.length <= 0) {
       Swal.fire({
         icon: "warning",
-        title: "No Data Export !/ไม่พบข้อมูล!",
+        text: "No Data Export/ไม่มีข้อมูล Export!",
       });
       return;
     }
@@ -659,7 +659,7 @@ function fn_SearchRefferenceLetter() {
                 width: 28,
                 height: 28,
                 cursor: "pointer",
-                display: Path == "ApproveRefferenceLetter" ? "" : "none",
+                display: Path == "ApproveReferenceLetter" ? "" : "none",
               }}
             />
           </Tooltip>
@@ -672,7 +672,7 @@ function fn_SearchRefferenceLetter() {
                 width: 28,
                 height: 28,
                 cursor: "pointer",
-                display: Path == "RefferenceLetterReceive" ? "" : "none",
+                display: Path == "ReferenceLetterReceive" ? "" : "none",
               }}
             />
           </Tooltip>
@@ -681,7 +681,7 @@ function fn_SearchRefferenceLetter() {
               src={ImgView}
               alt="View"
               onClick={() =>
-                Path == "RefferenceLetterMasterList"
+                Path == "ReferenceLetterMasterList"
                   ? handleViewMasterList(record.ReqNo)
                   : handleEdit(record.ReqNo)
               }
@@ -690,7 +690,7 @@ function fn_SearchRefferenceLetter() {
                 height: 28,
                 marginLeft: 5,
                 cursor: "pointer",
-                display: Path == "ApproveRefferenceLetter" ? "none" : "",
+                display: Path == "ApproveReferenceLetter" ? "none" : "",
               }}
             />
           </Tooltip>

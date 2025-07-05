@@ -202,7 +202,7 @@ const Step3 = ({
         </tr>
         <tr>
           <td align="right">
-            <label>Recrive Date :</label>
+            <label>Receive Date :</label>
           </td>
           <td colSpan={2}>
             <Input

@@ -140,16 +140,16 @@ function fn_Sider() {
       window.location.href = "/HrSystem/ManPowerMasterList";
     } else if (selectedMenu.MENU_NAME === "Home") {
       window.location.href = "/HrSystem/Home";
-    } else if (selectedMenu.MENU_NAME === "Refference Letter Request") {
-      window.location.href = "/HrSystem/NewRefferenceLetter";
+    } else if (selectedMenu.MENU_NAME === "Reference Letter Request") {
+      window.location.href = "/HrSystem/NewReferenceLetter";
     }
-    else if (selectedMenu.MENU_NAME === "Approve Refference Letter") {
-      window.location.href = "/HrSystem/ApproveRefferenceLetter";
+    else if (selectedMenu.MENU_NAME === "Approve Reference Letter") {
+      window.location.href = "/HrSystem/ApproveReferenceLetter";
     }
-    else if (selectedMenu.MENU_NAME === "Refference Letter Request (HR Staff Action)") {
-      window.location.href = "/HrSystem/HrActionRefferenceLetter";
-    } else if (selectedMenu.MENU_NAME === "Refference Letter Master List") {
-      window.location.href = "/HrSystem/RefferenceLetterMasterList";
+    else if (selectedMenu.MENU_NAME === "Reference Letter Request (HR Staff Action)") {
+      window.location.href = "/HrSystem/HrActionReferenceLetter";
+    } else if (selectedMenu.MENU_NAME === "Reference Letter Master List") {
+      window.location.href = "/HrSystem/ReferenceLetterMasterList";
     }else if (selectedMenu.MENU_NAME === "Employee Card Request") {
       window.location.href = "/HrSystem/NewEmployeeCard";
     }
@@ -162,8 +162,8 @@ function fn_Sider() {
     else if (selectedMenu.MENU_NAME === "Employee Card Master List") {
       window.location.href = "/HrSystem/EmployeeCardMasterList";
     }
-    else if (selectedMenu.MENU_NAME === "Receive Refference Letter") {
-      window.location.href = "/HrSystem/RefferenceLetterReceive";
+    else if (selectedMenu.MENU_NAME === "Receive Reference Letter") {
+      window.location.href = "/HrSystem/ReferenceLetterReceive";
     }
     
   };

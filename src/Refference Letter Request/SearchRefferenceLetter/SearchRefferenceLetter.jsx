@@ -111,7 +111,7 @@ const SearchManPower = () => {
               <td style={{ width: "220px" }}>
                 <Select
                   showSearch
-                  disabled={Path == "HrActionRefferenceLetter"}
+                  disabled={Path == "HrActionReferenceLetter"}
                   value={SL_Factory}
                   style={{
                     width: "100%",
@@ -243,7 +243,7 @@ const SearchManPower = () => {
                   onChange={setSL_Status}
                 />
               </td>
-              {/* align={{alignItems:Path=='ApproveRefferenceLetter'?'':'center'}} */}
+              {/* align={{alignItems:Path=='ApproveReferenceLetter'?'':'center'}} */}
               <td colSpan={6}>
                 <Button
                   type="primary"
@@ -278,7 +278,7 @@ const SearchManPower = () => {
       >
         <div
           style={{
-            display: Path != "ApproveRefferenceLetter" ? "flex" : "none",
+            display: Path != "ApproveReferenceLetter" ? "flex" : "none",
             // border: "1px solid red",
             gap: 8,
             marginBottom: 10,
@@ -287,7 +287,7 @@ const SearchManPower = () => {
           <div style={{ width: "50%" }}>
             <Button
               style={{
-                display: Path == "HrActionRefferenceLetter" ? "flex" : "none",
+                display: Path == "HrActionReferenceLetter" ? "flex" : "none",
                 alignItems: "center",
                 gap: 6,
                 background: "rgb(188, 226, 187)",
@@ -338,7 +338,7 @@ const SearchManPower = () => {
         </div>
         <Table
           rowSelection={
-            Path === "HrActionRefferenceLetter"
+            Path === "HrActionReferenceLetter"
               ? { type: "checkbox", ...rowSelection }
               : undefined
           }
@@ -359,8 +359,8 @@ const SearchManPower = () => {
           title={
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span>
-                {Path === "RefferenceLetterReceive"
-                  ? "Refference Letter Receive"
+                {Path === "ReferenceLetterReceive"
+                  ? "Reference Letter Receive"
                   : "Hr Staff Action For Close"}
               </span>
               {/* <img
@@ -371,7 +371,7 @@ const SearchManPower = () => {
                   width: 28,
                   height: 28,
                   cursor: "pointer",
-                  display: Path == "HrActionRefferenceLetter" ? "none" : "",
+                  display: Path == "HrActionReferenceLetter" ? "none" : "",
                 }}
               /> */}
             </div>
@@ -395,7 +395,7 @@ const SearchManPower = () => {
               <Radio.Group
                 name="radiogroup"
                 value={DataModal.Rd_Status}
-                disabled={Path != "HrActionRefferenceLetter"}
+                disabled={Path != "HrActionReferenceLetter"}
                 onChange={(e) => {
                   handleChange("Rd_Status", e.target.value);
                   if (e.target.value == "LT0107") {
@@ -411,7 +411,7 @@ const SearchManPower = () => {
                 showSearch
                 disabled={
                   DataModal.Rd_Status != "LT0108" ||
-                  Path != "HrActionRefferenceLetter"
+                  Path != "HrActionReferenceLetter"
                 }
                 style={{
                   width: 360,
@@ -474,7 +474,7 @@ const SearchManPower = () => {
               <Input
                 type="date"
                 style={{ width: 220 }}
-                disabled={Path!= "HrActionRefferenceLetter"}
+                disabled={Path!= "HrActionReferenceLetter"}
                 min={new Date().toISOString().split("T")[0]}
                 value={DataModal.Date_HrConfirm}
                 onChange={(e) => handleChange("Date_HrConfirm", e.target.value)}
@@ -502,14 +502,14 @@ const SearchManPower = () => {
                 style={{ width: 580 }}
                 maxLength={2000}
                 rows={3}
-                disabled={Path != "HrActionRefferenceLetter"}
+                disabled={Path != "HrActionReferenceLetter"}
                 value={DataModal.txt_HrComment}
                 onChange={(e) => handleChange("txt_HrComment", e.target.value)}
               />
             </div>
             <div
               style={{
-                display: Path == "HrActionRefferenceLetter" ? "none" : "",
+                display: Path == "HrActionReferenceLetter" ? "none" : "",
               }}
             >
               <div
@@ -527,7 +527,7 @@ const SearchManPower = () => {
                     marginTop: 4,
                   }}
                 >
-                  Receive By :
+                  Receive By ID :
                 </label>
                 <Input
                   value={DataModal.txt_ReceiveById}
@@ -638,7 +638,7 @@ const SearchManPower = () => {
               <Button
                 type="primary"
                 onClick={
-                  Path == "RefferenceLetterReceive"
+                  Path == "ReferenceLetterReceive"
                     ? Bt_SubmitReceive
                     : Bt_SubmitHr
                 }

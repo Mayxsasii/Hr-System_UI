@@ -118,7 +118,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.Date_HrConfirmAcDate == null) {
         Swal.fire({
           icon: "warning",
-          title: "Please Select confim action date/โปรดเลือกวันที่ยืนยันการดำเนินการ",
+          text: "Please Select confim action date/โปรดเลือกวันที่ยืนยันการดำเนินการ",
         });
         hideLoading();
         return;
@@ -127,7 +127,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.txt_RecriveById == "") {
         Swal.fire({
           icon: "warning",
-          title: "Please Input Receive By/กรุณากรอกรหัสพนักงานผู้รับ",
+          text: "Please Input Receive By/กรุณากรอกรหัสพนักงานผู้รับ",
         });
         hideLoading();
         return;
@@ -135,7 +135,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.txt_RecriveByTel == "") {
         Swal.fire({
           icon: "warning",
-          title: "Please Input Tel/กรุณากรอกเบอร์โทรศัพท์",
+          text: "Please Input Tel/กรุณากรอกเบอร์โทรศัพท์",
         });
         hideLoading();
         return;
@@ -143,7 +143,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.Date_RecriveDate == null) {
         Swal.fire({
           icon: "warning",
-          title: "Please Select Recrive Date/กรุณาเลือกวันที่รับเอกสาร",
+          text: "Please Select Recrive Date/กรุณาเลือกวันที่รับเอกสาร",
         });
         hideLoading();
         return;
@@ -155,7 +155,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
       if (formData1.Sl_HrCondion == "") {
         Swal.fire({
           icon: "warning",
-          title: "Please Select Condition Close/กรุณาเลือกเงื่อนไขการปิด",
+          text: "Please Select Condition Close/กรุณาเลือกเงื่อนไขการปิด",
         });
         hideLoading();
         return;
@@ -200,7 +200,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
         icon: "success",
         title: "Submit Success",
       }).then(async () => {
-        window.location.href = "/HrSystem/HrActionRefferenceLetter";
+        window.location.href = "/HrSystem/HrActionReferenceLetter";
       });
     } else {
       if (formData1.txt_ReqStatusValue == "LT0103") {
@@ -328,7 +328,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;width:120px ">System :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Refference Letter</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Reference Letter</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>

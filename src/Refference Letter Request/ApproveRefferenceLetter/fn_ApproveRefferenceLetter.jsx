@@ -45,7 +45,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       } else {
         Swal.fire({
           icon: "warning",
-          title: "Unable to request documents/ไม่สามารถขอเอกสารได้",
+          text: "Unable to request documents/ไม่สามารถขอเอกสารได้",
         });
         return;
       }
@@ -74,7 +74,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       if (formData1.CB_letterType.length == 0) {
         Swal.fire({
           icon: "warning",
-          title: "Please Select Letter Type/กรุณาเลือกประเภทเอกสาร",
+          text: "Please Select Letter Type/กรุณาเลือกประเภทเอกสาร",
         });
         hideLoading();
         return;
@@ -111,7 +111,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
           if (formData1.Date_Resignation == null) {
             Swal.fire({
               icon: "warning",
-              title: "กรุณากรอกวันที่ลาออกจากบริษัท",
+              text: "กรุณากรอกวันที่ลาออกจากบริษัท",
             });
             hideLoading();
             return;
@@ -121,7 +121,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
           if (formData1.txt_LetterOther == "") {
             Swal.fire({
               icon: "warning",
-              title: "กรุณากรอกเอกสารที่ต้องการอื่นๆ",
+              text: "กรุณากรอกเอกสารที่ต้องการอื่นๆ",
             });
             hideLoading();
             return;
@@ -132,7 +132,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       if (formData1.Sl_Supervisor == null) {
         Swal.fire({
           icon: "warning",
-          title: "Please Select Supervisor Up/กรุณาเลือกหัวหน้างาน",
+          text: "Please Select Supervisor Up/กรุณาเลือกหัวหน้างาน",
         });
         hideLoading();
         return;
@@ -237,7 +237,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
     if (formData1.Rd_SupervisorApprove == null) {
       Swal.fire({
         icon: "warning",
-        title: "Please Approve or Reject/กรุณาอนุมัติหรือไม่อนุมัติ",
+        text : "Please Approve or Reject/กรุณาเลือก Approve หรือ Reject",
       });
       hideLoading();
       return;
@@ -249,7 +249,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       ) {
         Swal.fire({
           icon: "warning",
-          title: "Please Input Comment/กรุณากรอกความคิดเห็น",
+          text: "Please Input Comment/กรุณากรอกความคิดเห็น",
         });
         hideLoading();
         return;
@@ -277,7 +277,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       icon: "success",
       title: "Submit Success",
     }).then(() => {
-      window.location.href = "/HrSystem/ApproveRefferenceLetter";
+      window.location.href = "/HrSystem/ApproveReferenceLetter";
     });
     hideLoading();
   };
@@ -467,7 +467,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;width:120px ">System :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Refference Letter</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Reference Letter</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
@@ -569,7 +569,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;width:120px ">System :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Refference Letter</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Reference Letter</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>

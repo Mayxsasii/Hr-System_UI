@@ -28,7 +28,7 @@ const RefferenceLetterMasterList = ({}) => {
             fontWeight: "bold",
           }}
         >
-          Refference Letter Request
+          Reference Letter Request
           {formData1.txt_ReqNo ? (
             <>
               {" >>"} {formData1.txt_ReqNo}

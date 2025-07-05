@@ -15,6 +15,7 @@ function fn_NewRefferenceLetter(formData1, setFormData1, Disable, setDisable) {
       })
       .then((res) => {
         console.log(res.data, "GetDataPerson");
+        handleChange("CB_letterType", []);
         if (res.data.length === 0) {
           handleChange("txt_Userlogin", '');
           handleChange("txt_ReqbyID", "");
@@ -28,7 +29,7 @@ function fn_NewRefferenceLetter(formData1, setFormData1, Disable, setDisable) {
           handleChange("txt_Email", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!/ไม่พบพนักงาน",
+            text: "User not found/ไม่พบข้อมูลพนักงาน",
             // text: "User not found!",
           });
         } else {
