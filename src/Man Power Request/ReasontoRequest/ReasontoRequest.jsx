@@ -754,7 +754,8 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
 >
   <Button
     disabled={Disable.ButtonSUB_ADD}
-    type="primary"
+    variant="solid"
+    color="cyan"
     style={{
       marginRight: "30px",
       display:
@@ -1378,7 +1379,8 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
 
 <Button
           disabled={Disable.ButtonADD_ADD}
-          type="primary"
+           variant="solid"
+    color="cyan"
           style={{
             marginRight: "30px",
             display:

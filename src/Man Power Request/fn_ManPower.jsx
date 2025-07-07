@@ -1007,12 +1007,12 @@ function fn_ManPower() {
   }));
 
   const contentStyle = {
-    padding: "10px",
+     // padding: "10px",
     backgroundColor: token.colorFillAlter,
     borderRadius: token.borderRadiusLG,
     border: `1px dashed ${token.colorBorder}`,
-    marginTop: 30,
-    marginRight: 10,
+    // marginTop: 30,
+    // marginRight: 10,
   };
 
   const handleChange = (field, value) => {

@@ -198,7 +198,7 @@ const Step1 = ({
           <td>
             <Input
             disabled={formData1.txt_ReqStatusValue!='LT0101'}
-              placeholder="เบอร์ภายใน/Tel :"
+              // placeholder="เบอร์ภายใน/Tel :"
               value={formData1.txt_Tel}
               // style={{ width: "80px" }}
               onChange={(e) => handleChange("txt_Tel", e.target.value)}

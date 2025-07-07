@@ -88,7 +88,7 @@ function fn_HrActionRefferenceLetter(formData1, setFormData1) {
           handleChange("txt_RecriveByEmail", "");
           Swal.fire({
             icon: "warning",
-            title: "User not found!/ไม่พบพนักงงาน",
+            title: "User not found/ไม่พบพนักงงาน",
           });
         } else {
           handleChange("txt_RecriveByName", res.data[0].name_surname);

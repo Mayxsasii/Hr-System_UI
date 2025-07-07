@@ -31,8 +31,8 @@ function fn_RefferenceLetterMasterList() {
     txt_Tel: "",
     //step2.1
     CB_letterType: [],
-     txt_LetterThai: '0',
-    txt_LetterEng: '0',
+    txt_LetterThai: "0",
+    txt_LetterEng: "0",
     Date_Resignation: null,
     txt_LetterOther: "",
     txt_Remark: "",
@@ -179,7 +179,7 @@ function fn_RefferenceLetterMasterList() {
           handleChange("txt_HrActionDate", "");
         }
       });
-       await axios
+    await axios
       .post("/api/RefferenceLetter/GetLetterType", {
         ReqNo: ReqNo,
       })
@@ -196,14 +196,21 @@ function fn_RefferenceLetterMasterList() {
           if (res.data[i].LetterType == "LT0205") {
             handleChange("txt_LetterOther", res.data[i].LetterDetail);
           }
-           if (res.data[i].LetterType == "LT0201") {
+          if (res.data[i].LetterType == "LT0201") {
             if (res.data[i].Thai) {
               handleChange("txt_LetterThai", res.data[i].Thai);
             }
             if (res.data[i].Eng) {
               handleChange("txt_LetterEng", res.data[i].Eng);
             }
-            
+          }
+          if (res.data[i].LetterType == "LT0202") {
+            if (res.data[i].Thai) {
+              handleChange("txt_WorkCerThai", res.data[i].Thai);
+            }
+            if (res.data[i].Eng) {
+              handleChange("txt_WorkCerEng", res.data[i].Eng);
+            }
           }
         }
         handleChange("CB_letterType", data);

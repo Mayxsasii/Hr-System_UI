@@ -58,6 +58,7 @@ function fn_SearchRefferenceLetter() {
     Date_HrConfirm: DateToday2,
     txt_HrComment: "",
     //Receive
+    allData: [],
     txt_ReceiveById: "",
     txt_ReceiveName: "",
     txt_UserLogin: "",
@@ -200,10 +201,14 @@ function fn_SearchRefferenceLetter() {
             status: ["LT0102"],
           })
           .then((res) => {
+            console.log(res.data, "SearchLetter");
             if (res.data.length > 0) {
               setDataSearch(res.data);
             } else {
-              Swal.fire({ icon: "warning", title: "Not Found Data!/ไม่พบข้อมูล" });
+              Swal.fire({
+                icon: "warning",
+                title: "Not Found Data/ไม่พบข้อมูล",
+              });
             }
           });
       } else if (Path == "ReferenceLetterReceive") {
@@ -250,7 +255,10 @@ function fn_SearchRefferenceLetter() {
               console.log(res.data, "SearchLetter");
               setDataSearch(res.data);
             } else {
-              Swal.fire({ icon: "warning", title: "Not Found Data!/ไม่พบข้อมูล" });
+              Swal.fire({
+                icon: "warning",
+                title: "Not Found Data/ไม่พบข้อมูล",
+              });
             }
           });
       } else {
@@ -315,7 +323,10 @@ function fn_SearchRefferenceLetter() {
             if (res.data.length > 0) {
               setDataSearch(res.data);
             } else {
-              Swal.fire({ icon: "warning", title: "Not Found Data!/ไม่พบข้อมูล" });
+              Swal.fire({
+                icon: "warning",
+                title: "Not Found Data/ไม่พบข้อมูล",
+              });
             }
           });
       }
@@ -350,9 +361,12 @@ function fn_SearchRefferenceLetter() {
   };
 
   const handleOpenModal = () => {
-    console.log(selectedRowKeys);
+    console.log(selectedRowKeys, "selectedRowKeys");
     if (selectedRowKeys.length <= 0) {
-      Swal.fire({ icon: "warning", text: "Please Select For Close/กรุณาเลือกข้อมูลที่ต้องการปิด" });
+      Swal.fire({
+        icon: "warning",
+        text: "Please Select For Close/กรุณาเลือกข้อมูลที่ต้องการปิด",
+      });
       return;
     }
     setIsModalOpen(true);
@@ -360,6 +374,7 @@ function fn_SearchRefferenceLetter() {
 
   const handleOpenModalReceive = (record) => {
     console.log(record, "handleOpenModalReceive");
+    handleChange("allData", record);
     handleChange("Rd_Status", record.Hr_Status);
     handleChange("Sl_ConditonClose", record.Hr_Condition);
     handleChange("txt_HrBy", record.Hr_By);
@@ -411,7 +426,7 @@ function fn_SearchRefferenceLetter() {
           handleChange("txt_UserLogin", "");
           Swal.fire({
             icon: "warning",
-            text: "User not found!/ไม่พบข้อมูลพนักงาน",
+            text: "User not found/ไม่พบข้อมูลพนักงาน",
           });
         } else {
           handleChange("txt_ReceiveName", res.data[0].name_surname);
@@ -451,7 +466,8 @@ function fn_SearchRefferenceLetter() {
 
       showLoading("กำลังบันทึก...");
       for (let i = 0; i < selectedRowKeys.length; i++) {
-        let ReqNo = selectedRowKeys[i];
+        let ReqNo = selectedRowKeys[i].ReqNo;
+        console.log(selectedRowKeys, "ReqNo");
         await axios
           .post("/api/RefferenceLetter/UpdateHrStaff", {
             status: status,
@@ -465,6 +481,10 @@ function fn_SearchRefferenceLetter() {
           .then((res) => {
             console.log("UpdateHrStaff", res.data);
           });
+       if (DataModal.Rd_Status == "LT0108") {
+        await GetDatamailSend(selectedRowKeys[i]);
+       }
+       
       }
 
       hideLoading();
@@ -514,6 +534,7 @@ function fn_SearchRefferenceLetter() {
         });
         return;
       }
+
       await axios
         .post("/api/RefferenceLetter/UpdateRecieve", {
           receive_by: DataModal.txt_UserLogin,
@@ -530,8 +551,9 @@ function fn_SearchRefferenceLetter() {
       Swal.fire({
         icon: "success",
         title: "Submit Success",
-      }).then(() => {
+      }).then(async () => {
         handleCloseModal();
+        await GetDatamailSend(DataModal.allData);
         bt_Search();
       });
     } catch (error) {
@@ -636,10 +658,208 @@ function fn_SearchRefferenceLetter() {
     saveAs(blob, "Employee Card Request.xlsx");
   };
 
+  const GetDatamailSend = async (Data) => {
+    let strSubject = "";
+    let Usermail = [];
+    let Dear = "All Concern";
+    let ReqNo = Data.ReqNo || "";
+    // let Data;
+    let Userlogin = "";
+    let Sv_By = Data.Sv_By || "";
+    if (Path === "ReferenceLetterReceive") {
+      Userlogin = DataModal.txt_UserLogin;
+      strSubject = `Letter Request : (${ReqNo}) Close`;
+    } else {
+       Userlogin = userlogin
+       strSubject = `Letter Request : (${ReqNo}) Close By Condition`;
+      // return;
+    }
+    await axios
+      .post("/api/Common/GetEmailUser", {
+        user: Sv_By || "",
+        formenu: "LETTER",
+      })
+      .then((res) => {
+        console.log("GetEmailSend", res.data);
+        if (res.data.length > 0) {
+          Usermail = res.data;
+        }
+      });
+
+    const fomathtml = await fomatmail(Dear, Data, Userlogin);
+    console.log(fomathtml, "nnnnnnnnnn");
+    Usermail.forEach((user) => {
+      console.log(user.User, "GetEmailSend", user.Email);
+
+      SendEmail(user.Email, strSubject, fomathtml);
+    });
+  };
+
+  const SendEmail = async (Email, strSubject, fomathtml) => {
+    console.log(Email, "SendEmail", strSubject, fomathtml);
+    await axios
+      .post("/api/Common/EmailSend", {
+        strSubject: strSubject,
+        strEmailFormat: fomathtml,
+        strEmail: Email,
+      })
+      .then((res) => {
+        console.log(res.data, "EmailSend");
+      });
+  };
+
+  const fomatmail = async (Dear, Data, User) => {
+    console.log(Data, "fomatmail");
+    let TargetDate = Data.Target_Date;
+    const formattedRemark = Data.ReqRemark.replace(/(.{60})/g, "$1<br>");
+    const formattedComment = (DataModal.txt_HrComment || "").replace(
+      /(.{60})/g,
+      "$1<br>"
+    );
+    const name = Data.ReqBy.split(":")[1]?.trim() || "";
+    let status = "";
+    if (Path == "ReferenceLetterReceive") {
+      status = "Close";
+    } else {
+      status = "Close By Condition";
+    }
+    let strEmailFormat = `
+      <!DOCTYPE html>
+        <html lang="en">
+        
+                <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f9;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #dddddd; background-color: #ffffff;">
+        <!-- Header -->
+        <tr>
+        <td align="center" bgcolor="#5F99AE" style="padding: 20px; color: #ffffff; font-size: 24px; font-weight: bold;">
+                                HR Online System Notification
+        </td>
+        </tr>
+        <!-- Content -->
+        <tr>
+        <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+        <p>Dear ${Dear} ,</p>
+        <p>
+                                  This Request creates as follow : ${name}
+        </p>
+        <!-- Details -->
+        <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
+        <tr>
+        <td  style="font-size: 20px; color: #555555; font-weight: bold;width:120px " colspan="2" >
+        <p><strong>รายละเอียด :</strong></p>
+        </td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;width:120px ">System :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">HR Online >> Reference Letter</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          Data.ReqNo
+        }</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          Data.Factory
+        }</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          Data.Dept
+        }</td>
+        </tr>
+
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Target Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${TargetDate}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${name}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          Data.ReqDate
+        }</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${name}</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          Data.ReqDate
+        }</td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left; ">
+            ${formattedRemark}
+        </td>
+        </tr>
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action By :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${User}</td>
+        </tr>
+                  <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Date :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${DateToday}</td>
+        </tr>
+         ${
+           Path != "ReferenceLetterReceive"
+             ? `
+        <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formattedComment || ""
+        }</td>
+        </tr>
+        `
+             : ""
+         }
+                  <tr>
+        <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${status}</td>
+        </tr>
+        </table>
+        <p>
+                                    กรุณาตรวจสอบข้อมูลผ่านระบบของคุณ และดำเนินการต่อให้เรียบร้อย
+        </p>
+        <!-- Button -->
+        <table align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
+        <tr>
+        <td align="center" bgcolor="#5F99AE" style="padding: 12px 25px; border-radius: 5px;">
+        <a href="http://10.17.100.183:4006/HrSystem/Home" style="text-decoration: none; color: #ffffff; font-size: 16px; font-weight: bold; display: inline-block;">
+                                ตรวจสอบรายการ
+        </a>
+        </td>
+        </tr>
+        </table>
+        </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+        <td align="center" bgcolor="#e4e4e7" style="padding: 15px; font-size: 12px; color: #777777;">
+                                                    Best Regards,<br/>
+                                © 2025 Fujikura Electronics (Thailand) Ltd. All rights reserved.
+        </td>
+        </tr>
+        </table>
+        </body>
+        </html>
+      `;
+    return strEmailFormat;
+  };
+
   const rowSelection = {
-    selectedRowKeys,
+    selectedRowKeys: selectedRowKeys.map((row) => row.ReqNo),
     onChange: (newSelectedRowKeys, selectedRows) => {
-      setSelectedRowKeys(newSelectedRowKeys);
+      setSelectedRowKeys(selectedRows); // เก็บทั้ง object array
     },
   };
 

@@ -213,7 +213,7 @@ function fn_SearchEmpcard() {
             })
             .then((res) => {
               if (res.data.length === 0) {
-                Swal.fire({ icon: "warning", text: "Not Found Data!/ไม่พบข้อมูล!" });
+                Swal.fire({ icon: "warning", text: "Not Found Data/ไม่พบข้อมูล!" });
                 setDataSearch([]);
               } else {
                 setDataSearch(res.data);
@@ -243,7 +243,7 @@ function fn_SearchEmpcard() {
           })
           .then((res) => {
             if (res.data.length === 0) {
-              Swal.fire({ icon: "warning", text: "Not Found Data!/ไม่พบข้อมูล!" });
+              Swal.fire({ icon: "warning", text: "Not Found Data/ไม่พบข้อมูล!" });
               setDataSearch([]);
             } else {
               setDataSearch(res.data);
@@ -396,7 +396,7 @@ function fn_SearchEmpcard() {
     if (dataSearch.length <= 0) {
        Swal.fire({
             icon: "warning",
-            text: "No Data Export!/ไม่พบข้อมูล!",
+            text: "No Data Export/ไม่พบข้อมูล!",
           });
       return;
     }

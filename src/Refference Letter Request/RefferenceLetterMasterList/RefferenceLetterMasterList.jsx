@@ -234,6 +234,26 @@ const RefferenceLetterMasterList = ({}) => {
                         <label style={{ marginLeft: "10px" }}>ฉบับ</label>
                       </>
                     )}
+                    {option.value === "LT0202" && (
+                      <>
+                        <label style={{ marginLeft: "30px" }}>ภาษาไทย</label>
+                        <Input
+                          type="text"
+                          disabled
+                          style={{ marginLeft: "10px", width: "40px" }}
+                          value={formData1.txt_WorkCerThai}
+                        />
+                        <label style={{ marginLeft: "10px" }}>ฉบับ</label>
+                        <label style={{ marginLeft: "40px" }}>ภาษาอังกฤษ</label>
+                        <Input
+                          type="text"
+                          disabled
+                          style={{ marginLeft: "10px", width: "40px" }}
+                          value={formData1.txt_WorkCerEng}
+                        />
+                        <label style={{ marginLeft: "10px" }}>ฉบับ</label>
+                      </>
+                    )}
                   </>
                 )}
               </div>

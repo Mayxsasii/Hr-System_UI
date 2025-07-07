@@ -238,14 +238,26 @@ const SearchEmpCard = () => {
       >
         <div
           style={{
-            display: String(ROLL).split(",").includes("'248'")
-              ? "Flex"
-              : "none",
+            display: "Flex",
             justifyContent: "flex-end",
             marginBottom: "10px",
           }}
         >
-          <Button onClick={exportToExcel}>
+          <Button
+            onClick={exportToExcel}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              display: String(ROLL).split(",").includes("'248'")
+                ? "Flex"
+                : "none",
+              gap: 6,
+              background: "#4F9EDB",
+              border: "none",
+              fontWeight: 500,
+            }}
+            type="primary"
+          >
             <img src={ImgExcel} alt="Export" style={{ width: "16px" }} />
             Export
           </Button>

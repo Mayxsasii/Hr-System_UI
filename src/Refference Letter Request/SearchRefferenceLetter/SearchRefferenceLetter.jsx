@@ -336,6 +336,7 @@ const SearchManPower = () => {
             </Button>
           </div>
         </div>
+     
         <Table
           rowSelection={
             Path === "HrActionReferenceLetter"

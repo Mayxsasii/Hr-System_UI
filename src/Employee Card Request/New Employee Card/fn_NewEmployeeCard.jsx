@@ -229,7 +229,7 @@ function fn_NewEmployeeCard() {
           handleChange("txt_Email", "");
           Swal.fire({
             icon: "warning",
-            text: "User not found!/ไม่พบข้อมูลพนักงาน",
+            text: "User not found/ไม่พบข้อมูลพนักงาน",
           });
           hideLoading();
         } else {
@@ -247,7 +247,7 @@ function fn_NewEmployeeCard() {
             Swal.fire({
               icon: "warning",
               text: "Please Contact HR Admin This Employee code cannot be approved/กรุณาติดต่อ HR Admin รหัสพนักงานนี้ไม่สามารถขออนุมัติได้",
-              // title: "Please Contact HR Admin!/กรุณาติดต่อ HR Admin",
+             
             });
             return;
           }
@@ -282,7 +282,7 @@ function fn_NewEmployeeCard() {
           handleChange("txt_RecriveByEmail", "");
           Swal.fire({
             icon: "warning",
-            text: "User not found!/ไม่พบข้อมูลพนักงาน",
+            text: "User not found/ไม่พบข้อมูลพนักงาน",
           });
           hideLoading();
         } else {

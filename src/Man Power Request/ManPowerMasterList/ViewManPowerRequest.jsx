@@ -7,6 +7,7 @@ import {
   Select,
   DatePicker,
   Radio,
+  Card,
 } from "antd";
 import {
   UploadOutlined,
@@ -32,14 +33,20 @@ const ViewManPowerRequest = ({}) => {
   } = fn_ManPowerMasterList();
   return (
     <>
-      <div
+      <Card
         style={{
           padding: "10px",
-          backgroundColor: token.colorFillAlter,
-          borderRadius: token.borderRadiusLG,
-          border: `1px dashed ${token.colorBorder}`,
-          marginTop: 30,
-          marginRight: 10,
+          // backgroundColor: token.colorFillAlter,
+          // borderRadius: token.borderRadiusLG,
+          // border: `1px dashed ${token.colorBorder}`,
+          margin: 30,
+          // marginRight: 10,
+          // maxWidth: "1300px",
+          // margin: "0 auto",
+          // marginLeft: "20px",
+          // padding: "20px",
+          borderRadius: "10px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
         <p
@@ -58,7 +65,15 @@ const ViewManPowerRequest = ({}) => {
             ""
           )}
         </p>
-        <table style={{ marginTop: "10px", marginLeft: "10px" }}>
+        <div
+          style={{
+            padding: "20px",
+            backgroundColor: "#fff",
+            borderRadius: "10px",
+            borderRadius: token.borderRadiusLG,
+            border: `2 px dashed ${token.colorBorder}`,
+          }}
+        >     <table style={{ marginTop: "10px", marginLeft: "10px" }}>
           <tr>
             <td style={{ textAlign: "right" }}>Factory :</td>
             <td>
@@ -1669,8 +1684,8 @@ const ViewManPowerRequest = ({}) => {
               />
             </div>
           </div>
-        ))}
-      </div>
+        ))}</div>
+      </Card>
     </>
   );
 };
