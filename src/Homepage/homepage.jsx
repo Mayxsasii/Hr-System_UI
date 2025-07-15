@@ -47,7 +47,7 @@ const Login = () => {
                 Man Power Request
               </span>
               <span className="Font_Count">
-                Total {ManPower[5]?.Total || 0} Request
+                Total {ManPower[7]?.Total || 0} Request
               </span>
             </div>
         
@@ -509,7 +509,8 @@ const Login = () => {
                 }}
                 className="Font_Title"
               >
-                Man Power Request
+               Stationery Purchasing Order Request
+
               </span>
               <span className="Font_Count">Total 10 Request</span>
             </div>
@@ -644,7 +645,7 @@ const Login = () => {
                   color: "#D32F2F",
                 }}
               >
-                Man Power Request
+                Safty Shoes Request
               </span>
               <span className="Font_Count">Total 10 Request</span>
             </div>

@@ -33,6 +33,8 @@ function fn_RefferenceLetterMasterList() {
     CB_letterType: [],
     txt_LetterThai: "0",
     txt_LetterEng: "0",
+    txt_WorkCerThai: "0",
+    txt_WorkCerEng: "0",
     Date_Resignation: null,
     txt_LetterOther: "",
     txt_Remark: "",
