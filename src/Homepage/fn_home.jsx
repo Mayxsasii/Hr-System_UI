@@ -21,6 +21,7 @@ function fn_home() {
         Fac:Fac||''
       })
       .then((res) => {
+        console.log("ManPower", res.data);
         setManPower(res.data);
       });
 
@@ -46,10 +47,14 @@ function fn_home() {
       });
   };
   const GoPathManPower = (value, count) => {
-    if (count > 0) {
-      if (value === "1") {
+     if (value === "1") {
+      if(String(Roll).split(",").includes("'241'")){
         window.location.href = "/HrSystem/ManPowerRequest";
-      } else if (value === "2") {
+      }
+      
+      } 
+    if (count > 0) {
+      if (value === "2") {
         window.location.href = "/HrSystem/ApproveManPower";
       } else if (value === "3") {
         window.location.href = "/HrSystem/HrActionManPowerRequest";
@@ -85,7 +90,7 @@ function fn_home() {
       }
     }
   };
-  return { ManPower, GoPathManPower,GoPathLetter,Letter,GoPathEmpCard,EmpCard};
+  return { ManPower, GoPathManPower,GoPathLetter,Letter,GoPathEmpCard,EmpCard,Roll};
 }
 
 export { fn_home };

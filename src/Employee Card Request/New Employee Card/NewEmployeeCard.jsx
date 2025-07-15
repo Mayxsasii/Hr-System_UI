@@ -164,9 +164,9 @@ const RefferenceLetterMasterList = ({}) => {
               </td>
               <td colSpan={3}>
                 <Input
-                  disabled={!["CD0101"].includes(formData1.txt_ReqStatusValue)}
+                  disabled
                   value={formData1.txt_Email}
-                  onChange={(e) => handleChange("txt_Email", e.target.value)}
+                  // onChange={(e) => handleChange("txt_Email", e.target.value)}
                 />
               </td>
 

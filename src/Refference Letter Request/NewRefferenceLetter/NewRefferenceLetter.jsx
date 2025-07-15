@@ -173,9 +173,9 @@ const Step1 = ({
           </td>
           <td colSpan={3}>
             <Input
-            disabled={formData1.txt_ReqStatusValue!='LT0101'}
+              disabled
               value={formData1.txt_Email}
-              onChange={(e) => handleChange("txt_Email", e.target.value)}
+              // onChange={(e) => handleChange("txt_Email", e.target.value)}
             />
           </td>
           <td align="right" style={{ width: "170px" }}>

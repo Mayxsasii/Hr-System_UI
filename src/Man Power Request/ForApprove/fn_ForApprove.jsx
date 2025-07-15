@@ -19,6 +19,8 @@ function fn_ForApprove(
   const [Factory, setFactory] = useState([]);
   const [DepartmentManager, setDepartmentManager] = useState([]);
   const [FMGM, setFMGM] = useState([]);
+  const [COO, setCOO] = useState([]);
+  const [CEO, setCEO] = useState([]);
   const [HrManager, setHrManager] = useState([]);
   const today = new Date();
   const DateToday = `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -30,6 +32,8 @@ function fn_ForApprove(
     GetFMDM();
     GetHrManager();
     GetFactory();
+    GetCOO();
+    GetCEO();
     // SendEmail();
   }, []);
 
@@ -54,6 +58,33 @@ function fn_ForApprove(
       .then((res) => {
         if (res.data.length > 0) {
           setDepartmentManager(res.data);
+        }
+      });
+  };
+
+  const GetCOO = async () => {
+    await axios
+      .post("/api/RequestManPower/GetCOO", {
+        factory: formData1.SL_Factory,
+      })
+      .then((res) => {
+        if (res.data.length > 0) {
+          setCOO(res.data);
+          console.log(res.data, "COO Data");
+          handleChange("SL_Chief", res.data[0].value);
+        }
+      });
+  };
+
+  const GetCEO = async () => {
+    await axios
+      .post("/api/RequestManPower/GetCEO", {
+        factory: formData1.SL_Factory,
+      })
+      .then((res) => {
+        if (res.data.length > 0) {
+          setCEO(res.data);
+           handleChange("SL_President", res.data[0].value);
         }
       });
   };
@@ -110,8 +141,10 @@ function fn_ForApprove(
         FileNameServer_Add,
         SL_DepartmentManager,
         SL_FMGM,
+        SL_Chief,
+        SL_President,
         SL_HRManager,
-        SL_Position
+        SL_Position,
       } = formData1;
 
       await axios
@@ -421,11 +454,12 @@ function fn_ForApprove(
           DeptBy: SL_DepartmentManager || "",
           FMGMBy: SL_FMGM || "",
           HRMBy: SL_HRManager || "",
+          CEOBy: SL_Chief || "",
+          COOBy: SL_President || "",
           UpdateBy: datauser.LOGIN || "",
           Position: SL_Position || "",
         })
-        .then((res) => {
-         });
+        .then((res) => {});
       Swal.fire({
         icon: "success",
         title: "Save Success",
@@ -535,9 +569,21 @@ function fn_ForApprove(
       }
     } else if (status === "MR0103") {
       if (formData1.CB_FMGMApprove == "A") {
-        statusNext = "MR0104";
+        statusNext = "MR0109";
       } else {
         statusNext = "MR0139";
+      }
+    } else if (status === "MR0109") {
+      if (formData1.CB_ChiefApprove == "A") {
+        statusNext = "MR0110";
+      } else {
+        statusNext = "MR0119";
+      }
+    } else if (status === "MR0110") {
+      if (formData1.CB_PresidentApprove == "A") {
+        statusNext = "MR0104";
+      } else {
+        statusNext = "MR0199";
       }
     } else if (status === "MR0104") {
       if (formData1.CB_HRManagerApprove == "A") {
@@ -721,8 +767,10 @@ function fn_ForApprove(
         FileNameServer_Add,
         SL_DepartmentManager,
         SL_FMGM,
+        SL_Chief,
+        SL_President,
         SL_HRManager,
-        SL_Position
+        SL_Position,
       } = formData1;
 
       console.log("กำลัง SendApprove");
@@ -1037,6 +1085,9 @@ function fn_ForApprove(
           Add_FilenameServer: FileNameServer_Add || "",
           DeptBy: SL_DepartmentManager || "",
           FMGMBy: SL_FMGM || "",
+          
+          COOBy:  SL_Chief|| "",
+          CEOBy:  SL_President|| "",
           HRMBy: SL_HRManager || "",
           UpdateBy: datauser.LOGIN || "",
           Position: SL_Position || "",
@@ -1058,7 +1109,7 @@ function fn_ForApprove(
       Swal.fire({
         icon: "success",
         title: "Save Success",
-      }).then(async() => {
+      }).then(async () => {
         await GetmailSend();
         if (formData1.StatusType == "R" || formData1.StatusType == "C") {
           window.location.href = "/HrSystem/ManPowerRequest";
@@ -1067,7 +1118,6 @@ function fn_ForApprove(
             icon: "success",
             title: "Save Success",
           }).then(() => {
-
             window.location.href = "/HrSystem/ApproveManPower";
           });
         }
@@ -1162,10 +1212,19 @@ function fn_ForApprove(
         .post("/api/RequestManPower/UpdateApprove", {
           DeptFlg: formData1.CB_DepartmentApprove || "",
           DeptComment: formData1.txt_CommentDepartmentmanager || "",
+
           FMGMFlg: formData1.CB_FMGMApprove || "",
           FMGMComment: formData1.txt_CommentFMGM || "",
+
+          COOFlg: formData1.CB_PresidentApprove || "",
+          COOComment: formData1.txt_CommentChief || "",
+
+          CEOFlg: formData1.CB_PresidentApprove || "",
+          CEOComment: formData1.txt_CommentPresident || "",
+
           HrFlg: formData1.CB_HRManagerApprove || "",
           HrComment: formData1.txt_CommentHRManager || "",
+
           status: formData1.ID_Status,
           ReqNo: formData1.txt_ReqNo,
           statusNext: statusNext,
@@ -1177,13 +1236,12 @@ function fn_ForApprove(
       Swal.fire({
         icon: "success",
         title: "Submit Success",
-      }).then(async() => {
+      }).then(async () => {
         await GetmailSend();
         if (formData1.StatusType == "R" || formData1.StatusType == "C") {
           window.location.href = "/HrSystem/ManPowerRequest";
         } else {
           window.location.href = "/HrSystem/ApproveManPower";
-          // SendEmail();
         }
       });
       hideLoading();
@@ -1203,12 +1261,11 @@ function fn_ForApprove(
         await axios
           .post("/api/Common/GetEmailHrStaff", {
             Fac: formData1.SL_Factory,
-            formenu:'MAN POWER'
+            formenu: "MAN POWER",
           })
           .then((res) => {
             console.log(res.data, "GetEmailHrStaff");
             if (res.data.length > 0) {
-          
               res.data.forEach((user) => {
                 SendEmail(user.User, user.Email); // ส่งอีเมลไปยังแต่ละคน
               });
@@ -1219,11 +1276,13 @@ function fn_ForApprove(
           formData1.txt_ReqBy,
           formData1.SL_DepartmentManager,
           formData1.SL_FMGM,
+          formData1.SL_Chief,
+          formData1.SL_President,
         ];
         await axios
           .post("/api/Common/GetEmailUser", {
             user: Usermail,
-             formenu:'MAN POWER'
+            formenu: "MAN POWER",
           })
           .then((res) => {
             if (res.data.length > 0) {
@@ -1248,19 +1307,41 @@ function fn_ForApprove(
         } else {
           Usermail = [formData1.txt_ReqBy];
         }
+      }else if (status === "MR0102") {
+        if (formData1.CB_DepartmentApprove === "A") {
+          Usermail = [formData1.SL_FMGM];
+        } else {
+          Usermail = [formData1.txt_ReqBy];
+        }
       } else if (status === "MR0103") {
         if (formData1.CB_FMGMApprove === "A") {
-          Usermail = [formData1.SL_HRManager];
+          Usermail = [formData1.SL_Chief];
         } else {
           Usermail = [formData1.txt_ReqBy, formData1.SL_DepartmentManager];
         }
-      } else if (status === "MR0105" || status === "MR0106") {
+        
+      } else if (status === "MR0109") {
+        if (formData1.CB_ChiefApprove === "A") {
+          Usermail = [formData1.SL_President];
+        } else {
+          Usermail = [formData1.txt_ReqBy, formData1.SL_DepartmentManager, formData1.SL_FMGM];
+        }
+        
+      }
+      else if (status === "MR0110") {
+        if (formData1.CB_PresidentApprove === "A") {
+          Usermail = [formData1.SL_HRManager];
+        } else {
+          Usermail = [formData1.txt_ReqBy, formData1.SL_DepartmentManager, formData1.SL_FMGM, formData1.SL_Chief];
+        }
+        
+      }else if (status === "MR0105" || status === "MR0106") {
         Usermail = [formData1.txt_ReqBy];
       }
       await axios
         .post("/api/Common/GetEmailUser", {
           user: Usermail,
-          formenu:'MAN POWER'
+          formenu: "MAN POWER",
         })
         .then((res) => {
           if (res.data.length > 0) {
@@ -1275,6 +1356,7 @@ function fn_ForApprove(
 
   const SendEmail = async (Dear, Email) => {
     const fomathtml = fomatmail(Dear);
+    console.log(fomathtml, "fomathtml");
     let ReqNo = formData1.txt_ReqNo;
     let status = formData1.ID_Status;
     let strSubject = "";
@@ -1294,8 +1376,7 @@ function fn_ForApprove(
         formData1.CB_HRManagerApprove == "R"
       ) {
         strSubject = `Please Revise Man Power request : (${ReqNo})`;
-      }
-      else{
+      } else {
         console.log("เข้า3333");
         strSubject = `Please Approve : (${ReqNo})`;
       }
@@ -1331,17 +1412,32 @@ function fn_ForApprove(
       }
     } else if (status === "MR0103") {
       ActionComment = formData1.txt_CommentFMGM;
-      if (formData1.CB_DepartmentApprove == "A") {
-        statusDesc = "Wait HR Manager Approve";
+      if (formData1.CB_FMGMApprove == "A") {
+        statusDesc = "Wait Chief Operating Officer Approve";
       } else {
         statusDesc = "Reject by FM/GM";
       }
-    } else if (status === "MR0104") {
-      ActionComment = formData1.txt_CommentFMGM;
-      if (formData1.CB_DepartmentApprove == "A") {
+    }else if (status === "MR0109") {
+      ActionComment = formData1.txt_CommentChief;
+      if (formData1.CB_ChiefApprove == "A") {
+        statusDesc = "Wait President & CEO Approve";
+      } else {
+        statusDesc = "Reject by Chief Operating Officer";
+      }
+    } 
+    else if (status === "MR0110") {
+      ActionComment = formData1.txt_CommentPresident;
+      if (formData1.CB_PresidentApprove == "A") {
+        statusDesc = "Wait HR Manager Approve";
+      } else {
+        statusDesc = "Reject by President & CEO";
+      }
+    }else if (status === "MR0104") {
+      ActionComment = formData1.txt_CommentHRManager;
+      if (formData1.CB_HRManagerApprove == "A") {
         statusDesc = "Wait HR Staff Action";
       } else {
-        statusDesc = "Reject by Dept. Manager";
+        statusDesc = "Reject by HR Manager";
       }
     } else if (status === "MR0105") {
       ActionComment = formData1.txt_HrComment;
@@ -1370,7 +1466,10 @@ function fn_ForApprove(
     let Position = `${formData1.SL_Position} ${
       formData1.txt_TotalSubstitube + formData1.txt_TotalAdditional
     } PERSON`;
-    const formattedComment = (Datamail.Comment || "").replace(/(.{60})/g, "$1<br>");
+    const formattedComment = (Datamail.Comment || "").replace(
+      /(.{60})/g,
+      "$1<br>"
+    );
     if (status === "MR0101") {
       strEmailFormat = `
         <!DOCTYPE html>
@@ -1431,7 +1530,7 @@ function fn_ForApprove(
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${userlogin}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqBy}</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
@@ -1490,7 +1589,9 @@ function fn_ForApprove(
         <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
         <p>Dear Khun ${Dear} ,</p>
         <p>
-                                  This Request creates as follow ${formData1.txt_ReqBy}
+                                  This Request creates as follow ${
+                                    formData1.txt_ReqBy
+                                  }
         </p>
         <!-- Details -->
         <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
@@ -1505,15 +1606,21 @@ function fn_ForApprove(
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">RequestNo.:</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqNo}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqNo
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Factory :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${factory.label}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          factory.label
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Department :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.SL_Department}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.SL_Department
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Position :</td>
@@ -1521,23 +1628,31 @@ function fn_ForApprove(
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Target Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.Date_Target}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.Date_Target
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqBy}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqBy
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqDate}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_ReqDate
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${userlogin}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqBy}</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_SendDate}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formData1.txt_SendDate
+        }</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Remark :</td>
@@ -1555,11 +1670,15 @@ function fn_ForApprove(
         </tr>
                             <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Last Action Comment :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formattedComment||''}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          formattedComment || ""
+        }</td>
         </tr>
                   <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Status :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${Datamail.Status}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${
+          Datamail.Status
+        }</td>
         </tr>
         </table>
         <p>
@@ -1592,24 +1711,26 @@ function fn_ForApprove(
   };
 
   const bt_Reset = async () => {
-    if( ["MR0101", "MR0129","MR0139","MR0149"].includes(formData1.ID_Status)){
+    if (
+      ["MR0101", "MR0129", "MR0139", "MR0149"].includes(formData1.ID_Status)
+    ) {
       handleChange("SL_DepartmentManager", null);
-      handleChange("SL_FMGM",null);
+      handleChange("SL_FMGM", null);
       handleChange("SL_HRManager", null);
     }
-    if(formData1.ID_Status=='MR0102'){
-      handleChange("txt_CommentDepartmentmanager",'');
-      handleChange("CB_DepartmentApprove", '');
+    if (formData1.ID_Status == "MR0102") {
+      handleChange("txt_CommentDepartmentmanager", "");
+      handleChange("CB_DepartmentApprove", "");
     }
-    if(formData1.ID_Status=='MR0103'){
-      handleChange("txt_CommentFMGM",'');
-      handleChange("CB_FMGMApprove", '');
+    if (formData1.ID_Status == "MR0103") {
+      handleChange("txt_CommentFMGM", "");
+      handleChange("CB_FMGMApprove", "");
     }
-    if(formData1.ID_Status=='MR0104'){
-      handleChange("txt_CommentHRManager",'');
-      handleChange("CB_HRManagerApprove", '');
+    if (formData1.ID_Status == "MR0104") {
+      handleChange("txt_CommentHRManager", "");
+      handleChange("CB_HRManagerApprove", "");
     }
-}
+  };
 
   return {
     DepartmentManager,
@@ -1621,7 +1742,9 @@ function fn_ForApprove(
     SendApprove,
     Bt_Submit,
     GetmailSend,
-    bt_Reset
+    bt_Reset,
+    COO,
+    CEO,
   };
 }
 

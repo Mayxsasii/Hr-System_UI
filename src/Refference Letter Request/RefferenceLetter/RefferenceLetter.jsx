@@ -32,7 +32,8 @@ const App = () => {
           current={current}
           items={items}
           onChange={onChange}
-          style={{ marginBottom: "20px" }}
+          style={{ marginBottom: "20px",width: "600px" }}
+           type="navigation"
         />
         <div style={{ ...contentStyle, padding: "20px", backgroundColor: "#fff", borderRadius: "10px" }}>
           {steps[current].content({

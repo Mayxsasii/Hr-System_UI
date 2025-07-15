@@ -231,7 +231,9 @@ function fn_NewEmployeeCard() {
             icon: "warning",
             text: "User not found/ไม่พบข้อมูลพนักงาน",
           });
+
           hideLoading();
+          return;
         } else {
           if (res.data[0].dept == "") {
             // handleChange("txt_Userlogin", "");
@@ -246,8 +248,7 @@ function fn_NewEmployeeCard() {
             handleChange("txt_Email", "");
             Swal.fire({
               icon: "warning",
-              text: "Please Contact HR Admin This Employee code cannot be approved/กรุณาติดต่อ HR Admin รหัสพนักงานนี้ไม่สามารถขออนุมัติได้",
-             
+              text: "Please Contact HR Admin This Employee code cannot be request/กรุณาติดต่อ HR Admin รหัสพนักงานนี้ไม่สามารถขออนุมัติได้",
             });
             return;
           }
@@ -261,7 +262,7 @@ function fn_NewEmployeeCard() {
           handleChange("txt_JobGrade", res.data[0].jobgrade);
           handleChange("txt_Email", res.data[0].email);
         }
-        await GetSv(res.data[0].factory_code, res.data[0].dept);
+        await GetSv(ID_Code);
       });
 
     hideLoading();
@@ -317,14 +318,27 @@ function fn_NewEmployeeCard() {
     });
   };
 
-  const GetSv = async (Fac, Dept) => {
+  const GetSv = async (IdCode) => {
     await axios
       .post("/api/EmployeeCard/GetPersonForApprovalEmployeeCard", {
-        factory: Fac || "",
-        dept: Dept || "",
+        IdCode: IdCode || "",
+        // dept: Dept || "",
       })
       .then((res) => {
-        setsupervisor(res.data);
+        if (res.data.length > 0) {
+          setsupervisor(res.data);
+        } else {
+          handleChange("txt_RecriveById", "");
+          handleChange("txt_RecriveByName", "");
+          handleChange("txt_RecriveByJobGrade", "");
+          handleChange("txt_RecriveByDepartment", "");
+          handleChange("txt_RecriveByEmail", "");
+          Swal.fire({
+            icon: "warning",
+            text: "Please Contact HR Admin This Dept. Don't have approver/กรุณาติดต่อฝ่าย HR Admin แผนกนี้ ไม่มีผู้อนุมัติ",
+          });
+          return;
+        }
       });
   };
 
@@ -393,13 +407,13 @@ function fn_NewEmployeeCard() {
       });
       return;
     }
-    if (formData1.txt_Email == "") {
-      Swal.fire({
-        icon: "warning",
-        text: "Please Input Email/กรุณากรอกอีเมล",
-      });
-      return;
-    }
+    // if (formData1.txt_Email == "") {
+    //   Swal.fire({
+    //     icon: "warning",
+    //     text: "Please Input Email/กรุณากรอกอีเมล",
+    //   });
+    //   return;
+    // }
     if (formData1.txt_Tel == "") {
       Swal.fire({
         icon: "warning",
@@ -753,11 +767,12 @@ function fn_NewEmployeeCard() {
       Subject = `Please Approve Letter Request : (${ReqNo})`;
       Dear = `Khun ${formData1.Sl_Supervisor}  (Supervisor up)`;
       await axios
-        .post("/api/Common/GetEmailUser", {
+        .post("/api/Common/GetEmailUserOther", {
           user: formData1.Sl_Supervisor,
-          formenu: "EMP CARD",
+          // formenu: "EMP CARD",
         })
         .then((res) => {
+          console.log("GetEmailUserOther", res.data);
           if (res.data.length > 0) {
             Usermail = res.data;
           }
@@ -776,9 +791,9 @@ function fn_NewEmployeeCard() {
     } else if (status == "CD0103" || status == "CD0104") {
       Dear = `All Concern`;
       await axios
-        .post("/api/Common/GetEmailUser", {
+        .post("/api/Common/GetEmailUserOther", {
           user: formData1.Sl_Supervisor,
-          formenu: "EMP CARD",
+          // formenu: "EMP CARD",
         })
         .then((res) => {
           if (res.data.length > 0) {
@@ -797,23 +812,33 @@ function fn_NewEmployeeCard() {
         }
       }
     }
-
-    Usermail.forEach((user) => {
-      let fomathtml = fomatmail(Dear, ReqNo);
-      SendEmail(Subject, fomathtml, user.Email);
-    });
+    if (Usermail.length > 0) {
+      Usermail.forEach((user) => {
+        let fomathtml = fomatmail(Dear, ReqNo);
+        SendEmail(Subject, fomathtml, user.Email);
+      });
+    }
   };
 
   const SendEmail = async (strSubject, fomathtml, Email) => {
-    await axios
-      .post("/api/Common/EmailSend", {
-        strSubject: strSubject,
-        strEmailFormat: fomathtml,
-        strEmail: Email,
-      })
-      .then((res) => {
-        console.log(res.data, "EmailSend");
+    try {
+      await axios
+        .post("/api/Common/EmailSend", {
+          strSubject: strSubject,
+          strEmailFormat: fomathtml,
+          strEmail: Email,
+        })
+        .then((res) => {
+          console.log(res.data, "EmailSend");
+        });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        // title: "Cannot be closed",
+        text: error.mass,
       });
+    }
   };
 
   const fomatmail = (Dear, ReqNo) => {

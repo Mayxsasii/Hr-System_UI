@@ -38,16 +38,14 @@ function fn_SearchManPowerRequst() {
   const [txt_ReqBy, settxt_ReqBy] = useState("");
   const [DateFrom, setDateFrom] = useState("");
   const [DateTo, setDateTo] = useState("");
-
+  const [isHR, setIsHR] = useState(false);
   const [TitlePage, setTitlePage] = useState(userlogin);
 
   const [dataSearch, setDataSearch] = useState([]);
 
   useEffect(() => {
-    if (Path != "ManPowerMasterList") {
-      GetDepartment();
-    }
-
+    GetDepartment();
+    CheckHR();
     GetFactory();
     GetStatus();
     Title();
@@ -96,14 +94,19 @@ function fn_SearchManPowerRequst() {
         .post("/api/RequestManPower/GetFactory", {
           User_login: userlogin || "",
         })
-        .then((res) => {
+        .then(async (res) => {
           console.log(res.data, "GetFactory");
           setFactory(res.data);
+          if ((await CheckHR()).length > 0 && Path == "ManPowerMasterList") {
+            setSL_Factory(res.data[0].value);
+            GetDepartmentFac(res.data[0].value);
+            GetDepartmentFac(res.data[0].value);
+            GetPosition(res.data[0].value);
+          }
           if (Path == "HrActionManPowerRequest") {
             setSL_Factory(res.data[0].value);
-            if (Path == "HrActionManPowerRequest") {
-              GetDepartmentFac(res.data[0].value);
-            }
+            GetDepartmentFac(res.data[0].value);
+            GetPosition(res.data[0].value);
           }
         });
     }
@@ -144,9 +147,14 @@ function fn_SearchManPowerRequst() {
         .post("/api/RequestManPower/GetDepartment", {
           User_login: userlogin || "",
         })
-        .then((res) => {
+        .then(async (res) => {
           console.log(res.data, "GetFactGetDepartmentory");
           setDepartment(res.data);
+          let dataHR = await CheckHR();
+          console.log("mmmmmm", dataHR.length);
+          if ((await CheckHR()).length <= 0 && Path == "ManPowerMasterList") {
+            setSL_Department([res.data[0].value]);
+          }
         });
     }
   };
@@ -160,6 +168,23 @@ function fn_SearchManPowerRequst() {
         console.log(res.data, "GetPosition");
         setPosition(res.data);
       });
+  };
+
+  const CheckHR = async () => {
+    let data = [];
+    await axios
+      .post("/api/RequestManPower/CheckHR", {
+        User_login: userlogin || "",
+      })
+      .then((res) => {
+        console.log(res.data, "CheckHR");
+        data = res.data;
+        if (res.data.length > 0) {
+          setIsHR(true);
+        }
+        // setJobGrade(res.data);
+      });
+    return data;
   };
 
   const GetJobGrade = async (position) => {
@@ -178,7 +203,8 @@ function fn_SearchManPowerRequst() {
   const handleFactory = async (value) => {
     setSL_Factory(value);
     GetPosition(value);
-    if (Path == "ManPowerMasterList") {
+    // const dataHR =await CheckHR()
+    if (Path == "ManPowerMasterList" && (await CheckHR()).length > 0) {
       GetDepartmentFac(value);
     }
   };
@@ -191,6 +217,7 @@ function fn_SearchManPowerRequst() {
 
   const handleEdit = (record) => {
     console.log("Edit record:", record.ReqNo);
+
     navigate(`/HrSystem/NewManPowerRequest?ReqNo=${record.ReqNo}`);
   };
 
@@ -202,7 +229,37 @@ function fn_SearchManPowerRequst() {
   };
 
   const handleDelete = (record) => {
-    console.log("Delete record:", record);
+    Swal.fire({
+      title: "Are you sure?",
+      text: `Do you want to delete Req No. ${record.ReqNo}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await axios
+          .post("/api/RequestManPower/Update_DeleteStatus", {
+            User: userlogin || "",
+            ReqNo: record.ReqNo || "",
+          })
+          .then((res) => {
+            console.log(res.data, "GetJobGrade");
+            setJobGrade(res.data);
+          });
+        Swal.fire({
+          title: "Deleted success!",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            bt_Search();
+          }
+        });
+      }
+    });
   };
 
   const bt_New = async () => {
@@ -213,7 +270,7 @@ function fn_SearchManPowerRequst() {
   const bt_Search = async () => {
     try {
       setDataSearch([]);
-      console.log("Searchhhh", Factory);
+      console.log("Searchhhh", SL_Department);
       if (Path == "ApproveManPower") {
         const factoryValues = Factory.map((item) => item.value);
         console.log(factoryValues, "factoryValues");
@@ -250,7 +307,7 @@ function fn_SearchManPowerRequst() {
                 : Path == "ApproveManPower"
                 ? Array.isArray(SL_Status) && SL_Status.length > 0
                   ? SL_Status
-                  : ["MR0102", "MR0103", "MR0103"]
+                  : ["MR0102", "MR0103", "MR0104", "MR0109", "MR0110"]
                 : Path == "HrActionManPowerRequest"
                 ? Array.isArray(SL_Status) && SL_Status.length > 0
                   ? SL_Status
@@ -372,8 +429,7 @@ function fn_SearchManPowerRequst() {
     }
   };
 
-  const bt_Reset = () => {
-    setSL_Department(null);
+  const bt_Reset = async () => {
     setSL_Position(null);
     setSL_JobGrade(null);
     setSL_Status(null);
@@ -384,9 +440,21 @@ function fn_SearchManPowerRequst() {
     if (Path != "ManPowerRequest") {
       settxt_ReqBy("");
     }
-    if (Path != "HrActionManPowerRequest") {
-      setSL_Factory(null);
+    if (Path == "ManPowerMasterList") {
+      if ((await CheckHR()).length <= 0) {
+        setSL_Factory(null);
+      } else {
+        setSL_Department(null);
+      }
     }
+    if (Path == "HrActionManPowerRequest") {
+      setSL_Department(null);
+    }
+    if (Path != "HrActionManPowerRequest" && Path != "ManPowerMasterList") {
+      setSL_Factory(null);
+      setSL_Department(null);
+    }
+
     setDataSearch([]);
   };
 
@@ -396,16 +464,6 @@ function fn_SearchManPowerRequst() {
       width: "91px",
       render: (_, record) => (
         <div>
-          {/* <Button
-            onClick={() => handleEdit(record)}
-            style={{ marginRight: 10, fontSize: "18px" }}
-            icon={<EditOutlined style={{ color: "#EF9651" }} />}
-          />
-          <Button
-            onClick={() => handleDelete(record)}
-            style={{ fontSize: "18px" }}
-            icon={<CloseOutlined style={{ color: "red" }} />}
-          /> */}
           {console.log(record, "record")}
           <img
             src={ImgApprove}
@@ -593,6 +651,7 @@ function fn_SearchManPowerRequst() {
     Path,
     TitlePage,
     bt_Reset,
+    isHR,
   };
 }
 

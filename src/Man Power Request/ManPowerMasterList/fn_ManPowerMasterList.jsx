@@ -41,8 +41,8 @@ function fn_ManPowerMasterList() {
     txt_EmpReq_Other: "",
     txt_Remark: "",
     //Step2
-    txt_FileNameReadData:'',
-    DataFileReadData:null,
+    txt_FileNameReadData: "",
+    DataFileReadData: null,
     // ------------------------
     CB_Substitube: "",
     txt_TotalSubstitube: 0,
@@ -106,29 +106,41 @@ function fn_ManPowerMasterList() {
     ],
     //step3
     SL_DepartmentManager: null,
-    CB_DepartmentApprove: "A",
-    Date_DepartmentManager: DateToday,
+    CB_DepartmentApprove: "",
+    Date_DepartmentManager: "",
     txt_CommentDepartmentmanager: "",
+
     SL_FMGM: null,
-    CB_FMGMApprove: "A",
-    Date_FMGM: DateToday,
+    CB_FMGMApprove: "",
+    Date_FMGM: "",
     txt_CommentFMGM: "",
+
+    SL_Chief: null,
+    CB_ChiefApprove: "",
+    Date_Chief: "",
+    txt_CommentChief: "",
+
+    SL_President: null,
+    CB_PresidentApprove: "",
+    Date_President: "",
+    txt_CommentPresident: "",
+
     SL_HRManager: null,
-    CB_HRManagerApprove: "A",
-    Date_HRManager: DateToday,
+    CB_HRManagerApprove: "",
+    Date_HRManager: "",
     txt_CommentHRManager: "",
     //step4
     Radio_HrStatus: "MR0106",
     Sl_HrCloseBy: null,
-    Date_HrAction: '',
-    txt_HrStaffBy:'',
+    Date_HrAction: "",
+    txt_HrStaffBy: "",
     txt_HrComment: "",
     txt_TotalManual: 0,
     txt_TotalRemain: 0,
     CB_HrFileAttach: false,
     Hr_FileAttach: "",
     Hr_DataFileAttach: null,
-    Hr_NameFileOther: '',
+    Hr_NameFileOther: "",
     Hr_DataFileOther: null,
     Hr_Add: [
       {
@@ -157,14 +169,18 @@ function fn_ManPowerMasterList() {
     GetFactory();
     GetEducation();
     GetCourse();
-    GetField
+    GetField;
     GetField();
     GetEnglish();
 
     if (ReqNo != null) {
-      queryParams.delete("ReqNo");
-      const newUrl = `${location.pathname}?${queryParams.toString()}`;
-      window.history.replaceState(null, "", newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl);
+      // queryParams.delete("ReqNo");
+      // const newUrl = `${location.pathname}?${queryParams.toString()}`;
+      // window.history.replaceState(
+      //   null,
+      //   "",
+      //   newUrl.endsWith("?") ? newUrl.slice(0, -1) : newUrl
+      // );
       showLoading("Loading...");
       await GetdataEdit();
       await GetFileDetail();
@@ -210,8 +226,8 @@ function fn_ManPowerMasterList() {
         handleChange("ID_Status", res.data[0].Status_code);
         if (res.data[0].Status_Type == "C" || res.data[0].Status_Type == "R") {
           console.log("vvvvvvv", res.data[0].Cb_Sub);
-        //   DisableChange("SL_Factory", true);
-        //   DisableChange("SL_Department", true);
+          //   DisableChange("SL_Factory", true);
+          //   DisableChange("SL_Department", true);
           // DisableChange("SL_Position", true);
 
           if (res.data[0].Cb_Sub == "Y") {
@@ -265,23 +281,28 @@ function fn_ManPowerMasterList() {
         handleChange("FileName_Add", res.data[0].Add_FileName);
         // handleChange("FileNameServer_Add", res.data[0].Add_FileNameServer);
 
-        if (res.data[0].Status_code == "MR0102") {
-          handleChange("Date_HRManager", DateToday);
-        } else if (res.data[0].Status_code == "MR0103") {
-          handleChange("Date_HRManager", DateToday);
-        } else if (res.data[0].Status_code == "MR0104") {
-          handleChange("Date_HRManager", DateToday);
-        } else {
-          handleChange("Date_DepartmentManager", res.data[0].Dept_date);
-          handleChange("Date_FMGM", res.data[0].FMGM_Date);
-          handleChange("Date_HRManager", res.data[0].FMGM_Date);
-        }
+        handleChange("Date_DepartmentManager", res.data[0].Dept_date);
+        handleChange("Date_FMGM", res.data[0].FMGM_Date);
+        handleChange("Date_HRManager", res.data[0].FMGM_Date);
+        handleChange("Date_Chief", res.data[0].COO_Date);
+        handleChange("Date_President", res.data[0].CEO_Date);
+
         handleChange("SL_DepartmentManager", res.data[0].Dept_by || null);
         handleChange("CB_DepartmentApprove", res.data[0].Dept_Radio);
         handleChange("txt_CommentDepartmentmanager", res.data[0].Dept_Comment);
+
         handleChange("SL_FMGM", res.data[0].FMGM_By || null);
         handleChange("CB_FMGMApprove", res.data[0].FMGM_Radio);
         handleChange("txt_CommentFMGM", res.data[0].FMGM_Comment);
+
+        handleChange("SL_Chief", res.data[0].COO_By || null);
+        handleChange("CB_ChiefApprove", res.data[0].COO_Radio);
+        handleChange("txt_CommentChief", res.data[0].COO_Comment);
+
+        handleChange("SL_President", res.data[0].CEO_By || null);
+        handleChange("CB_PresidentApprove", res.data[0].CEO_Radio);
+        handleChange("txt_CommentPresident", res.data[0].CEO_Comment);
+
         handleChange("SL_HRManager", res.data[0].Hr_By || null);
         handleChange("CB_HRManagerApprove", res.data[0].Hr_Radio);
         handleChange("txt_CommentHRManager", res.data[0].Hr_Comment);
@@ -623,33 +644,38 @@ function fn_ManPowerMasterList() {
   const GetFile = async () => {
     const processFile = (fileName, fileData) => {
       if (!fileName || !fileData) return null;
-  
+
       let mimeType = "";
       if (fileName.endsWith(".pdf")) {
         mimeType = "application/pdf";
       } else if (fileName.endsWith(".xls")) {
         mimeType = "application/vnd.ms-excel";
       } else if (fileName.endsWith(".xlsx")) {
-        mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        mimeType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       } else {
         console.error("Unsupported file type");
         return null;
       }
-  
-      const blob = new Blob([new Uint8Array(fileData.data)], { type: mimeType });
+
+      const blob = new Blob([new Uint8Array(fileData.data)], {
+        type: mimeType,
+      });
       return new File([blob], fileName, { type: mimeType });
     };
-  
+
     try {
-      const response = await axios.post("/api/Common/GetFile", { ReqNo: ReqNo });
+      const response = await axios.post("/api/Common/GetFile", {
+        ReqNo: ReqNo,
+      });
       console.log(response.data, "GetFile");
-  
+
       const resData = response.data[0];
       if (!resData) {
         console.error("No data found");
         return;
       }
-  
+
       const fileAdd = processFile(resData.AddName, resData.AddName_File);
       const fileSub = processFile(resData.SubName, resData.SubName_File);
       const fileHr = processFile(resData.HrAcName, resData.HrAcName_File);
@@ -658,11 +684,11 @@ function fn_ManPowerMasterList() {
         handleChange("FileName_Add", fileAdd.name);
         handleChange("DataFileADD", fileAdd);
       }
-      if (fileSub){
+      if (fileSub) {
         handleChange("FileName_Sub", fileSub.name);
         handleChange("DataFileSub", fileSub);
       }
-      if (fileHr){
+      if (fileHr) {
         handleChange("Hr_NameFileOther", fileHr.name);
         handleChange("Hr_DataFileOther", fileHr);
       }
@@ -674,97 +700,104 @@ function fn_ManPowerMasterList() {
   const GetFileDetail = async () => {
     const processFile = (fileName, fileData) => {
       if (!fileName || !fileData || !fileData.data) {
-        console.error("Invalid file data or file name:", { fileName, fileData });
+        console.error("Invalid file data or file name:", {
+          fileName,
+          fileData,
+        });
         return null;
       }
-  
+
       let mimeType = "";
       if (fileName.endsWith(".pdf")) {
         mimeType = "application/pdf";
       } else if (fileName.endsWith(".xls")) {
         mimeType = "application/vnd.ms-excel";
       } else if (fileName.endsWith(".xlsx")) {
-        mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        mimeType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       } else {
         console.error("Unsupported file type:", fileName);
         return null;
       }
-  
+
       try {
-        const blob = new Blob([new Uint8Array(fileData.data)], { type: mimeType });
+        const blob = new Blob([new Uint8Array(fileData.data)], {
+          type: mimeType,
+        });
         return new File([blob], fileName, { type: mimeType });
       } catch (error) {
         console.error("Error creating file object:", error);
         return null;
       }
     };
-  
+
     try {
-      const response = await axios.post("/api/Common/GetFileDetail", { ReqNo: ReqNo });
+      const response = await axios.post("/api/Common/GetFileDetail", {
+        ReqNo: ReqNo,
+      });
       console.log(response.data, "GetFileDetail0");
-  
+
       const resData = response.data;
       console.log(resData, "GetFileDetail1");
-  
+
       if (!resData || resData.length === 0) {
         console.error("No data found");
         return;
       }
-  
+
       for (let i = 0; i < resData.length; i++) {
         const fileName = resData[i].FileName || "";
         const fileData = resData[i].File || null;
         const recID = resData[i].RecID || "";
-  
-        if (fileName=='') {
+
+        if (fileName == "") {
           console.log(`Invalid file data at index ${i}:`, resData[i]);
           continue;
         }
-  
+
         const fileDetail = processFile(fileName, fileData);
         if (!fileDetail) {
-          console.log(`Failed to process file at index ${i}:`, fileName,recID);
+          console.log(`Failed to process file at index ${i}:`, fileName, recID);
           continue;
         }
-  
+
         // console.log(fileDetail, "fileDetailxxx",recID);
-  
-        const ADDSUB = recID.charAt(0); 
-        const index = parseInt(recID.slice(-2), 10)-1; 
-  
+
+        const ADDSUB = recID.charAt(0);
+        const index = parseInt(recID.slice(-2), 10) - 1;
+
         // console.log("subbbbAdddd", recID, ADDSUB, index);
-  
-       
-        if (ADDSUB === 'S') {
+
+        if (ADDSUB === "S") {
           setFormData1((prev) => {
-            const updatedPersonSub = [...(prev.Person_Sub || [])]; 
+            const updatedPersonSub = [...(prev.Person_Sub || [])];
             if (!updatedPersonSub[index]) {
-              updatedPersonSub[index] = {}; 
+              updatedPersonSub[index] = {};
             }
             updatedPersonSub[index] = {
               ...updatedPersonSub[index],
               DataFilefeature: fileDetail,
-              Filefeature:fileName
+              Filefeature: fileName,
             };
-        
+
             return {
               ...prev,
               Person_Sub: updatedPersonSub,
             };
           });
         }
-        if (ADDSUB === 'A') {
+        if (ADDSUB === "A") {
           setFormData1((prev) => {
-            const updatedPersonADD = [...(prev.Person_ADD || [])]; 
+            const updatedPersonADD = [...(prev.Person_ADD || [])];
             if (!updatedPersonADD[index]) {
-              updatedPersonADD[index] = {}; 
+              updatedPersonADD[index] = {};
             }
             updatedPersonADD[index] = {
               ...updatedPersonADD[index],
               DataFilefeature: fileDetail,
-              Filefeature:fileName
+              Filefeature: fileName,
             };
-        
+
             return {
               ...prev,
               Person_Sub: updatedPersonADD,
@@ -824,7 +857,13 @@ function fn_ManPowerMasterList() {
   };
 
   return {
-    formData1,Factory,Education,Course,Field,English,DownLoadFile
+    formData1,
+    Factory,
+    Education,
+    Course,
+    Field,
+    English,
+    DownLoadFile,
   };
 }
 

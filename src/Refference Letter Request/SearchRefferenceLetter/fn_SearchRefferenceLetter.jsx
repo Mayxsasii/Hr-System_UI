@@ -481,10 +481,9 @@ function fn_SearchRefferenceLetter() {
           .then((res) => {
             console.log("UpdateHrStaff", res.data);
           });
-       if (DataModal.Rd_Status == "LT0108") {
-        await GetDatamailSend(selectedRowKeys[i]);
-       }
-       
+        if (DataModal.Rd_Status == "LT0108") {
+          await GetDatamailSend(selectedRowKeys[i]);
+        }
       }
 
       hideLoading();
@@ -668,10 +667,10 @@ function fn_SearchRefferenceLetter() {
     let Sv_By = Data.Sv_By || "";
     if (Path === "ReferenceLetterReceive") {
       Userlogin = DataModal.txt_UserLogin;
-      strSubject = `Letter Request : (${ReqNo}) Close`;
+      strSubject = `Letter Request : (${ReqNo}) Closed`;
     } else {
-       Userlogin = userlogin
-       strSubject = `Letter Request : (${ReqNo}) Close By Condition`;
+      Userlogin = userlogin;
+      strSubject = `Letter Request : (${ReqNo}) Closed By Condition`;
       // return;
     }
     await axios
@@ -719,9 +718,9 @@ function fn_SearchRefferenceLetter() {
     const name = Data.ReqBy.split(":")[1]?.trim() || "";
     let status = "";
     if (Path == "ReferenceLetterReceive") {
-      status = "Close";
+      status = "Closed";
     } else {
-      status = "Close By Condition";
+      status = "Closed By Condition";
     }
     let strEmailFormat = `
       <!DOCTYPE html>
@@ -740,7 +739,7 @@ function fn_SearchRefferenceLetter() {
         <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
         <p>Dear ${Dear} ,</p>
         <p>
-                                  This Request creates as follow : ${name}
+                                  This Request creates as follow ${name}
         </p>
         <!-- Details -->
         <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">

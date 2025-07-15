@@ -138,10 +138,21 @@ function fn_ManPower() {
     Date_FMGM: DateToday,
     txt_CommentFMGM: "",
 
+    SL_Chief: null,
+    CB_ChiefApprove: "A",
+    Date_Chief: DateToday,
+    txt_CommentChief: "",
+
+    SL_President: null,
+    CB_PresidentApprove: "A",
+    Date_President: DateToday,
+    txt_CommentPresident: "",
+
     SL_HRManager: null,
     CB_HRManagerApprove: "A",
     Date_HRManager: DateToday,
     txt_CommentHRManager: "",
+
     //step4
     Radio_HrStatus: "MR0106",
     Sl_HrCloseBy: null,
@@ -236,6 +247,16 @@ function fn_ManPower() {
     SL_FMGM: false,
     CB_FMGMApprove: false,
     txt_CommentFMGM: false,
+
+    SL_Chief: false,
+    CB_ChiefApprove: false,
+    // Date_Chief: DateToday,
+    txt_CommentChief: false,
+
+    SL_President: false,
+    CB_PresidentApprove: false,
+    // Date_President: DateToday,
+    txt_CommentPresident: false,
     // // --
     SL_HRManager: false,
     CB_HRManagerApprove: false,
@@ -255,11 +276,18 @@ function fn_ManPower() {
       // if(formData1.)
       DisableChange("CB_DepartmentApprove", true);
       DisableChange("txt_CommentDepartmentmanager", true);
+
       DisableChange("CB_FMGMApprove", true);
       DisableChange("txt_CommentFMGM", true);
+
+      DisableChange("CB_ChiefApprove", true);
+      DisableChange("txt_CommentChief", true);
+
+      DisableChange("CB_PresidentApprove", true);
+      DisableChange("txt_CommentPresident", true);
+
       DisableChange("CB_HRManagerApprove", true);
       DisableChange("txt_CommentHRManager", true);
-    } else if (StatusType == "R") {
     } else {
       DisableChange("SL_Factory", true);
       DisableChange("SL_Department", true);
@@ -316,23 +344,55 @@ function fn_ManPower() {
 
       DisableChange("SL_DepartmentManager", true);
       DisableChange("SL_FMGM", true);
+      DisableChange("SL_Chief", true);
+      DisableChange("SL_President", true);
       DisableChange("SL_HRManager", true);
 
       if (StatusType == "A") {
         if (ID_Status == "MR0103") {
           DisableChange("CB_DepartmentApprove", true);
           DisableChange("txt_CommentDepartmentmanager", true);
+        } else if (ID_Status == "MR0109") {
+          DisableChange("CB_DepartmentApprove", true);
+          DisableChange("txt_CommentDepartmentmanager", true);
+
+          DisableChange("CB_FMGMApprove", true);
+          DisableChange("txt_CommentFMGM", true);
+        } else if (ID_Status == "MR0110") {
+          DisableChange("CB_DepartmentApprove", true);
+          DisableChange("txt_CommentDepartmentmanager", true);
+
+          DisableChange("CB_FMGMApprove", true);
+          DisableChange("txt_CommentFMGM", true);
+
+          DisableChange("CB_ChiefApprove", true);
+          DisableChange("txt_CommentChief", true);
         } else if (ID_Status == "MR0104") {
           DisableChange("CB_DepartmentApprove", true);
           DisableChange("txt_CommentDepartmentmanager", true);
+
           DisableChange("CB_FMGMApprove", true);
           DisableChange("txt_CommentFMGM", true);
+
+          DisableChange("CB_ChiefApprove", true);
+          DisableChange("txt_CommentChief", true);
+
+          DisableChange("CB_PresidentApprove", true);
+          DisableChange("txt_CommentPresident", true);
         }
       } else if (StatusType == "H" || StatusType == "F") {
         DisableChange("CB_DepartmentApprove", true);
         DisableChange("txt_CommentDepartmentmanager", true);
+
         DisableChange("CB_FMGMApprove", true);
         DisableChange("txt_CommentFMGM", true);
+
+        DisableChange("CB_ChiefApprove", true);
+        DisableChange("txt_CommentChief", true);
+
+        DisableChange("CB_PresidentApprove", true);
+        DisableChange("txt_CommentPresident", true);
+
         DisableChange("CB_HRManagerApprove", true);
         DisableChange("txt_CommentHRManager", true);
       }
@@ -431,28 +491,44 @@ function fn_ManPower() {
         // handleChange("FileNameServer_Add", res.data[0].Add_FileNameServer);
 
         if (res.data[0].Status_code == "MR0102") {
-          handleChange("Date_HRManager", DateToday);
+          handleChange("Date_DepartmentManager", DateToday);
         } else if (res.data[0].Status_code == "MR0103") {
-          handleChange("Date_HRManager", DateToday);
+          handleChange("Date_FMGM", DateToday);
         } else if (res.data[0].Status_code == "MR0104") {
           handleChange("Date_HRManager", DateToday);
+        } else if (res.data[0].Status_code == "MR0109") {
+          handleChange("Date_Chief", DateToday);
+        } else if (res.data[0].Status_code == "MR0110") {
+          handleChange("Date_President", DateToday);
         } else {
           handleChange("Date_DepartmentManager", res.data[0].Dept_date);
           handleChange("Date_FMGM", res.data[0].FMGM_Date);
           handleChange("Date_HRManager", res.data[0].FMGM_Date);
+          handleChange("Date_Chief", res.data[0].COO_Date);
+          handleChange("Date_President", res.data[0].CEO_Date);
         }
         handleChange("SL_DepartmentManager", res.data[0].Dept_by || null);
         handleChange("CB_DepartmentApprove", res.data[0].Dept_Radio);
         handleChange("txt_CommentDepartmentmanager", res.data[0].Dept_Comment);
+
         handleChange("SL_FMGM", res.data[0].FMGM_By || null);
         handleChange("CB_FMGMApprove", res.data[0].FMGM_Radio);
         handleChange("txt_CommentFMGM", res.data[0].FMGM_Comment);
+
+        handleChange("SL_Chief", res.data[0].COO_By || null);
+        handleChange("CB_ChiefApprove", res.data[0].COO_Radio);
+        handleChange("txt_CommentChief", res.data[0].COO_Comment);
+
+        handleChange("SL_President", res.data[0].CEO_By || null);
+        handleChange("CB_PresidentApprove", res.data[0].CEO_Radio);
+        handleChange("txt_CommentPresident", res.data[0].CEO_Comment);
+
         handleChange("SL_HRManager", res.data[0].Hr_By || null);
         handleChange("CB_HRManagerApprove", res.data[0].Hr_Radio);
         handleChange("txt_CommentHRManager", res.data[0].Hr_Comment);
         //step4
         handleChange("Radio_HrStatus", res.data[0].HrStaff_Status);
-        handleChange("Sl_HrCloseBy", res.data[0].HrStaff_Condition||null);
+        handleChange("Sl_HrCloseBy", res.data[0].HrStaff_Condition || null);
         handleChange("txt_HrComment", res.data[0].HrStaff_Comment);
         handleChange("txt_TotalManual", res.data[0].HrStaff_Complete);
         handleChange(
@@ -866,10 +942,8 @@ function fn_ManPower() {
       const response = await axios.post("/api/Common/GetFileDetail", {
         ReqNo: ReqNo,
       });
- 
 
       const resData = response.data;
-
 
       if (!resData || resData.length === 0) {
         return;
@@ -888,8 +962,6 @@ function fn_ManPower() {
         if (!fileDetail) {
           continue;
         }
-
-
 
         const ADDSUB = recID.charAt(0);
         const index = parseInt(recID.slice(-2), 10) - 1;
@@ -945,9 +1017,32 @@ function fn_ManPower() {
       });
       return false;
     }
+    if (formData1.CB_EmpRequirment.length <= 0) {
+      Swal.fire({
+        icon: "error",
+        text: "Please Select Employee Requirement",
+      });
+      return false;
+    }
+    else {
+      if(formData1.CB_EmpRequirment.includes("MR0202") && formData1.SL_EmployeeType == null) {
+        Swal.fire({
+          icon: "error",
+          text: "Please Select Employee Type",
+        });
+        return false;
+      }
+      if (formData1.SL_EmployeeType=='MR0390' && formData1.txt_EmpReq_Other == "") {
+        Swal.fire({
+          icon: "error",
+          text: "Please Input Other Employee Requirement",
+        });
+        return false;
+      }
+    }
     return true;
   };
-
+console.log("formDataๅๅๅๅๅๅๅๅๅๅๅๅๅๅๅๅๅๅ1", formData1);
   const validateStep4 = async () => {
     let check = true;
     await axios
@@ -955,7 +1050,6 @@ function fn_ManPower() {
         User: UserLogin,
       })
       .then(async (res) => {
-
         if (res.data.length <= 0) {
           Swal.fire({
             icon: "error",
@@ -968,7 +1062,6 @@ function fn_ManPower() {
   };
 
   const next = async () => {
-
     if (current === 0 && !validateStep1()) {
       return;
     } else if (current == 2 && !(await validateStep4())) {
@@ -979,7 +1072,6 @@ function fn_ManPower() {
   };
 
   const prev = () => {
-
     if (current - 1 == -1) {
       showLoading("Loading...");
       window.history.back(); // ย้อนกลับไปยังหน้าก่อนหน้า
@@ -1007,7 +1099,7 @@ function fn_ManPower() {
   }));
 
   const contentStyle = {
-     // padding: "10px",
+    // padding: "10px",
     backgroundColor: token.colorFillAlter,
     borderRadius: token.borderRadiusLG,
     border: `1px dashed ${token.colorBorder}`,

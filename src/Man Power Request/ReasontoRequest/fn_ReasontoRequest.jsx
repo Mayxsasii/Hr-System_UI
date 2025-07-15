@@ -716,7 +716,7 @@ function fn_ReasontoRequest(formData1, setFormData1, Disable, setDisable) {
                 };
                 break;
 
-              case "COURSE":
+              case "FACULTY":
                 if (value) {
                   const matchCOURSE = value.match(/\(([^)]+)\)/);
                   const extractedValueCOURSE = matchCOURSE
@@ -893,7 +893,7 @@ function fn_ReasontoRequest(formData1, setFormData1, Disable, setDisable) {
                   StepLanguage: value,
                 };
                 break;
-              case "COURSE":
+              case "FACULTY":
                 if (value) {
                   const matchCOURSE = value.match(/\(([^)]+)\)/);
                   const extractedValueCOURSE = matchCOURSE

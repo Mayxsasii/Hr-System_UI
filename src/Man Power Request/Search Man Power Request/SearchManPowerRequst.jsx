@@ -46,7 +46,8 @@ const SearchManPower = () => {
     txt_ReqBy,
     Path,
     TitlePage,
-    bt_Reset
+    bt_Reset,
+    isHR,
   } = fn_SearchManPowerRequst();
 
   return (
@@ -71,7 +72,7 @@ const SearchManPower = () => {
         }}
       >
         <p style={{ margin: 0, fontSize: "20px", fontWeight: "bold" }}>
-        🔍 {TitlePage}
+          🔍 {TitlePage}
         </p>
       </div>
 
@@ -92,7 +93,8 @@ const SearchManPower = () => {
               <td style={{ textAlign: "right", padding: "4px" }}>Factory :</td>
               <td style={{ padding: "4px" }}>
                 <Select
-                disabled={Path=='HrActionManPowerRequest'}
+                  // disabled={Path == "HrActionManPowerRequest"}
+                  disabled={isHR == true&&(Path == "HrActionManPowerRequest"||Path == "ManPowerMasterList")}
                   showSearch
                   value={SL_Factory}
                   style={{
@@ -116,6 +118,7 @@ const SearchManPower = () => {
               <td style={{ padding: "4px" }}>
                 <Select
                   showSearch
+                  disabled={isHR == false && Path == "ManPowerMasterList"}
                   mode="multiple"
                   maxTagCount={"responsive"}
                   value={SL_Department}
@@ -231,14 +234,33 @@ const SearchManPower = () => {
                   value={txt_ReqBy}
                   onChange={(e) => settxt_ReqBy(e.target.value)}
                   style={{ width: "100%" }}
-                  disabled={Path == "ManPowerRequest" ? true : false} 
+                  disabled={Path == "ManPowerRequest" ? true : false}
                 />
               </td>
-              <td style={{ textAlign: "right", padding: "4px",display:Path=='ApproveManPower'||Path=='HrActionManPowerRequest'?'none':'' }} >
+              <td
+                style={{
+                  textAlign: "right",
+                  padding: "4px",
+                  display:
+                    Path == "ApproveManPower" ||
+                    Path == "HrActionManPowerRequest"
+                      ? "none"
+                      : "",
+                }}
+              >
                 Request Status:
               </td>
-              <td style={{ padding: "4px",display:Path=='ApproveManPower'||Path=='HrActionManPowerRequest'?'none':''  }}>
-              <Select
+              <td
+                style={{
+                  padding: "4px",
+                  display:
+                    Path == "ApproveManPower" ||
+                    Path == "HrActionManPowerRequest"
+                      ? "none"
+                      : "",
+                }}
+              >
+                <Select
                   showSearch
                   mode="multiple"
                   maxTagCount={"responsive"}
@@ -270,12 +292,21 @@ const SearchManPower = () => {
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
-                  style={{ marginRight: "10px", backgroundColor: "#399918" ,display:Path=='ManPowerRequest'?'':'none'}}
+                  style={{
+                    marginRight: "10px",
+                    backgroundColor: "#399918",
+                    display: Path == "ManPowerRequest" ? "" : "none",
+                  }}
                   onClick={() => bt_New()}
                 >
                   New
                 </Button>
-                <Button type="primary" danger icon={<ReloadOutlined />} onClick={() => bt_Reset()}>
+                <Button
+                  type="primary"
+                  danger
+                  icon={<ReloadOutlined />}
+                  onClick={() => bt_Reset()}
+                >
                   Reset
                 </Button>
               </td>

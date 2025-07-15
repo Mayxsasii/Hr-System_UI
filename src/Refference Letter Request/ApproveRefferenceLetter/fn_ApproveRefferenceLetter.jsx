@@ -29,8 +29,8 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
   const GetSupervisor = async () => {
     await axios
       .post("/api/RefferenceLetter/GetSupervisorUp", {
-        Fac: formData1.txt_FactoryValue,
-        Dept: formData1.txt_Department,
+        IdCode: formData1.txt_ReqbyID,
+        // Dept: formData1.txt_Department,
       })
       .then((res) => {
         setSupervisor(res.data);
@@ -312,9 +312,8 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       if (status === "LT0101") {
         Dear = `Khun ${formData1.Sl_Supervisor}  (Supervisor up)`;
         await axios
-          .post("/api/Common/GetEmailUser", {
+          .post("/api/Common/GetEmailUserOther", {
             user: formData1.Sl_Supervisor,
-            formenu: "LETTER",
           })
           .then((res) => {
             console.log("GetEmailSend", res.data);
@@ -337,9 +336,9 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       }
     } else if (status === "LT0103") {
       await axios
-        .post("/api/Common/GetEmailUser", {
+        .post("/api/Common/GetEmailUserOther", {
           user: formData1.Sl_Supervisor,
-          formenu: "LETTER",
+
         })
         .then((res) => {
           console.log("GetEmailSend", res.data);
@@ -357,9 +356,9 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
       }
     } else {
       await axios
-        .post("/api/Common/GetEmailUser", {
+        .post("/api/Common/GetEmailUserOther", {
           user: formData1.Sl_Supervisor,
-          formenu: "LETTER",
+
         })
         .then((res) => {
           console.log("GetEmailSend", res.data);

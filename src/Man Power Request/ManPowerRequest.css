@@ -58,7 +58,7 @@ input[type="file"] {
 }
 
 :disabled {
-  color: #504b4b !important; 
+  color: #504b4b !important;
   cursor: not-allowed;
 }
 .ant-radio-disabled .ant-radio-inner,
@@ -70,20 +70,16 @@ input[type="file"] {
   cursor: not-allowed !important;
 }
 
-
-
 .ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner::after {
-  border-color: #382b2b !important;     
-  border-width: 2.5px !important;     
-  opacity: 1 !important;             
+  border-color: #382b2b !important;
+  border-width: 2.5px !important;
+  opacity: 1 !important;
 }
 
-
-
 .ant-select-disabled .ant-select-selector {
-  color: #504b4b !important;            
-  cursor: not-allowed !important;       
-  opacity: 1 !important;                 
+  color: #504b4b !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
 }
 
 .ant-select-disabled .ant-select-selection-item {
@@ -107,7 +103,6 @@ input[type="file"] {
   color: #504b4b !important;
 }
 
-
 .ant-picker-disabled .ant-picker-suffix {
   color: #504b4b !important;
 }
@@ -129,7 +124,7 @@ input[type="file"] {
   background-color: #d3d2d2;
   border-radius: 5px;
   padding: 3px;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 .DeleteFile {
@@ -142,6 +137,93 @@ input[type="file"] {
 .DeleteFile:hover {
   background-color: #bbb9b9;
   border-radius: 5px;
-  padding: 5px; 
-  display: inline-block; 
+  padding: 5px;
+  display: inline-block;
+}
+/* Approve */
+.for-approve-container {
+  background: #fff;
+  /* min-height: 100vh; */
+  /* padding: 32px 0; */
+  /* display: flex;
+  justify-content: center;
+  align-items: flex-start; */
+}
+
+/* .for-approve-card { */
+/* background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(60, 60, 60, 0.08);
+  padding: 32px 40px;
+  width: 950px;
+  max-width: 98vw; */
+/* } */
+
+.for-approve-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #3f7d58;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+
+.for-approve-reqno {
+  color: #888;
+  font-size: 18px;
+  margin-left: 8px;
+}
+
+.for-approve-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  gap: 12px;
+}
+
+.for-approve-label {
+  min-width: 170px;
+  font-weight: 500;
+  color: #444;
+  text-align: right;
+}
+.labelApprove {
+  /* border-radius: 15px; */
+  /* padding: 6px 5px; */
+  font-weight: bold;
+  /* background: #3F7D58; */
+  /* color: #fff; */
+}
+
+
+
+.for-approve-label-Date {
+  min-width: 80px;
+  font-weight: 500;
+  color: #444;
+  text-align: right;
+}
+
+/* .for-approve-input {
+  flex: 2;
+  
+} */
+.for-approve-radio {
+  flex: 1.2;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.for-approve-btn-group {
+  margin-top: 32px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.for-approve-btn-group .ant-btn {
+  min-width: 120px;
+  font-size: 16px;
+  border-radius: 8px;
+  height: 40px;
 }

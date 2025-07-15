@@ -428,9 +428,9 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               }}
             />
           </div>
-          <table className="TB_ReasontoRequest" style={{ marginLeft: "80px" }}>
+          <table className="TB_ReasontoRequest" style={{ marginLeft: "30px"}}>
             <tr>
-              <td align="right">วุฒิการศึกษา (Education) :</td>
+              <td align="right">Education (วุฒิการศึกษา) :</td>
               <td colSpan={1}>
                 {" "}
                 <Select
@@ -478,7 +478,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               </td>
             </tr>
             <tr>
-              <td align="right">Course (หลักสูตร):</td>
+              <td align="right">Faculty (คณะ):</td>
               <td colSpan={1}>
                 <Select
                   // disabled={formData1.CB_FileSubstitube}
@@ -641,7 +641,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               </td>
             </tr>
             <tr>
-              <td align="right">คุณสมบัติอย่างละเอียด :</td>
+              <td align="right">Attach Organization and Job Description :</td>
               <td colSpan={2}>
                 <div className="file-upload" style={{ marginLeft: "5px" }}>
                   <label
@@ -810,7 +810,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
             disabled={Disable.txt_TargetCapacity1}
           />
         </div>
-        <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+        {/* <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
           <TextArea
             disabled={Disable.txt_TargetCapacity2}
             style={{ width: "1000px", height: "50px", marginLeft: "195px" }}
@@ -820,7 +820,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               handleChange("txt_TargetCapacity2", e.target.value)
             }
           />
-        </div>
+        </div> */}
       </div>
 
       <div
@@ -990,7 +990,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
             <p style={{ margin: 0, marginLeft: "20px", marginTop: "5px" }}>
               {index + 1}.
             </p>
-            <table style={{ marginLeft: "80px" }}>
+            <table style={{ marginLeft: "1px" }}>
               <tr>
                 <td align="right">For Dept.:</td>
                 <td colSpan={2} style={{}}>
@@ -1037,7 +1037,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                 </td>
               </tr>
               <tr>
-                <td align="right">วุฒิการศึกษา (Education) :</td>
+                <td align="right">Education (วุฒิการศึกษา) :</td>
                 <td colSpan={1}>
                   <Select
                     mode="multiple"
@@ -1084,7 +1084,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                 </td>
               </tr>
               <tr>
-                <td align="right">Course (หลักสูตร):</td>
+                <td align="right">Faculty (คณะ) :</td>
                 <td colSpan={1}>
                   {" "}
                   <Select
@@ -1261,7 +1261,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
                 </td>
               </tr>
               <tr>
-                <td align="right">คุณสมบัติอย่างละเอียด :</td>
+                <td align="right">Attach Organization and Job Description :</td>
                 <td colSpan={2}>
                   <div className="file-upload" style={{ marginLeft: "5px" }}>
                     <label

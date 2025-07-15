@@ -65,6 +65,7 @@ const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
+              value={formData1.SL_Factory}
               options={Factory}
               onChange={(value) => {
                 handleChange("SL_Factory", value);
@@ -132,11 +133,12 @@ const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
           <td style={{ textAlign: "right" }}>Email :</td>
           <td colSpan={3}>
             <Input
+              disabled
               value={formData1.txt_Email}
               // disabled={formData1.ID_Status != "MR0101" ? true : false}
-              disabled={Disable.txt_Email}
+              // disabled={Disable.txt_Email}
               style={{ marginLeft: "5px", width: "600px" }}
-              onChange={(e) => handleChange("txt_Email", e.target.value)}
+              // onChange={(e) => handleChange("txt_Email", e.target.value)}
             />
           </td>
           <td style={{ textAlign: "right" }}>Tel :</td>
@@ -204,7 +206,7 @@ const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
           </td>
         </tr>
         <tr>
-          <td style={{ textAlign: "right" }}>Employee Requirment :</td>
+          <td style={{ textAlign: "right" }}>Employee Requirement :</td>
           <td colSpan={5}>
             <Checkbox.Group
             //  disabled={formData1.ID_Status != "MR0101" ? true : false}
@@ -283,7 +285,7 @@ const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
                   }
                 />
               </div>
-              <div style={{ marginTop: "2px" }}>
+              {/* <div style={{ marginTop: "2px" }}>
                 <Checkbox value="MR0290">Other</Checkbox>
                 <Input
                  disabled={Disable.txt_EmpReq_Other}
@@ -299,7 +301,7 @@ const Step1 = ({ formData1, setFormData1,Disable,setDisable }) => {
                     handleChange("txt_EmpReq_Other", e.target.value)
                   }
                 />
-              </div>
+              </div> */}
             </Checkbox.Group>
           </td>
         </tr>

@@ -16,13 +16,17 @@ const Login = () => {
     GoPathLetter,
     Letter,
     GoPathEmpCard,
-    EmpCard
+    EmpCard,
+    Roll
   } = fn_home();
 
+  
   return (
     <div>
       <div className="Home_Page">
-        <div className="card_HomePage">
+        <div className="card_HomePage" style={{   display: ["241", "243", "244"].some((role) => String(Roll).includes(role))
+                ? ""
+                : "none",}}>
           <div
             className="Title_card green"
             style={{
@@ -136,7 +140,7 @@ const Login = () => {
                 background: "#E3FCEF",
                 borderLeft: "10px solid #2E7D32",
               }}
-              onClick={() => GoPathManPower("2", ManPower[2]?.WaitFMGMApprove)}
+              onClick={() => GoPathManPower("2", ManPower[3]?.WaitCOOApprove)}
             >
               <p
                 className="P_Title_Status"
@@ -153,7 +157,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                {ManPower[2]?.WaitFMGMApprove || 0}
+                { ManPower[3]?.WaitCOOApprove || 0}
               </p>
             </div>
             <div
@@ -162,7 +166,7 @@ const Login = () => {
                 background: "#E3FCEF",
                 borderLeft: "10px solid #2E7D32",
               }}
-              onClick={() => GoPathManPower("2", ManPower[2]?.WaitFMGMApprove)}
+               onClick={() => GoPathManPower("2", ManPower[4]?.WaitCEOApprove)}
             >
               <p
                 className="P_Title_Status"
@@ -179,7 +183,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                {ManPower[2]?.WaitFMGMApprove || 0}
+                {ManPower[4]?.WaitCEOApprove || 0}
               </p>
             </div>
 
@@ -190,7 +194,7 @@ const Login = () => {
                 borderLeft: "10px solid #2E7D32",
               }}
               onClick={() =>
-                GoPathManPower("2", ManPower[3]?.WaitHRManagerApprove)
+                GoPathManPower("2", ManPower[5]?.WaitHRManagerApprove)
               }
             >
               <p
@@ -208,7 +212,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                {ManPower[3]?.WaitHRManagerApprove || 0}
+                {ManPower[5]?.WaitHRManagerApprove || 0}
               </p>
             </div>
 
@@ -218,7 +222,7 @@ const Login = () => {
                 background: "#E3FCEF",
                 borderLeft: "10px solid #2E7D32",
               }}
-              onClick={() => GoPathManPower("3", ManPower[4]?.WaitHRStaff)}
+              onClick={() => GoPathManPower("3", ManPower[6]?.WaitHRStaff)}
             >
               <p
                 className="P_Title_Status"
@@ -235,7 +239,7 @@ const Login = () => {
                   border: "2px solid #2E7D32",
                 }}
               >
-                {ManPower[4]?.WaitHRStaff || 0}
+                {ManPower[6]?.WaitHRStaff || 0}
               </p>
             </div>
           </div>
