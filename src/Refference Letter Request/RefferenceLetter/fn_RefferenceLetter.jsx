@@ -256,13 +256,13 @@ function fn_RefferenceLetter() {
       });
       return false;
     }
-    if (formData1.txt_Email == "") {
-      Swal.fire({
-        icon: "warning",
-        text: "Please Input Email/กรุณากรอกอีเมล",
-      });
-      return false;
-    }
+    // if (formData1.txt_Email == "") {
+    //   Swal.fire({
+    //     icon: "warning",
+    //     text: "Please Input Email/กรุณากรอกอีเมล",
+    //   });
+    //   return false;
+    // }
     if (formData1.Date_Target == null) {
       Swal.fire({
         icon: "warning",

@@ -14,7 +14,7 @@ function fn_ApproveRefferenceLetter(formData1, setFormData1) {
   const userlogin = localStorage.getItem("username");
   const typeGH_Bank = [
     "PMG,Permanent Management",
-    "PFF,Permanent Expatiate/Foreigner",
+    // "PFF,Permanent Expatiate/Foreigner",
     "PM,Permanent Monthly/Foreigner",
   ];
   useEffect(() => {

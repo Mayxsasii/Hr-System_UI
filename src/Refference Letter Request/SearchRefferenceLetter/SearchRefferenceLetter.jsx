@@ -170,7 +170,7 @@ const SearchManPower = () => {
             </tr>
 
             <tr>
-              <td style={{ textAlign: "right" }}>Request by ID :</td>
+              <td style={{ textAlign: "right" }}>Request By Emp ID:</td>
               <td style={{}}>
                 <Input
                   value={txt_ReqBy}

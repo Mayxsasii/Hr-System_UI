@@ -344,8 +344,9 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
               // disabled={formData1.CB_FileSubstitube}
               disabled={Disable.Sub_ID_Code}
               size="middle"
+              placeholder="Input Emp ID"
               value={formData1.Person_Sub[index]?.ID_Code}
-              style={{ width: "100px", marginLeft: "10px" }}
+              style={{ width: "120px", marginLeft: "10px" }}
               onChange={(e) =>
                 handlePersonSubChange(index, "ID_Code", e.target.value)
               }
@@ -381,6 +382,7 @@ const Step2 = ({ formData1, setFormData1, Disable, setDisable }) => {
             <Input
               size="middle"
               disabled
+              
               value={formData1.Person_Sub[index]?.Job_grade}
               onChange={(e) =>
                 handlePersonSubChange(index, "Job_grade", e.target.value)

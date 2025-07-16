@@ -645,7 +645,7 @@ const Login = () => {
                   color: "#D32F2F",
                 }}
               >
-                Safty Shoes Request
+                Safety Shoes Request
               </span>
               <span className="Font_Count">Total 10 Request</span>
             </div>

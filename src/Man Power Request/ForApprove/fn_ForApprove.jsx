@@ -1487,7 +1487,7 @@ function fn_ForApprove(
         <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
         <p>Dear Khun ${Dear} ,</p>
         <p>
-                                  This Request creates as follow ${formData1.txt_ReqBy}
+                                  This Request creates as follow ${userlogin}
         </p>
         <!-- Details -->
         <table width="100%" border="0" cellpadding="10" cellspacing="0" style="background-color: #f9f9f9; border: 1px solid #dddddd; margin: 20px 0;">
@@ -1522,7 +1522,7 @@ function fn_ForApprove(
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqBy}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${userlogin}</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Request Date :</td>
@@ -1530,7 +1530,7 @@ function fn_ForApprove(
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send By :</td>
-        <td style="font-size: 14px; color: #333333; text-align: left;">${formData1.txt_ReqBy}</td>
+        <td style="font-size: 14px; color: #333333; text-align: left;">${userlogin}</td>
         </tr>
         <tr>
         <td style="font-size: 14px; color: #555555; text-align: right; font-weight: bold;">Send Date :</td>

@@ -191,7 +191,7 @@ const SearchEmpCard = () => {
                   onChange={(e) => setDateTo(e.target.value)}
                 />
               </td>
-              <td style={{ textAlign: "right" }}>Request By :</td>
+              <td style={{ textAlign: "right" }}>Request By Emp ID :</td>
               <td>
                 <Input
                   value={txt_ReqBy}
