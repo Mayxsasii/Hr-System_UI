@@ -165,7 +165,10 @@ function fn_Sider() {
     else if (selectedMenu.MENU_NAME === "Receive Reference Letter") {
       window.location.href = "/HrSystem/ReferenceLetterReceive";
     }
-    
+     else if (selectedMenu.MENU_NAME === "Person Master") {
+      window.location.href = "/HrSystem/Master/PersonMaster";
+    }
+    //Person Master
   };
 
   const handleMouseLeave = () => {

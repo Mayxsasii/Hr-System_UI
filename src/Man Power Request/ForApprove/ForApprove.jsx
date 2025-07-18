@@ -48,7 +48,7 @@ const Step3 = ({
         {/* Department Manager */}
         <div className="for-approve-row">
           <div className="for-approve-label">
-            <label className="labelApprove Dept">Department Manager :</label>
+            <label className="labelApprove Dept">Divison Manager :</label>
           </div>
           <div>
             <Select

@@ -95,7 +95,7 @@ const Login = () => {
                   color: "#2E7D32",
                 }}
               >
-                Wait Department Manager Approve
+                Wait Divison Manager Approve
               </p>
               <p
                 className="P_Count_Status"
